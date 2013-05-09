@@ -17,6 +17,7 @@ import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -63,8 +64,12 @@ public class MonkeyMod extends JavaPlugin{
 		// TODO Auto-generated method stub
 		
 		m_pluginConfig = getConfiguration();
-		m_pluginPermissions = new Configuration( new File(getDataFolder(), "permissions.yml") );
+
+                m_pluginPermissions = new Configuration( new File(getDataFolder(), "permissions.yml") );
+                m_pluginPermissions.load();
+
 		m_pluginVips = new Configuration( new File(getDataFolder(), "vips.yml") );
+                m_pluginVips.load();
 		
 		//Options available to general, just place holders at the moment
 		
@@ -112,6 +117,9 @@ public class MonkeyMod extends JavaPlugin{
 			//Stop the burning!!
 			pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Normal, this);
 		}
+
+                pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
+                pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
 		
 		//TODO Add block destroy and placements rules 
 
@@ -188,6 +196,16 @@ public class MonkeyMod extends JavaPlugin{
 		// returns pluginConfig by default
 		return m_pluginConfig;
 	}
+
+
+        /*
+         * 
+         */
+        public Boolean getPermition( Player player, String path ){
+            // query permissions file
+            // player.sendMessage(player.getName() + path);
+            return m_pluginPermissions.getBoolean(player.getName() + path, false);
+        }
 	
 	public String getLoggerUrl(){
 		return m_pluginConfig.getString("logger.url", "http://cppmonkey.net/minecraft/update.php");
