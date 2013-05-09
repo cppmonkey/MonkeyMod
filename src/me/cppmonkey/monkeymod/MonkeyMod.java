@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 5;
+	private Integer m_build = 16;
 	
 	private PluginDescriptionFile m_pluginDescFile;
 	
@@ -84,7 +84,6 @@ public class MonkeyMod extends JavaPlugin{
         /*
          * Check for updates from server
          */
-        
         ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
         getServer().dispatchCommand(sender, "monkey uptodate");
         		
