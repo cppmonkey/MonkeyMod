@@ -88,6 +88,7 @@ public class UpdateThread extends Thread {
             is.close();
             
             try{
+            	// TODO re-write auto reload, plugin only though 
             	m_plugin.getServer().reload();
             	Message( ChatColor.GREEN + "Update complete!" );
             }catch( CommandException e){

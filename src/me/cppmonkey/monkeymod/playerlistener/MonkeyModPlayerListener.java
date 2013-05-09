@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MonkeyModPlayerListener extends PlayerListener {
 	
-	@SuppressWarnings("unused")
 	private final MonkeyMod m_plugin;
 	
 	public MonkeyModPlayerListener(MonkeyMod instance)
@@ -22,7 +21,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
 	
 	@Override
 	public void onPlayerJoin(PlayerJoinEvent event){
-		//TODO Add :- reporting to cppmonkey.net
+		// reporting to cppmonkey.net
 		Player player = event.getPlayer();
 		
 		// setting up parms for http request

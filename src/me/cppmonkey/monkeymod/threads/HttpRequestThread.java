@@ -188,8 +188,8 @@ public class HttpRequestThread extends Thread {
 	            	in.close();
 	            	
 	            	if (outOfDate){
-	                	//TODO Impliment callback to take action bepending on server response
 	            		Message( "Update found!" );
+	            		//Update found, now attempt to update using callers permissions
 	                	m_plugin.selfUpdate( m_ThreadOwner );
 	                }else
 	                	Message( "You have the latest version!" );
