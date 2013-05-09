@@ -1,6 +1,8 @@
-package me.cppmonkey.monkeymod;
+package me.cppmonkey.monkeymod.playerlistener;
 
 import java.net.URLEncoder;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -23,11 +25,12 @@ public class MonkeyModPlayerListener extends PlayerListener {
 		//TODO Add :- reporting to cppmonkey.net
 		Player player = event.getPlayer();
 		
+		// setting up parms for http request
 		String[] parms = {
                 "action=connect",
                 "player=" + player.getName(),
-                "vip=false",
-                "admin=false"
+                "vip=false", /* TODO process VIP status */
+                "admin=" + player.isOp() /* TODO process Op/Admin status*/
             };
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),

@@ -1,5 +1,6 @@
-package me.cppmonkey.monkeymod;
+package me.cppmonkey.monkeymod.blocklistener;
 
+import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener;

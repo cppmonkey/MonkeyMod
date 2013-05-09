@@ -1,4 +1,4 @@
-package me.cppmonkey.monkeymod;
+package me.cppmonkey.monkeymod.threads;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
+import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.command.CommandSender;
 
