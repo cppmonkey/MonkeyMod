@@ -12,6 +12,7 @@ import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -84,22 +85,14 @@ public class MonkeyMod extends JavaPlugin{
          * Check for updates from server
          */
         
-        String[] parmsCheckForUpdates = {
-				"name=" + this.getName(),
-				"version=" + this.getVersion(),
-				"build=" + this.getBuild()
-		};
-		
-		HttpRequestThread updateQuery = new HttpRequestThread("uptodate", null, "http://cppmonkey.net/monkeymod/ajax.php", parmsCheckForUpdates, this );
-		
-		updateQuery.start();
-        
-		
+        ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
+        getServer().dispatchCommand(sender, "monkey uptodate");
+        		
 		//getCommand("debug");
 	}
 	
 	public void selfUpdate( CommandSender sender ){
-		//TODO selfupdate code
+		// sender needs to be an OP to carry out this action
 		if (sender.isOp()){
 			try{
 				sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");

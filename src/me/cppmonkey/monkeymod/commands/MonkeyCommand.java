@@ -1,6 +1,6 @@
 package me.cppmonkey.monkeymod.commands;
 
-import me.cppmonkey.monkeymod.HttpRequestThread;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
@@ -17,11 +17,11 @@ public class MonkeyCommand implements CommandExecutor {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
-		//Todo process commands
+		//TODO process commands
 		// Priority to /monkey update!
 		if (args.length > 0) {
 			if ("update".equalsIgnoreCase( args[0])) {
-				//Let the user know whats going on		
+				//Let the user know what's going on		
 				m_plugin.selfUpdate(sender);            
 				return true;
 			} //END /monkey update
