@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class MonkeyCommand implements CommandExecutor {
+	@SuppressWarnings("unused")
 	private final MonkeyMod m_plugin;
 	
 	
@@ -18,19 +19,14 @@ public class MonkeyCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String lable, String[] args){
-		if (!(sender instanceof Player)){
-			return false;
-		}
-		
-		Player player = (Player) sender;
-		
+			
 
 		//Todo process commands
 		// Priority to /monkey update!
 		if( "update".equalsIgnoreCase( args[0])){
-			player.sendMessage("Trying to update MonkeyMod");
+			//player.sendMessage("Trying to update MonkeyMod");
 			
-			UpdateThread updateThread = new UpdateThread("Update", "MonkeyMod", "http://cppmonkey.net/minecraft/");
+			UpdateThread updateThread = new UpdateThread("Update", MonkeyMod.name, "http://cppmonkey.net/minecraft/");
             updateThread.start();
             
 			return true;

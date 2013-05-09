@@ -3,12 +3,12 @@ main: me.cppmonkey.monkeymod.MonkeyMod
 version: 0.1
 author: CppMonkey
 description: >
-			An admit tool along with offering Cuboid like functions
+             An admit tool along with offering Cuboid like functions
 
 commands:
-	monkey:
-		aliases: [monkey,boxy]
-		description: Perform monkey command
-		usage: |
-				/<command> update
-				Example: /<command> update
+  monkey:
+    aliases: [monkey,boxy]
+    description: Perform monkey command
+    usage: |
+           /<command> update
+           Example: /<command> update

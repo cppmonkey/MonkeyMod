@@ -5,6 +5,7 @@ import org.bukkit.event.block.BlockListener;
 
 public class MonkeyModBlockListener extends BlockListener {
 
+	@SuppressWarnings("unused")
 	private final MonkeyMod m_plugin;
 
 	public MonkeyModBlockListener( MonkeyMod instance ){

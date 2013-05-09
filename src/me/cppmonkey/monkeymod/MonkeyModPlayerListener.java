@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MonkeyModPlayerListener extends PlayerListener {
 	
+	@SuppressWarnings("unused")
 	private final MonkeyMod m_plugin;
 	
 	public MonkeyModPlayerListener(MonkeyMod instance)

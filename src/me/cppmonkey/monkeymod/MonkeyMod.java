@@ -6,10 +6,17 @@ import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MonkeyMod extends JavaPlugin{
+	
+	//Plugin Details
+	public static String name = "MonkeyMod";
+	public static int build = 5;
+	
+	//Private members containing listeners
 	private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
 	private final MonkeyModBlockListener m_BlockListener = new MonkeyModBlockListener(this);
 	
@@ -18,7 +25,8 @@ public class MonkeyMod extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
-		log.info("Disabling MonkeyMod");
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info( pdfFile.getFullName() + " is disabled!" );
 	}
 
 	@Override
@@ -27,7 +35,9 @@ public class MonkeyMod extends JavaPlugin{
 		PluginManager pm = getServer().getPluginManager();
 		
 		// TODO Auto-generated method stub
-		log.info("Enabling MonkeyMod");
+		
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info( pdfFile.getFullName() + " is enabled!" );
 		
 		//Register hooks to process events
 		pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Low, this);
@@ -38,9 +48,9 @@ public class MonkeyMod extends JavaPlugin{
 		pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Low, this);
 
 		//TODO Process commands, these a partial commands!!
-		
-		getCommand("monkey").setExecutor(new MonkeyCommand(this));
-		//getCommand("boxie").setExecutor(new MonkeyCommand(this));
+		MonkeyCommand commandHandeler = new MonkeyCommand(this);
+		getCommand("monkey").setExecutor(commandHandeler);
+		getCommand("boxie").setExecutor(commandHandeler);
 		
 		
 		//Notify CppMonkey.NET of the new server
