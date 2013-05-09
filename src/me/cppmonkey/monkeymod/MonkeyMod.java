@@ -65,8 +65,6 @@ public class MonkeyMod extends JavaPlugin{
 		
 		PluginManager pm = getServer().getPluginManager();
 		
-		// TODO Auto-generated method stub
-		
 		m_pluginConfig = getConfiguration();
 
                 m_pluginPermissions = new Configuration( new File(getDataFolder(), "permissions.yml") );
@@ -132,8 +130,6 @@ public class MonkeyMod extends JavaPlugin{
                 pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Normal, this);
 
                 pm.registerEvent(Event.Type.INVENTORY_OPEN , m_PlayerListener, Priority.Normal, this);
-		
-		//TODO Add block destroy and placements rules 
 
 		//TODO Process commands, these a partial commands!!
 		getCommand("monkey").setExecutor(new MonkeyCommand(this));

@@ -30,8 +30,8 @@ public class MonkeyModPlayerListener extends PlayerListener {
         String[] parms = {
             "action=connect",
             "player=" + player.getName(),
-            "vip="+Boolean.toString(m_plugin.getPermition(player, ".isVip")), /* TODO process VIP status */
-            "admin=" + Boolean.toString(m_plugin.getPermition(player, ".isAdmin")) /* TODO process Op/Admin status*/};
+            "vip="+Boolean.toString(m_plugin.getPermition(player, ".isVip")),
+            "admin=" + Boolean.toString(m_plugin.getPermition(player, ".isAdmin"))};
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
                 player,

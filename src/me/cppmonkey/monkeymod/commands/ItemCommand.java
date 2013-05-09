@@ -27,7 +27,7 @@ public class ItemCommand implements CommandExecutor {
 
                 Player player = (Player) sender;
 
-                // TODO Permission check. Op only command for now
+                // Permission check. Op only command for now
                 if (!m_plugin.getPermition(player, ".isVip")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that");
                     return true;
