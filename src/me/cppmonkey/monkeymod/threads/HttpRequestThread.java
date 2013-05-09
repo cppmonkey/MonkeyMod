@@ -177,7 +177,9 @@ public class HttpRequestThread extends Thread {
 	            	String inputLine;
 	            	
 	            	while ((inputLine = in.readLine() )!= null){
-	            		System.out.println(inputLine);
+	            		// debug output
+	            		if(m_debug)
+	            			System.out.println(inputLine);
 	            		if( "false".equalsIgnoreCase(inputLine)){
 	            			//Needs updating
 	            			outOfDate = true;

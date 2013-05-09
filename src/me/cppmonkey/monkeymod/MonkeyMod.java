@@ -27,7 +27,7 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 18;
+	private Integer m_build = 22;
 	
 	private PluginDescriptionFile m_pluginDescFile;
 	
@@ -67,6 +67,7 @@ public class MonkeyMod extends JavaPlugin{
 		m_pluginVips = new Configuration( new File(getDataFolder(), "vips.yml") );
 		
 		m_pluginConfig.setProperty("server.registered", false);
+		m_pluginConfig.setProperty("server.update.auto", false);
 		m_pluginConfig.setProperty("protection.grief", true);
 		m_pluginConfig.setProperty("protection.tower", true);
 		m_pluginConfig.setProperty("protection.tower.threshold", 40);
@@ -74,15 +75,18 @@ public class MonkeyMod extends JavaPlugin{
 		m_pluginConfig.setProperty("log.disconnect", true);
 		m_pluginConfig.setProperty("log.chat", true);
 		
+		m_pluginConfig.setProperty("override.nag", true);
+		
 		
 		
 		m_pluginPermissions.save();
 		m_pluginConfig.save();
 		
 		// TODO Server verification before setting up hooks
-		if (!m_pluginConfig.getBoolean("server.registered", false))
+		if (!m_pluginConfig.getBoolean("server.registered", false) && !m_pluginConfig.getBoolean("override.nag",false)) {
 			log.info("Creating nag thread");
 			m_announceThreads.add(new AnnounceThread(this));
+		}
 		
 		log.info( m_pluginDescFile.getFullName() + "(" + m_build +") is enabled!" );
 		
@@ -118,18 +122,19 @@ public class MonkeyMod extends JavaPlugin{
 	            "rcon-port=" + (getServer().getPort()+10)
 	        };
         HttpRequestThread notification = new HttpRequestThread(
-                "Notification thread: Plugin initialized", null,
+                "Notification thread: Plugin initialized", new ConsoleCommandSender(getServer()),
                 "http://cppmonkey.net/minecraft/" + "update.php",
                 parms);
         
         notification.start();
         
-        /*
-         * Check for updates from server
-         */
-        ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
-        getServer().dispatchCommand(sender, "monkey uptodate");
-        		
+        if (m_pluginConfig.getBoolean("server.update.auto", false)) {
+	        /*
+	         * Check for updates from server
+	         */
+	        ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
+	        getServer().dispatchCommand(sender, "monkey uptodate");
+        }		
 		//getCommand("debug");
 	}
 	
