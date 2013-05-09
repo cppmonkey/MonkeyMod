@@ -28,7 +28,7 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 23;
+	private Integer m_build = 27;
 	
 	private PluginDescriptionFile m_pluginDescFile;
 	

@@ -47,6 +47,7 @@ public class MonkeyCommand implements CommandExecutor {
 			if ("version".equalsIgnoreCase(args[0])){
 				//TODO process action
 				sender.sendMessage(ChatColor.RED + "Action still to do!");
+				sender.sendMessage(ChatColor.RED + m_plugin.getName() + " " + m_plugin.getVersion() + "(" + m_plugin.getBuild() + ")");
 				return true;
 			} //END /monkey version
 			

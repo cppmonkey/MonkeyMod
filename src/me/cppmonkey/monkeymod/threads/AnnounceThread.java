@@ -7,10 +7,10 @@ import me.cppmonkey.monkeymod.MonkeyMod;
 public class AnnounceThread extends Thread{
 	private Boolean m_halt = false;
 	private MonkeyMod 	m_plugin;
-	private Integer		m_interval = 20000;
+	private Integer		m_interval = 10000;
 	private String[]	m_msg = {
 			ChatColor.RED+"MonkeyMod is not registered on this server",
-			ChatColor.RED+"Visit " + ChatColor.BLUE + "http://CppMonkey.NET/MonkeyMod/" + ChatColor.RED + " and register"};
+			ChatColor.RED+"Visit " + ChatColor.BLUE + "http://CppMonkey.NET/monkeymod/" + ChatColor.RED + " and register"};
 	
 	public AnnounceThread( MonkeyMod plugin ){
 		m_plugin = plugin;
@@ -25,6 +25,13 @@ public class AnnounceThread extends Thread{
 		m_plugin = plugin;
 		m_msg = msg;
 		m_interval = interval;
+    }
+    /*
+	* TODO Validate server registration, if found, dont start server
+	*/
+    public Boolean VerifyRegistration(){
+		
+		return true;
 	}
 	
 	public void Halt(){
