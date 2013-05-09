@@ -1,9 +1,13 @@
 package me.cppmonkey.monkeymod;
 
+import me.cppmonkey.monkeymod.threads.AnnounceThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.playerlistener.MonkeyModPlayerListener;
 import me.cppmonkey.monkeymod.blocklistener.MonkeyModBlockListener;
+
+import java.io.File;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
@@ -26,7 +30,11 @@ public class MonkeyMod extends JavaPlugin{
 	private Integer m_build = 18;
 	
 	private PluginDescriptionFile m_pluginDescFile;
+	
 	private Configuration m_pluginConfig;
+	private Configuration m_pluginPermissions, m_pluginVips;
+	
+	private Stack<AnnounceThread> m_announceThreads = new Stack<AnnounceThread>();
 	
 	//Private members containing listeners
 	private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
@@ -37,6 +45,13 @@ public class MonkeyMod extends JavaPlugin{
 	
 	public void onDisable() {
 		// TODO Auto-generated method stub
+		
+		while(!m_announceThreads.isEmpty()){
+			AnnounceThread temp = m_announceThreads.pop();
+			temp.Halt();
+		}
+			
+		
 		log.info( m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!" );
 	}
 
@@ -48,20 +63,41 @@ public class MonkeyMod extends JavaPlugin{
 		// TODO Auto-generated method stub
 		
 		m_pluginConfig = getConfiguration();
+		m_pluginPermissions = new Configuration( new File(getDataFolder(), "permissions.yml") );
+		m_pluginVips = new Configuration( new File(getDataFolder(), "vips.yml") );
 		
+		m_pluginConfig.setProperty("server.registered", false);
+		m_pluginConfig.setProperty("protection.grief", true);
+		m_pluginConfig.setProperty("protection.tower", true);
+		m_pluginConfig.setProperty("protection.tower.threshold", 40);
+		m_pluginConfig.setProperty("log.connect", true);
+		m_pluginConfig.setProperty("log.disconnect", true);
+		m_pluginConfig.setProperty("log.chat", true);
+		
+		
+		
+		m_pluginPermissions.save();
 		m_pluginConfig.save();
 		
-		
+		// TODO Server verification before setting up hooks
+		if (!m_pluginConfig.getBoolean("server.registered", false))
+			log.info("Creating nag thread");
+			m_announceThreads.add(new AnnounceThread(this));
 		
 		log.info( m_pluginDescFile.getFullName() + "(" + m_build +") is enabled!" );
 		
 		//Register hooks to process events
-		pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Low, this);
-		pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Low, this);
-		pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Low, this);
+		if(m_pluginConfig.getBoolean("log.connect", true))
+			pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Low, this);
+		if(m_pluginConfig.getBoolean("log.disconnect", true))
+			pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Low, this);
+		if(m_pluginConfig.getBoolean("log.chat", true))
+			pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Low, this);
 		
-		//Stop the burning!! 
-		pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Normal, this);
+		if (m_pluginConfig.getBoolean("protection.grief", true )) {
+			//Stop the burning!!
+			pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Normal, this);
+		}
 		
 		//TODO Add block destroy and placements rules 
 
