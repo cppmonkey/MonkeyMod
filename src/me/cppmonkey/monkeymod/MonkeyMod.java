@@ -17,8 +17,8 @@ import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -100,11 +100,11 @@ public class MonkeyMod extends JavaPlugin{
 		if (m_pluginConfig.getBoolean("logger.enabled", true)) {
 			//Register hooks to process events
 			if(m_pluginConfig.getBoolean("logger.connect", true))
-				pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Low, this);
+				pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Monitor , this);
 			if(m_pluginConfig.getBoolean("logger.disconnect", true))
-				pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Low, this);
+				pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Monitor , this);
 			if(m_pluginConfig.getBoolean("logger.chat", true))
-				pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Low, this);
+				pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Monitor , this);
 		} //END Logging
 		
 		
