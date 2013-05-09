@@ -1,4 +1,7 @@
-package me.cppmonkey.monkeymod;
+package me.cppmonkey.monkeymod.commands;
+
+import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.UpdateThread;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,8 +21,20 @@ public class MonkeyCommand implements CommandExecutor {
 		if (!(sender instanceof Player)){
 			return false;
 		}
+		
+		Player player = (Player) sender;
+		
+
 		//Todo process commands
 		// Priority to /monkey update!
+		if( "update".equalsIgnoreCase( args[0])){
+			player.sendMessage("Trying to update MonkeyMod");
+			
+			UpdateThread updateThread = new UpdateThread("Update", "MonkeyMod", "http://cppmonkey.net/minecraft/");
+            updateThread.start();
+            
+			return true;
+		}
 		return false;
 	}
 }
