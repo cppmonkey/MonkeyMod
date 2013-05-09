@@ -11,7 +11,9 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
 
 /**
  *
@@ -22,23 +24,25 @@ public class UpdateThread extends Thread {
 
     public static String name = "Update Thread";
     public static String version = "1.3.1";
-    private Player m_ThreadOwner = null;
+    private CommandSender m_ThreadOwner = null;
     private String m_PackageName;
     private String m_ReposUrl;
     private Boolean m_debug = false;
+    private MonkeyMod m_plugin;
     
 
     /**
      * @param args the command line arguments
      */
-    public UpdateThread(String id, Player player, String packageName, String respoUrl) {
+    public UpdateThread(String id, CommandSender player, String packageName, String respoUrl, MonkeyMod plugin) {
         super(id);
-
+        m_plugin = plugin;
         m_ThreadOwner = player;
         m_PackageName = packageName;
         m_ReposUrl = respoUrl;
     }
 
+    @Deprecated
     public UpdateThread(String id, String packageName, String respoUrl) {
         super(id);
 
@@ -61,7 +65,7 @@ public class UpdateThread extends Thread {
 
             msg = "Attempting to download " + m_ReposUrl + m_PackageName + ".jar";
 
-            Message( msg );
+            Message( ChatColor.GREEN + msg );
                 
             URL url = new URL(m_ReposUrl + m_PackageName + ".jar");
             if( m_debug ){
@@ -81,22 +85,21 @@ public class UpdateThread extends Thread {
             }
             os.close();
             is.close();
-
-            msg = "reloadplugin " + m_PackageName;
-
-            if (m_ThreadOwner != null) {
-                m_ThreadOwner.performCommand("/" + msg);
-            } else if (log != null) {
-                log.info(msg);
-                //etc.getLoader().reloadPlugin(m_PackageName);
+            
+            try{
+            	m_plugin.getServer().reload();
+            	Message( ChatColor.GREEN + "Update complete!" );
+            }catch( CommandException e){
+            	Message( ChatColor.RED + "Something went wrong whilst updaing" );
+            	Message( ChatColor.RED + e.getMessage());
             }
 
         } catch (Exception e) {
             msg = "Sorry master something went wrong!";
-            Message(msg);
+            Message(ChatColor.RED + msg);
 
             msg = e.getMessage();
-            Message(msg);
+            Message(ChatColor.RED + msg);
         }
     }
 }

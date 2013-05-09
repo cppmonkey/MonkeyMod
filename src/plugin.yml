@@ -7,8 +7,22 @@ description: >
 
 commands:
   monkey:
-    aliases: [monkey,boxy]
-    description: Perform monkey command
+    description: Executes MonkeyMod Command
     usage: |
            /<command> update
-           Example: /<command> update
+           /<command> uptodate
+           /<command> status
+           /<command> setvar [var] [val]
+           /<command> enable [var]
+           /<command> disable [var]           
+  boxy:
+    aliases: [boxie]
+    description: Cuboid like function for replacing blocks
+    usage: |
+           /<command> <Replace ID> <With ID> [Height] [Spacing]
+           Example: /<command> 0 1 10 2
+  item:
+    description: Gives items to players
+    usage: |
+           /<command> <ItemID> [Quantity]
+           Example: /<command> 1 64

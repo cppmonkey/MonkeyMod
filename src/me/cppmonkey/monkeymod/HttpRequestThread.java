@@ -4,13 +4,15 @@ package me.cppmonkey.monkeymod;
  * and open the template in the editor.
  */
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 /**
  *
@@ -21,11 +23,15 @@ public class HttpRequestThread extends Thread {
     protected static final Logger log = Logger.getLogger("Minecraft");
     public static String name = "Http Request Thread";
     public static String version = "1.4.1";
-    private Player m_ThreadOwner;
+    private CommandSender m_ThreadOwner;
     private URL m_url;
     private Boolean m_debug;
+    
+    //New for Bukkit
+    private Boolean m_callBack = false;
+    private MonkeyMod m_plugin = null;
 
-    public HttpRequestThread(String id, Player player, String url, String[] parms) {
+    public HttpRequestThread(String id, CommandSender player, String url, String[] parms) {
 
         m_ThreadOwner = player;
         m_debug = false;
@@ -37,8 +43,24 @@ public class HttpRequestThread extends Thread {
             Message(e.getMessage());
         }
     }
+    
+    public HttpRequestThread(String id, CommandSender player, String url, String[] parms, MonkeyMod plugin) {
 
-    public HttpRequestThread(String id, Player player, String url, String[] parms, Boolean debug) {
+    	m_callBack = true;
+    	m_plugin = plugin;
+    	
+        m_ThreadOwner = player;
+        m_debug = false;
+
+        try {
+            m_url = new URL(url + "?" + ParseUrlParms(parms));
+        } catch (MalformedURLException e) {
+            Message("HttpRequestThread() Exception");
+            Message(e.getMessage());
+        }
+    }
+
+    public HttpRequestThread(String id, CommandSender player, String url, String[] parms, Boolean debug) {
 
         m_ThreadOwner = player;
         m_debug = debug;
@@ -60,7 +82,7 @@ public class HttpRequestThread extends Thread {
 
     // Legacy support
     @Deprecated
-    public HttpRequestThread(String id, Player player, String url, String parms, Boolean debug) {
+    public HttpRequestThread(String id, CommandSender player, String url, String parms, Boolean debug) {
         super(id);
 
         m_ThreadOwner = player;
@@ -133,13 +155,11 @@ public class HttpRequestThread extends Thread {
     }
 
     public void run() {
-
+    	Boolean outOfDate = false;
         HttpURLConnection urlConn = null;
         try {
 
             urlConn = (HttpURLConnection) m_url.openConnection();
-
-
 
             urlConn.setRequestMethod("GET");
             urlConn.setAllowUserInteraction(false);
@@ -147,7 +167,35 @@ public class HttpRequestThread extends Thread {
             urlConn.addRequestProperty("Content-type", "text/xml");
 
             try {
-                urlConn.getInputStream();
+            	
+            	if( m_callBack ){
+            		BufferedReader in = new BufferedReader(
+							new InputStreamReader(
+									urlConn.getInputStream()));
+
+	            	String inputLine;
+	            	
+	            	while ((inputLine = in.readLine() )!= null){
+	            		System.out.println(inputLine);
+	            		if( "false".equalsIgnoreCase(inputLine)){
+	            			//Needs updating
+	            			outOfDate = true;
+	            		}
+	            	}
+	            	in.close();
+	            	
+	            	if (outOfDate){
+	                	//TODO Impliment callback to take action bepending on server response
+	            		Message( "Update found!" );
+	                	m_plugin.selfUpdate( m_ThreadOwner );
+	                }else
+	                	Message( "You have the latest version!" );
+                }else{
+                	//Basic call
+                	urlConn.getInputStream();
+                }
+                	
+                
             } catch (IOException e) {
                 Message(name + " Unable to get InputStream");
             }
