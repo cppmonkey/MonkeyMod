@@ -18,13 +18,15 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 16;
+	private Integer m_build = 18;
 	
 	private PluginDescriptionFile m_pluginDescFile;
+	private Configuration m_pluginConfig;
 	
 	//Private members containing listeners
 	private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
@@ -44,6 +46,11 @@ public class MonkeyMod extends JavaPlugin{
 		PluginManager pm = getServer().getPluginManager();
 		
 		// TODO Auto-generated method stub
+		
+		m_pluginConfig = getConfiguration();
+		
+		m_pluginConfig.save();
+		
 		
 		
 		log.info( m_pluginDescFile.getFullName() + "(" + m_build +") is enabled!" );
