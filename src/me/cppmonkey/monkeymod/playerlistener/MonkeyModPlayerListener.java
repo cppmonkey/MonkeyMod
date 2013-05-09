@@ -3,9 +3,11 @@ package me.cppmonkey.monkeymod.playerlistener;
 import java.net.URLEncoder;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
+import org.bukkit.ChatColor;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -82,12 +84,13 @@ public class MonkeyModPlayerListener extends PlayerListener {
         }
     }
 
- 	/* // Something not right here.... Removed to see if there is a warning generated
+    // Something not right here.... Removed to see if there is a warning generated
     @Override
     public void onInventoryOpen(PlayerInventoryEvent event) {
         Player player = (Player)event.getPlayer();
 
-        //if (player != null){
+        if (player != null){
+            player.sendMessage(ChatColor.YELLOW+"onInventoryOpen");
             if (m_plugin.getPermition(player, "")){
                 return;
             }
@@ -95,7 +98,15 @@ public class MonkeyModPlayerListener extends PlayerListener {
             {
                 player.sendMessage(ChatColor.RED+"You cant do that");
             }
-        //}
+        }
     }
-	*/
+
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent event){
+        Player player = (Player)event.getPlayer();
+
+        if (player != null){
+            player.sendMessage(ChatColor.YELLOW+"onPlayerInteract");
+        }
+    }
 }

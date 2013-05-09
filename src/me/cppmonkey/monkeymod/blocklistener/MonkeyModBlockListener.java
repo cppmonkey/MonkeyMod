@@ -1,7 +1,9 @@
 package me.cppmonkey.monkeymod.blocklistener;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -49,7 +51,7 @@ public class MonkeyModBlockListener extends BlockListener {
     public void onBlockPlace(BlockPlaceEvent event){
         Player player = (Player)event.getPlayer();
 
-        if (player)
+        if (player != null)
 	{
             if (m_plugin.getPermition(player,".canBuild")){
                 // nothing to do
@@ -59,7 +61,19 @@ public class MonkeyModBlockListener extends BlockListener {
             {
                 player.sendMessage(ChatColor.RED+"You don't have pemission to do that");
                 event.setCancelled(true);
+                return;
             }
         }
+    }
+
+    @Override
+    public void onBlockDamage(BlockDamageEvent event){
+        Player player = (Player)event.getPlayer();
+
+        if (player != null)
+		{
+			player.sendMessage(ChatColor.YELLOW+"onBlockDamage");
+		}
+
     }
 }

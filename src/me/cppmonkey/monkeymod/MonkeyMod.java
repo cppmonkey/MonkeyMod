@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
+import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,7 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 27;
+	private Integer m_build = 31;
 	
 	private PluginDescriptionFile m_pluginDescFile;
 	
@@ -40,9 +41,9 @@ public class MonkeyMod extends JavaPlugin{
 	//Private members containing listeners
 	private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
 	private final MonkeyModBlockListener m_BlockListener = new MonkeyModBlockListener(this);
+        private final MonkeyModEntityListener m_EntityListener = new MonkeyModEntityListener(this);
 	
 	private static final Logger log = Logger.getLogger("Minecraft");
-	
 	
 	public void onDisable() {
 		// TODO Auto-generated method stub
@@ -57,6 +58,8 @@ public class MonkeyMod extends JavaPlugin{
 	}
 
 	public void onEnable() {
+
+            setNaggable( true );
 		m_pluginDescFile = this.getDescription();
 		
 		PluginManager pm = getServer().getPluginManager();
@@ -96,7 +99,10 @@ public class MonkeyMod extends JavaPlugin{
 		// TODO Server verification before setting up hooks
 		if (!m_pluginConfig.getBoolean("server.registered", false) && !m_pluginConfig.getBoolean("override.nag",false)) {
 			log.info("Creating nag thread");
-			m_announceThreads.add(new AnnounceThread(this));
+
+                        AnnounceThread announcement = new AnnounceThread(this);
+                        announcement.setPriority( AnnounceThread.MIN_PRIORITY );
+			m_announceThreads.add(announcement);
 		}
 		
 		log.info( m_pluginDescFile.getFullName() + "(" + m_build +") is enabled!" );
@@ -119,7 +125,11 @@ public class MonkeyMod extends JavaPlugin{
 		}
 
                 pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
-                pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
+                pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
+
+                pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Normal, this);
+
+                pm.registerEvent(Event.Type.INVENTORY_OPEN , m_PlayerListener, Priority.Normal, this);
 		
 		//TODO Add block destroy and placements rules 
 
