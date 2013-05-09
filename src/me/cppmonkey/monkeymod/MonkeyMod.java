@@ -3,8 +3,8 @@ package me.cppmonkey.monkeymod;
 import me.cppmonkey.monkeymod.threads.AnnounceThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.playerlistener.MonkeyModPlayerListener;
-import me.cppmonkey.monkeymod.blocklistener.MonkeyModBlockListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 
 import java.io.File;
 import java.util.Stack;

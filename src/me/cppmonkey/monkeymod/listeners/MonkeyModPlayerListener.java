@@ -1,4 +1,4 @@
-package me.cppmonkey.monkeymod.playerlistener;
+package me.cppmonkey.monkeymod.listeners;
 
 import java.net.URLEncoder;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
@@ -38,6 +38,18 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 m_plugin.getLoggerUrl(),
                 parms,
                 false);
+
+        // FIXME - improve method of checking to see if the player is known
+        if (m_plugin.isKnownUser( player ) == null){
+            player.sendMessage( ChatColor.GREEN+"Welcome "+ player.getName() +", you apear to be new around here");
+            player.sendMessage( ChatColor.GREEN+"Please wait one moment. Checking permissions with CppMonkey.NET");
+
+            //TODO start thread with appropriate callback function to ammend any user abilities
+        }
+        else
+        {
+            player.sendMessage( ChatColor.GREEN+"Welcome back "+ player.getName() +", lovely to see you again =).");
+        }
 
         notification.start();
     }
