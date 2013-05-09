@@ -14,26 +14,24 @@ public class AnnounceThread extends Thread{
 	
 	public AnnounceThread( MonkeyMod plugin ){
 		m_plugin = plugin;
-		this.start();
 	}
 	
 	public AnnounceThread( MonkeyMod plugin, String[] msg ){
 		m_plugin = plugin;
 		m_msg = msg;
-		this.start(); //Always starts
 	}
 	
 	public AnnounceThread( MonkeyMod plugin, String[] msg, Integer interval ){
 		m_plugin = plugin;
 		m_msg = msg;
 		m_interval = interval;
-		this.start(); //Always starts, can't forget this way
 	}
 	
 	public void Halt(){
 		m_halt = true;
 	}
 	
+    @Override
 	public void run(){
 		//While not told to halt, loop
 		while(!m_halt){
