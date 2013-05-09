@@ -123,12 +123,12 @@ public class MonkeyMod extends JavaPlugin{
 	        };
         HttpRequestThread notification = new HttpRequestThread(
                 "Notification thread: Plugin initialized", new ConsoleCommandSender(getServer()),
-                "http://cppmonkey.net/minecraft/" + "update.php",
+                getLoggerUrl(),
                 parms);
         
         notification.start();
         
-        if (m_pluginConfig.getBoolean("server.update.auto", false)) {
+        if (m_pluginConfig.getBoolean("plugin.update.auto", false)) {
 	        /*
 	         * Check for updates from server
 	         */

@@ -35,7 +35,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
                 player,
-                "http://cppmonkey.net/minecraft/" + "update.php",
+                m_plugin.getLoggerUrl(),
                 parms,
                 false);
         
@@ -44,9 +44,9 @@ public class MonkeyModPlayerListener extends PlayerListener {
 	
 	@Override
 	public void onPlayerQuit(PlayerQuitEvent event){
-		//Todo add :- reporting to cppmonkey.net
-		Player player = event.getPlayer();
 		
+		Player player = event.getPlayer();
+		//reporting to cppmonkey.net
 		String[] parms = {
                 "action=disconnect",
                 "player=" + player.getName()
@@ -54,7 +54,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
                 player,
-                "http://cppmonkey.net/minecraft/" + "update.php",
+                m_plugin.getLoggerUrl(),
                 parms,
                 false);
         
@@ -73,7 +73,11 @@ public class MonkeyModPlayerListener extends PlayerListener {
 	                "player=" + URLEncoder.encode(player.getName(), "UTF-8"),
 	                "message=" + URLEncoder.encode(message, "UTF-8")
 	            };
-	            HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), player, "http://cppmonkey.net/minecraft/" + "update.php", parms, false);
+	            HttpRequestThread notification = new HttpRequestThread(
+	            		"Disconnection Notification Thread:" + player.getName(),
+	            		player,
+	            		m_plugin.getLoggerUrl(),
+	            		parms);
 	            
 	            notification.start();
 		}catch(Exception e){
