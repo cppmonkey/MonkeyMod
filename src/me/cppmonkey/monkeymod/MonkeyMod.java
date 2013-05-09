@@ -25,11 +25,12 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 31;
+	private Integer m_build = 32;
 	
 	private PluginDescriptionFile m_pluginDescFile;
 	
@@ -126,6 +127,7 @@ public class MonkeyMod extends JavaPlugin{
 
                 pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
                 pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
+                pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
 
                 pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Normal, this);
 
@@ -215,6 +217,11 @@ public class MonkeyMod extends JavaPlugin{
             // query permissions file
             // player.sendMessage(player.getName() + path);
             return m_pluginPermissions.getBoolean(player.getName() + path, false);
+        }
+
+        public Object isKnownUser( Player player ){
+            //FIXME
+            return m_pluginPermissions.getProperty(player.getName().toLowerCase()+".canBuild");
         }
 	
 	public String getLoggerUrl(){
