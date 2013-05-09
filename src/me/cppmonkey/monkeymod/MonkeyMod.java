@@ -27,7 +27,7 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin{
 	
 	//Plugin Details
-	private Integer m_build = 22;
+	private Integer m_build = 23;
 	
 	private PluginDescriptionFile m_pluginDescFile;
 	
@@ -66,17 +66,23 @@ public class MonkeyMod extends JavaPlugin{
 		m_pluginPermissions = new Configuration( new File(getDataFolder(), "permissions.yml") );
 		m_pluginVips = new Configuration( new File(getDataFolder(), "vips.yml") );
 		
+		//Options available to general, just place holders at the moment
+		
+		/*
 		m_pluginConfig.setProperty("server.registered", false);
-		m_pluginConfig.setProperty("server.update.auto", false);
+		m_pluginConfig.setProperty("plugin.update.auto", false);
+		m_pluginConfig.setProperty("plugin.update.url", "http://cppmonkey.net/minecraft/");
 		m_pluginConfig.setProperty("protection.grief", true);
 		m_pluginConfig.setProperty("protection.tower", true);
 		m_pluginConfig.setProperty("protection.tower.threshold", 40);
-		m_pluginConfig.setProperty("log.connect", true);
-		m_pluginConfig.setProperty("log.disconnect", true);
-		m_pluginConfig.setProperty("log.chat", true);
+		m_pluginConfig.setProperty("logger.url", "http://cppmonkey.net/minecraft/update.php");
+		m_pluginConfig.setProperty("logger.enable", true);
+		m_pluginConfig.setProperty("logger.connect", true);
+		m_pluginConfig.setProperty("logger.disconnect", true);
+		m_pluginConfig.setProperty("logger.chat", true);
 		
 		m_pluginConfig.setProperty("override.nag", true);
-		
+		*/
 		
 		
 		m_pluginPermissions.save();
@@ -90,13 +96,17 @@ public class MonkeyMod extends JavaPlugin{
 		
 		log.info( m_pluginDescFile.getFullName() + "(" + m_build +") is enabled!" );
 		
-		//Register hooks to process events
-		if(m_pluginConfig.getBoolean("log.connect", true))
-			pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Low, this);
-		if(m_pluginConfig.getBoolean("log.disconnect", true))
-			pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Low, this);
-		if(m_pluginConfig.getBoolean("log.chat", true))
-			pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Low, this);
+		// Enable various logger hooks
+		if (m_pluginConfig.getBoolean("logger.enabled", true)) {
+			//Register hooks to process events
+			if(m_pluginConfig.getBoolean("logger.connect", true))
+				pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Low, this);
+			if(m_pluginConfig.getBoolean("logger.disconnect", true))
+				pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Low, this);
+			if(m_pluginConfig.getBoolean("logger.chat", true))
+				pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Low, this);
+		} //END Logging
+		
 		
 		if (m_pluginConfig.getBoolean("protection.grief", true )) {
 			//Stop the burning!!
@@ -152,6 +162,35 @@ public class MonkeyMod extends JavaPlugin{
 		}else{
 			sender.sendMessage(ChatColor.RED + "You dont have permission to do that");
 		}
+	}
+	@Deprecated
+	public Configuration getPluginConfiguration(){
+		return m_pluginConfig;
+	}
+	
+	enum EConfig{
+		PLUGIN,
+		PERMISSIONS,
+		VIP
+	};
+	
+	@Deprecated
+	public Configuration getPluginConfiguration(EConfig config){
+		switch(config){
+		case PLUGIN:
+			return m_pluginConfig;
+		case PERMISSIONS:
+			return m_pluginPermissions;
+		case VIP:
+			return m_pluginVips;
+		}
+		
+		// returns pluginConfig by default
+		return m_pluginConfig;
+	}
+	
+	public String getLoggerUrl(){
+		return m_pluginConfig.getString("logger.url", "http://cppmonkey.net/minecraft/update.php");
 	}
 	
 	public String getName()
