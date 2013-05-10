@@ -59,6 +59,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
             
         }
 
+        notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
     }
 
@@ -77,6 +78,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 m_plugin.getLoggerUrl(),
                 parms,
                 false);
+        notification.setPriority(Thread.MIN_PRIORITY);
 
         notification.start();
 
@@ -98,6 +100,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
                     player,
                     m_plugin.getLoggerUrl(),
                     parms);
+            notification.setPriority(Thread.MIN_PRIORITY);
 
             notification.start();
         } catch (Exception e) {

@@ -30,7 +30,7 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin {
 
     //Plugin Details
-    private Integer m_build = 42;
+    private Integer m_build = 46;
     private PluginDescriptionFile m_pluginDescFile;
     private Configuration m_pluginConfig;
     private Configuration m_pluginPermissions, m_pluginVips;
@@ -153,6 +153,7 @@ public class MonkeyMod extends JavaPlugin {
                 "Notification thread: Plugin initialized", new ConsoleCommandSender(getServer()),
                 getLoggerUrl(),
                 parms);
+        notification.setPriority(Thread.MIN_PRIORITY);
 
         notification.start();
 
@@ -176,6 +177,7 @@ public class MonkeyMod extends JavaPlugin {
             }
 
             UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this);
+            updateThread.setPriority(Thread.MIN_PRIORITY);
             updateThread.start();
         } else {
             sender.sendMessage(ChatColor.RED + "You dont have permission to do that");
