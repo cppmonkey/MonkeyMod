@@ -49,14 +49,14 @@ public class MonkeyModPlayerListener extends PlayerListener {
         else
         {
             player.sendMessage( ChatColor.GREEN+"Welcome back "+ player.getName() +", lovely to see you again =).");
-            
+
             if (m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).getBoolean(player.getName()+".isVip", false)) {
                 player.setDisplayName(ChatColor.GREEN + player.getName()+ChatColor.WHITE);
             }else if (m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).getBoolean(player.getName()+".isAdmin", false)) {
                 player.setDisplayName(ChatColor.RED + player.getName()+ChatColor.WHITE);
             }
-            
-            
+
+
         }
 
         notification.setPriority(Thread.MIN_PRIORITY);
@@ -79,7 +79,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 parms,
                 false);
         notification.setPriority(Thread.MIN_PRIORITY);
-
         notification.start();
 
     }
@@ -101,7 +100,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
                     m_plugin.getLoggerUrl(),
                     parms);
             notification.setPriority(Thread.MIN_PRIORITY);
-
             notification.start();
         } catch (Exception e) {
         }

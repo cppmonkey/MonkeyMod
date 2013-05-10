@@ -24,7 +24,7 @@ public class MonkeyCommand implements CommandExecutor {
         // Priority to /monkey update!
         if (args.length > 0) {
             if ("update".equalsIgnoreCase(args[0])) {
-                //Let the user know what's going on		
+                //Let the user know what's going on
                 m_plugin.selfUpdate(sender);
                 return true;
             } //END /monkey update
@@ -38,7 +38,7 @@ public class MonkeyCommand implements CommandExecutor {
                     "build=" + m_plugin.getBuild()
                 };
 
-                // Create http request thread 
+                // Create http request thread
                 HttpRequestThread updateQuery = new HttpRequestThread("uptodate", sender, "http://cppmonkey.net/monkeymod/ajax.php", parms, m_plugin);
                 // Start the thread
                 updateQuery.start();
@@ -64,7 +64,7 @@ public class MonkeyCommand implements CommandExecutor {
                     "plugin.update.url",
                     "logger.url"
                 };
-                
+
                 if( args.length == 3){
                     for(int i = 0; i < stringOptions.length;i++){
                         // Option found
@@ -80,11 +80,11 @@ public class MonkeyCommand implements CommandExecutor {
                         }
                     }
                 }
-                
+
                 String[] intOptions = {
                     "protection.tower.threshold"
                 };
-                
+
                 if( args.length == 3){
                     for(int i = 0; i < intOptions.length;i++){
                         // Option found
@@ -108,7 +108,7 @@ public class MonkeyCommand implements CommandExecutor {
             if ("enable".equalsIgnoreCase(args[0]) || "disable".equalsIgnoreCase(args[0])) {
                 // List all all the boolean options
                 String[] boolOptions = {
-                  "plugin.update.auto",  
+                  "plugin.update.auto",
                   "protection.grief",
                   "protection.fire",
                   "protection.tower.stict",
@@ -119,7 +119,7 @@ public class MonkeyCommand implements CommandExecutor {
                   "logger.chat",
                   "override.nag"
                 };
-                
+
                 // Correct number of arguments?
                 if( args.length == 2){
                     for(int i = 0; i < boolOptions.length;i++){
@@ -136,53 +136,55 @@ public class MonkeyCommand implements CommandExecutor {
                         }
                     }
                 }
-                
-                
-                
+
+
+
                 //return false, the command wasnt found
                 return false;
             } //END /monkey [enable/disable]
             if (args.length == 3){
                 Configuration permissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
-                
+
                 // Must be admin to add users
                 if( sender instanceof Player ){
                     Player player = (Player)sender;
                     if (!permissions.getBoolean(player.getName()+".isAdmin", false))
                         return false;
                 }
-                    
-                
+
+
                 if ("add".equalsIgnoreCase(args[0])) {
                     // Get permission configs
-                    
+
+                    // Username
+                    String playerName = args[2].toLowerCase();
 
                     if("user".equalsIgnoreCase(args[1])){
-                        permissions.setProperty(args[2]+".canBuild", true);
-                        permissions.setProperty(args[2]+".canIgnite", false);
+                        permissions.setProperty(playerName+".canBuild", true);
+                        permissions.setProperty(playerName+".canIgnite", false);
                         permissions.save();
                         return true;
                     }
                     if("vip".equalsIgnoreCase(args[1])){
-                        permissions.setProperty(args[2]+".canBuild", true);
-                        permissions.setProperty(args[2]+".canIgnite", false);
-                        permissions.setProperty(args[2]+".isVip", true);
+                        permissions.setProperty(playerName+".canBuild", true);
+                        permissions.setProperty(playerName+".canIgnite", false);
+                        permissions.setProperty(playerName+".isVip", true);
                         permissions.save();
                         return true;
                     }
                     if("admin".equalsIgnoreCase(args[1])){
-                        permissions.setProperty(args[2]+".canBuild", true);
-                        permissions.setProperty(args[2]+".canIgnite", true);
-                        permissions.setProperty(args[2]+".isAdmin", true);
+                        permissions.setProperty(playerName+".canBuild", true);
+                        permissions.setProperty(playerName+".canIgnite", true);
+                        permissions.setProperty(playerName+".isAdmin", true);
                         permissions.save();
                         return true;
                     }
                 }// END add
             } // END args == 4
-            
+
         }// END args > 0
-        
-        
+
+
         return false;
     }
 }

@@ -14,7 +14,7 @@ commands:
            /<command> status
            /<command> setvar [var] [val]
            /<command> enable [var]
-           /<command> disable [var]    
+           /<command> disable [var]
            /<command> add user [var]
            /<command> add vip [var]
            /<command> add admin [var]

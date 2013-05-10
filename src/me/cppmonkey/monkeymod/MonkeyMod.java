@@ -1,6 +1,5 @@
 package me.cppmonkey.monkeymod;
 
-import me.cppmonkey.monkeymod.threads.AnnounceThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
@@ -84,7 +83,7 @@ public class MonkeyMod extends JavaPlugin {
         m_pluginConfig.setProperty("logger.connect", true);
         m_pluginConfig.setProperty("logger.disconnect", true);
         m_pluginConfig.setProperty("logger.chat", true);
-        
+
         m_pluginConfig.setProperty("override.nag", true);
          */
 
@@ -93,6 +92,7 @@ public class MonkeyMod extends JavaPlugin {
         m_pluginConfig.save();
 
         // TODO Server verification before setting up hooks
+        /*
         if (!m_pluginConfig.getBoolean("server.registered", false) && !m_pluginConfig.getBoolean("override.nag", false)) {
             log.info("Creating nag thread");
 
@@ -102,6 +102,8 @@ public class MonkeyMod extends JavaPlugin {
             announcement.start();
             m_announceThreads.add(announcement);
         }
+         *
+         */
 
         log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
@@ -154,7 +156,6 @@ public class MonkeyMod extends JavaPlugin {
                 getLoggerUrl(),
                 parms);
         notification.setPriority(Thread.MIN_PRIORITY);
-
         notification.start();
 
         if (m_pluginConfig.getBoolean("plugin.update.auto", false)) {
@@ -215,12 +216,12 @@ public class MonkeyMod extends JavaPlugin {
 
 
     /*
-     * 
+     *
      */
     public Boolean getPermition(Player player, String path) {
         // query permissions file
-        // player.sendMessage(player.getName() + path);
-        return m_pluginPermissions.getBoolean(player.getName() + path, false);
+        // player.sendMessage(player.getName().toLowerCase() + path);
+        return m_pluginPermissions.getBoolean(player.getName().toLowerCase() + path, false);
     }
 
     public Object isKnownUser(Player player) {
