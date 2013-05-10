@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
+import me.cppmonkey.monkeymod.interfaces.MonkeyModThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
 
 import org.bukkit.ChatColor;
@@ -37,8 +38,7 @@ public class MonkeyMod extends JavaPlugin{
 	private Configuration m_pluginConfig;
 	private Configuration m_pluginPermissions, m_pluginVips;
 	
-	private Stack<AnnounceThread> m_announceThreads = new Stack<AnnounceThread>();
-	
+	private Stack<MonkeyModThread> m_announceThreads = new Stack<MonkeyModThread>();
 	//Private members containing listeners
 	private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
 	private final MonkeyModBlockListener m_BlockListener = new MonkeyModBlockListener(this);
@@ -49,8 +49,9 @@ public class MonkeyMod extends JavaPlugin{
 	public void onDisable() {
 		// TODO Auto-generated method stub
 		
-		while(!m_announceThreads.isEmpty()){
-			AnnounceThread temp = m_announceThreads.pop();
+		System.out.println("Shutting down MonkeyMod Threads");
+		while (!m_announceThreads.isEmpty()) {
+			MonkeyModThread temp = m_announceThreads.pop();
 			temp.Halt();
 		}
 			
@@ -101,6 +102,8 @@ public class MonkeyMod extends JavaPlugin{
 
                         AnnounceThread announcement = new AnnounceThread(this);
                         announcement.setPriority( AnnounceThread.MIN_PRIORITY );
+			// FIXME Annoucment thread, need to varify registration
+			announcement.start();
 			m_announceThreads.add(announcement);
 		}
 		
