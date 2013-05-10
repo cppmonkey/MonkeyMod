@@ -66,30 +66,32 @@ public class MonkeyModBlockListener extends BlockListener {
         System.out.println( ChatColor.YELLOW + "onBlockDamage");
         Player player = (Player) event.getPlayer();
 
-        if (player != null) {
-            player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
+        //return is not a player
+        if (player == null)
+            return;
+            //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
 
-            if (!m_plugin.getPermition(player, ".canBuild")){
-                player.sendMessage(ChatColor.RED + "You don't have pemission to do that");
-                event.setCancelled(true);
-                return;
-            }
+        // Can the player build?
+        if (!m_plugin.getPermition(player, ".canBuild")){
+            player.sendMessage(ChatColor.RED + "You don't have pemission to do that");
+            event.setCancelled(true);
+            return;
         }
     }
 
     @Override
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-        System.out.println( ChatColor.YELLOW + "onBlockCanBuild");
+        System.out.println( "onBlockCanBuild");
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        System.out.println( ChatColor.YELLOW + "onBlockBreak");
+        System.out.println( "onBlockBreak");
 
         Player player = (Player) event.getPlayer();
 
         if (player != null) {
-            player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
+            //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
         }
     }
 }
