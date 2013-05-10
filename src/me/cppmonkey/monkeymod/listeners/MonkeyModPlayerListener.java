@@ -49,6 +49,14 @@ public class MonkeyModPlayerListener extends PlayerListener {
         else
         {
             player.sendMessage( ChatColor.GREEN+"Welcome back "+ player.getName() +", lovely to see you again =).");
+            
+            if (m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).getBoolean(player.getName()+".isVip", false)) {
+                player.setDisplayName(ChatColor.GREEN + player.getName()+ChatColor.WHITE);
+            }else if (m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).getBoolean(player.getName()+".isAdmin", false)) {
+                player.setDisplayName(ChatColor.RED + player.getName()+ChatColor.WHITE);
+            }
+            
+            
         }
 
         notification.start();

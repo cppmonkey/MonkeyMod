@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 public class MonkeyCommand implements CommandExecutor {
@@ -17,6 +18,7 @@ public class MonkeyCommand implements CommandExecutor {
         m_plugin = instance;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         //TODO process commands
         // Priority to /monkey update!
@@ -134,10 +136,53 @@ public class MonkeyCommand implements CommandExecutor {
                         }
                     }
                 }
+                
+                
+                
                 //return false, the command wasnt found
                 return false;
             } //END /monkey [enable/disable]
+            if (args.length == 3){
+                Configuration permissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
+                
+                // Must be admin to add users
+                if( sender instanceof Player ){
+                    Player player = (Player)sender;
+                    if (!permissions.getBoolean(player.getName()+".isAdmin", false))
+                        return false;
+                }
+                    
+                
+                if ("add".equalsIgnoreCase(args[0])) {
+                    // Get permission configs
+                    
+
+                    if("user".equalsIgnoreCase(args[1])){
+                        permissions.setProperty(args[2]+".canBuild", true);
+                        permissions.setProperty(args[2]+".canIgnite", false);
+                        permissions.save();
+                        return true;
+                    }
+                    if("vip".equalsIgnoreCase(args[1])){
+                        permissions.setProperty(args[2]+".canBuild", true);
+                        permissions.setProperty(args[2]+".canIgnite", false);
+                        permissions.setProperty(args[2]+".isVip", true);
+                        permissions.save();
+                        return true;
+                    }
+                    if("admin".equalsIgnoreCase(args[1])){
+                        permissions.setProperty(args[2]+".canBuild", true);
+                        permissions.setProperty(args[2]+".canIgnite", true);
+                        permissions.setProperty(args[2]+".isAdmin", true);
+                        permissions.save();
+                        return true;
+                    }
+                }// END add
+            } // END args == 4
+            
         }// END args > 0
+        
+        
         return false;
     }
 }
