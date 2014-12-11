@@ -18,6 +18,7 @@ public class ItemCommand implements CommandExecutor {
         m_plugin = instance;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Has the sender provided arguments?
         if (args.length > 0) {

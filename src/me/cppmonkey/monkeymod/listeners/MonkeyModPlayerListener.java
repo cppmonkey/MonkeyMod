@@ -85,7 +85,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerChat(PlayerChatEvent event) {
-        Player player = (Player)event.getPlayer();
+        Player player = event.getPlayer();
         String message = event.getMessage();
 
         try {
@@ -108,7 +108,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
     // Something not right here.... Removed to see if there is a warning generated
     @Override
     public void onInventoryOpen(PlayerInventoryEvent event) {
-        Player player = (Player)event.getPlayer();
+        Player player = event.getPlayer();
 
         if (player != null){
             player.sendMessage(ChatColor.YELLOW+"onInventoryOpen");
@@ -124,7 +124,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event){
-        Player player = (Player)event.getPlayer();
+        Player player = event.getPlayer();
 
         if (player != null){
             player.sendMessage(ChatColor.YELLOW+"onPlayerInteract");

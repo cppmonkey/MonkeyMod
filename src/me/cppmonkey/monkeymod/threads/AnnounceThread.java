@@ -1,7 +1,5 @@
 package me.cppmonkey.monkeymod.threads;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 
 import me.cppmonkey.monkeymod.MonkeyMod;

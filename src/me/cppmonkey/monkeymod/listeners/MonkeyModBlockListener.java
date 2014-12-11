@@ -12,7 +12,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class MonkeyModBlockListener extends BlockListener {
 
-    @SuppressWarnings("unused")
     private final MonkeyMod m_plugin;
 
     public MonkeyModBlockListener(MonkeyMod instance) {
@@ -23,7 +22,7 @@ public class MonkeyModBlockListener extends BlockListener {
     public void onBlockIgnite(BlockIgniteEvent event) {
         //TODO, Allow or disallow action
 
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
         // is player?
         if (player != null) {
@@ -47,7 +46,7 @@ public class MonkeyModBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
         if (player != null) {
             if (m_plugin.getPermition(player, ".canBuild")) {
@@ -63,8 +62,7 @@ public class MonkeyModBlockListener extends BlockListener {
 
     @Override
     public void onBlockDamage(BlockDamageEvent event) {
-        System.out.println( ChatColor.YELLOW + "onBlockDamage");
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
         //return is not a player
         if (player == null)
@@ -86,9 +84,8 @@ public class MonkeyModBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        System.out.println( "onBlockBreak");
 
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
         if (player != null) {
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
