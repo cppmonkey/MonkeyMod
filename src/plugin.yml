@@ -27,5 +27,5 @@ commands:
   item:
     description: Gives items to players
     usage: |
-           /<command> <ItemID> [Quantity]
+           /<command> item[:data] [amount]
            Example: /<command> 1 64

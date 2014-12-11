@@ -35,8 +35,23 @@ public class ItemCommand implements CommandExecutor {
 
 
                 try {
+                    ItemStack item;
+
                     // Create stack of items from Supplied ID. Maybe unhandled exception from invalid IDs
-                    ItemStack item = new ItemStack(Integer.parseInt(args[0]));
+
+                    if (args[0].contains(":")){
+                        // Split values
+                        String itemData[] = args[0].split(":");
+                        if( itemData.length != 2){
+                            //invalid syntax
+                            player.sendMessage("Invalid syntax");
+                            return true;
+                        }
+                        item = new ItemStack(Integer.parseInt(itemData[0]));
+                        item.setDurability((short)Integer.parseInt(itemData[1]));
+                    } else {
+                        item = new ItemStack(Integer.parseInt(args[0]));
+                    }
 
                     if (args.length == 2) // Parse quantity if specified else set it to 1
                     {
