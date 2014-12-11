@@ -29,10 +29,10 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin {
 
     //Plugin Details
-    private Integer m_build = 46;
+    private Integer m_build = 49;
     private PluginDescriptionFile m_pluginDescFile;
     private Configuration m_pluginConfig;
-    private Configuration m_pluginPermissions, m_pluginVips;
+    private Configuration m_pluginPermissions, m_pluginVips, m_pluginBoxy;
     private Stack<MonkeyModThread> m_announceThreads = new Stack<MonkeyModThread>();
     //Private members containing listeners
     private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
@@ -69,6 +69,9 @@ public class MonkeyMod extends JavaPlugin {
         m_pluginVips = new Configuration(new File(getDataFolder(), "vips.yml"));
         m_pluginVips.load();
 
+        m_pluginBoxy = new Configuration(new File(getDataFolder(),"boxy.yml"));
+        m_pluginBoxy.load();
+
         //Options available to general, just place holders at the moment
 
         /*
@@ -88,9 +91,6 @@ public class MonkeyMod extends JavaPlugin {
          */
 
 
-        m_pluginPermissions.save();
-        m_pluginConfig.save();
-
         // TODO Server verification before setting up hooks
         /*
         if (!m_pluginConfig.getBoolean("server.registered", false) && !m_pluginConfig.getBoolean("override.nag", false)) {
@@ -99,7 +99,8 @@ public class MonkeyMod extends JavaPlugin {
             AnnounceThread announcement = new AnnounceThread(this);
             announcement.setPriority(AnnounceThread.MIN_PRIORITY);
             // FIXME Annoucment thread, need to varify registration
-            announcement.start();
+         * /// WARNING HIGH CPU! DO NOT USE!
+          //// announcement.start();
             m_announceThreads.add(announcement);
         }
          *
@@ -194,7 +195,8 @@ public class MonkeyMod extends JavaPlugin {
 
         PLUGIN,
         PERMISSIONS,
-        VIP
+        VIP,
+        BOXY
     };
 
     /*
@@ -208,6 +210,8 @@ public class MonkeyMod extends JavaPlugin {
                 return m_pluginPermissions;
             case VIP:
                 return m_pluginVips;
+            case BOXY:
+                return m_pluginBoxy;
         }
 
         // returns pluginConfig by default
@@ -218,6 +222,7 @@ public class MonkeyMod extends JavaPlugin {
     /*
      *
      */
+    @Deprecated
     public Boolean getPermition(Player player, String path) {
         // query permissions file
         // player.sendMessage(player.getName().toLowerCase() + path);
@@ -225,7 +230,8 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public Object isKnownUser(Player player) {
-        //FIXME
+        //FIXME need to be seeing if there username exists. not, can they build!
+        // Couldnt figure it out at the time
         return m_pluginPermissions.getProperty(player.getName().toLowerCase() + ".canBuild");
     }
 
@@ -243,5 +249,16 @@ public class MonkeyMod extends JavaPlugin {
 
     public String getBuild() {
         return m_build.toString();
+    }
+
+    public String[] getStatus(){
+        return new String[]{
+                    "logger.enabled "+m_pluginConfig.getBoolean("logger.enabled", true),
+                    "logger.connect "+m_pluginConfig.getBoolean("logger.connect", true),
+                    "logger.disconnect "+m_pluginConfig.getBoolean("logger.disconnect", true),
+                    "logger.chat "+m_pluginConfig.getBoolean("logger.chat", true),
+                    "protection.grief "+m_pluginConfig.getBoolean("protection.grief", true),
+                    "plugin.update.auto "+m_pluginConfig.getBoolean("plugin.update.auto", false)
+                };
     }
 }

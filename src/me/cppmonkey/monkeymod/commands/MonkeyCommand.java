@@ -54,6 +54,11 @@ public class MonkeyCommand implements CommandExecutor {
 
             if ("status".equalsIgnoreCase(args[0])) {
                 // TODO process status commands
+                String status[] = m_plugin.getStatus();
+
+                for( int i = 0; i < status.length; i++){
+                    sender.sendMessage(ChatColor.RED+status[i]);
+                }
                 sender.sendMessage(ChatColor.RED + "Action still to do!");
                 return true;
             } //END /monkey status
@@ -128,7 +133,7 @@ public class MonkeyCommand implements CommandExecutor {
                             Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
                             config.setProperty(
                                     boolOptions[i],
-                                    Boolean.parseBoolean(args[0]));
+                                    "enable".equalsIgnoreCase(args[0]));
                             config.save();
                             sender.sendMessage(ChatColor.GREEN+boolOptions[i]+" has been altered");
                             sender.sendMessage(ChatColor.GREEN+"A restart maybe required to apply changes");
@@ -153,6 +158,9 @@ public class MonkeyCommand implements CommandExecutor {
                 }
 
 
+                /* TODO Some form of feedback would be nice...
+                 * Was just a quick implomentation to get it working
+                 */
                 if ("add".equalsIgnoreCase(args[0])) {
                     // Get permission configs
 

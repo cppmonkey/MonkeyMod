@@ -29,3 +29,4 @@ commands:
     usage: |
            /<command> item[:data] [amount]
            Example: /<command> 1 64
+                    /<command> grilled_pork 64

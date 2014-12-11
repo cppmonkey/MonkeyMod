@@ -69,6 +69,10 @@ public class ItemCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Invalid argument value");
                     sender.sendMessage(ex.getMessage());
                     return false;
+                } catch (NullPointerException e){
+                    System.out.println(e.getMessage());
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
                 }
             } /*END /item (player) */ else {
                 //TODO Process Console /item Commands. Will require player name!
