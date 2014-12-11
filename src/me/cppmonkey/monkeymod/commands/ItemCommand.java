@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
 
 public class ItemCommand implements CommandExecutor {
 
@@ -16,6 +17,15 @@ public class ItemCommand implements CommandExecutor {
 
     public ItemCommand(MonkeyMod instance) {
         m_plugin = instance;
+    }
+
+    private String itemName(String Item){
+        //returns the ID of an item / block from a given string
+        //eg: input = CHEST
+        //return = 54
+        Material tempMaterial = null;
+        tempMaterial.matchMaterial(Item);
+        return Integer.toString(tempMaterial.getId());
     }
 
     @Override
@@ -48,9 +58,24 @@ public class ItemCommand implements CommandExecutor {
                             player.sendMessage("Invalid syntax");
                             return true;
                         }
+                        try{
+                            String tempItemData = itemData[0];
+                            Integer.parseInt(tempItemData);
+						} catch (NumberFormatException e) {
+                                String tempItemData = itemData[0];
+                                itemData[0] = itemName(tempItemData);
+                        }
+
                         item = new ItemStack(Integer.parseInt(itemData[0]));
                         item.setDurability((short)Integer.parseInt(itemData[1]));
                     } else {
+                        try{
+                            String tempItemData = args[0];
+                            Integer.parseInt(tempItemData);
+						} catch (NumberFormatException e) {
+                                String tempItemData = args[0];
+                                args[0] = itemName(tempItemData);
+                        }
                         item = new ItemStack(Integer.parseInt(args[0]));
                     }
 
