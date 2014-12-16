@@ -142,7 +142,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 if (m_pluginBoxy.getBoolean(player.getName().toLowerCase() + ".enabled", false)) {
                     //user has boxy enabled
                     if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
-                        //allowed to use boxy
+                        // FIXME allowed to use boxy, shouldn't this be the FIRST thing you check?
                         if (m_pluginBoxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
                             Block block = event.getClickedBlock();
                             int X = 0;
@@ -154,6 +154,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                 Z = block.getLocation().getBlockZ();
                         BoxyCommand BoxyExec = new BoxyCommand(m_plugin);
                                 //the switch compensates coords for the side of the block clicked
+                                // FIXME WARNING! ALL MISSING BREAK! Always check compiler output
                                 switch (event.getBlockFace()) {
                                     case UP:
                                         Y++;
@@ -168,7 +169,9 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                     case WEST:
                                         Z--;
                                 }
-                                BoxyExec.playerListenerEvent(player,block, X, Y, Z);
+                                    
+                                //FIXME Don't like the way this is called. Why create a new listener only just to make a single call? just move the code here?
+                                playerListenerEvent(player, block, clicked);
                                 return;
                             } catch (NullPointerException e) {
                                 player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");

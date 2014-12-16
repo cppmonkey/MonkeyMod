@@ -2,6 +2,7 @@ package me.cppmonkey.monkeymod.listeners;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
@@ -9,13 +10,16 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.util.config.Configuration;
 
 public class MonkeyModBlockListener extends BlockListener {
 
     private final MonkeyMod m_plugin;
+    private final Configuration m_chestPermissions;
 
     public MonkeyModBlockListener(MonkeyMod instance) {
         m_plugin = instance;
+        m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
     }
 
     @Override
@@ -55,6 +59,9 @@ public class MonkeyModBlockListener extends BlockListener {
                 if (event.getBlockPlaced().getType() == Material.CHEST) {
                     //
                     player.sendMessage("You placed a chest");
+                    String chestLocation = event.getBlockPlaced().getLocation().getX() + "," + event.getBlockPlaced().getLocation().getY()  + "," + event.getBlockPlaced().getLocation().getZ();
+
+                    m_chestPermissions.setProperty(chestLocation + ".owner", player);
                     return;
                 }
 
@@ -73,8 +80,9 @@ public class MonkeyModBlockListener extends BlockListener {
         Player player = event.getPlayer();
 
         //return is not a player
-        if (player == null)
+        if (player == null) {
             return;
+        }
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
 
         // Can the player build?
