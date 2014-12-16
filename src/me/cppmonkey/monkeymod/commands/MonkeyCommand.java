@@ -12,16 +12,15 @@ import org.bukkit.util.config.Configuration;
 
 public class MonkeyCommand implements CommandExecutor {
 
-    private final MonkeyMod m_plugin;
+    private MonkeyMod m_plugin;
     @Deprecated
-    private final Configuration m_permissions;
+    private Configuration m_permissions;
 
     public MonkeyCommand(MonkeyMod instance) {
         m_plugin = instance;
         m_permissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Priority to /monkey update!
         if (args.length > 0) {

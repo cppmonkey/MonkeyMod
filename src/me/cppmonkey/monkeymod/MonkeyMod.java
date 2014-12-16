@@ -30,7 +30,7 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin {
 
     //Plugin Details
-    private Integer m_build = 55;
+    private Integer m_build = 56;
     private PluginDescriptionFile m_pluginDescFile;
     private Configuration m_pluginConfig;
     private Configuration m_pluginPermissions;
@@ -43,7 +43,6 @@ public class MonkeyMod extends JavaPlugin {
     private final MonkeyModEntityListener m_EntityListener = new MonkeyModEntityListener(this);
     private static final Logger log = Logger.getLogger("Minecraft");
 
-    @Override
     public void onDisable() {
         System.out.println("Shutting down MonkeyMod Threads");
         while (!m_announceThreads.isEmpty()) {
@@ -54,7 +53,6 @@ public class MonkeyMod extends JavaPlugin {
         log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
     }
 
-    @Override
     public void onEnable() {
 
         setNaggable(true);
@@ -173,7 +171,7 @@ public class MonkeyMod extends JavaPlugin {
 
     public void selfUpdate(CommandSender sender) {
         // sender needs to be an OP to carry out this action
-        if (sender.isOp()) {
+        if (sender.isOp()) { // Alter to .isAdmin
             try {
                 sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");
             } catch (Exception e) {
@@ -232,7 +230,7 @@ public class MonkeyMod extends JavaPlugin {
 
     public Object isKnownUser(Player player) {
         //FIXME need to be seeing if there username exists. not, can they build!
-        // Couldnt figure it out at the time
+        // Couldn't figure it out at the time
         return m_pluginPermissions.getProperty(player.getName().toLowerCase() + ".canBuild");
     }
 
@@ -262,4 +260,10 @@ public class MonkeyMod extends JavaPlugin {
                     "plugin.update.auto "+m_pluginConfig.getBoolean("plugin.update.auto", false)
                 };
     }
+
+    public String[] getUsers(){
+
+        return new String[]{""};
+    }
+
 }

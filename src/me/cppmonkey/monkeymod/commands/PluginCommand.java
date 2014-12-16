@@ -24,7 +24,6 @@ public class PluginCommand implements CommandExecutor {
         m_plugin = instance;
     }
 
-    @Override
     public boolean onCommand(final CommandSender sender, Command command, String label, final String[] args) {
 
         if (args.length == 2) {
@@ -36,8 +35,6 @@ public class PluginCommand implements CommandExecutor {
 
                 if (plugin.isEnabled()) {
                     new Thread(new Runnable() {
-
-                        @Override
                         public void run() {
                             synchronized (pm) {
                                 pm.disablePlugin(plugin);
@@ -56,7 +53,6 @@ public class PluginCommand implements CommandExecutor {
     }
 
     // Available command(s)
-    @SuppressWarnings("unused")
     private enum ECommands {
 
         RELOAD

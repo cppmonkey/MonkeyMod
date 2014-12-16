@@ -13,9 +13,9 @@ import org.bukkit.util.config.Configuration;
 
 public class ItemCommand implements CommandExecutor {
 
-    private final MonkeyMod m_plugin;
+    private MonkeyMod m_plugin;
     @Deprecated
-    private final Configuration m_settings;
+    private Configuration m_settings;
 
     public ItemCommand(MonkeyMod instance) {
         m_plugin = instance;
@@ -37,7 +37,6 @@ public class ItemCommand implements CommandExecutor {
         return Integer.toString(tempMaterial.getId());
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Has the sender provided arguments?
         if (args.length > 0) {

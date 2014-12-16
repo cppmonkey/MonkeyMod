@@ -18,14 +18,13 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
     private MonkeyMod m_plugin;
     @Deprecated
-    private final Configuration m_permissions;
+    private Configuration m_permissions;
 
     public MonkeyModPlayerListener(MonkeyMod instance) {
         m_plugin = instance;
         m_permissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
     }
 
-    @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
             try{
         // reporting to cppmonkey.net
@@ -74,7 +73,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
     public void onPlayerQuit(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
@@ -94,7 +92,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
     }
 
-    @Override
     public void onPlayerChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
@@ -117,7 +114,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
     }
 
     // Something not right here.... Removed to see if there is a warning generated
-    @Override
     public void onInventoryOpen(PlayerInventoryEvent event) {
         Player player = event.getPlayer();
 
@@ -133,7 +129,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
     public void onPlayerInteract(PlayerInteractEvent event){
         Player player = event.getPlayer();
 

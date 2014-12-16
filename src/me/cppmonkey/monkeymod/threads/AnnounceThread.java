@@ -32,11 +32,9 @@ public class AnnounceThread extends Thread implements MonkeyModThread{
      */
 
     public Boolean VerifyRegistration() {
-
         return true;
     }
 
-    @Override
     public void Halt() {
         m_halt = true;
     }

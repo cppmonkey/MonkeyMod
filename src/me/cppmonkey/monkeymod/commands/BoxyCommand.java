@@ -20,7 +20,6 @@ public class BoxyCommand implements CommandExecutor {
         m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
 	}
 
-    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         /* TODO process commands
 		 * 	/boxy [id/name] [id/name] [height] [step]
