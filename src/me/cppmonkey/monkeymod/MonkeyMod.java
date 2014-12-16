@@ -13,6 +13,7 @@ import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.PluginCommand;
+import me.cppmonkey.monkeymod.commands.ChestCommand;
 import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
 
@@ -36,6 +37,7 @@ public class MonkeyMod extends JavaPlugin {
     private Configuration m_pluginPermissions;
     private Configuration m_pluginVips;
     private Configuration m_pluginBoxy;
+    private Configuration m_pluginChest;
     private Stack<IThread> m_announceThreads = new Stack<IThread>();
     //Private members containing listeners
     private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
@@ -53,8 +55,9 @@ public class MonkeyMod extends JavaPlugin {
         log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
     }
 
+    @Override
     public void onEnable() {
-
+        System.out.println("Enableing MonkeyMod...");
         setNaggable(true);
         m_pluginDescFile = this.getDescription();
 
@@ -70,6 +73,9 @@ public class MonkeyMod extends JavaPlugin {
 
         m_pluginBoxy = new Configuration(new File(getDataFolder(),"boxy.yml"));
         m_pluginBoxy.load();
+
+        m_pluginChest = new Configuration(new File(getDataFolder(),"chests.yml"));
+        m_pluginChest.load();
 
         //Options available to general, just place holders at the moment
 
@@ -104,7 +110,6 @@ public class MonkeyMod extends JavaPlugin {
         }
          *
          */
-
         log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
         // Enable various logger hooks
@@ -142,7 +147,8 @@ public class MonkeyMod extends JavaPlugin {
         getCommand("monkey").setExecutor(new MonkeyCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("boxy").setExecutor(new BoxyCommand(this));
-        getCommand("plugin").setExecutor(new PluginCommand(this));
+        getCommand("chest").setExecutor(new ChestCommand(this));
+        getCommand("plugin").setExecutor(new PluginCommand(this)); //FIXME: Calling this wil cause any following SetExecutors to have a null pointer exception!!!
 
 
         //Notify CppMonkey.NET of the new server
@@ -199,7 +205,8 @@ public class MonkeyMod extends JavaPlugin {
         PLUGIN,
         PERMISSIONS,
         VIP,
-        BOXY
+        BOXY,
+        CHESTS
     };
 
     /*
@@ -215,6 +222,8 @@ public class MonkeyMod extends JavaPlugin {
                 return m_pluginVips;
             case BOXY:
                 return m_pluginBoxy;
+            case CHESTS:
+                return m_pluginChest;
         }
 
         // returns pluginConfig by default

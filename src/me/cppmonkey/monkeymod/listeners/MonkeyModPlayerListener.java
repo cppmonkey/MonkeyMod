@@ -6,6 +6,7 @@ import me.cppmonkey.monkeymod.callback.LoginCallback;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
+import me.cppmonkey.monkeymod.commands.ChestCommand;
 import org.bukkit.ChatColor;
 
 import org.bukkit.entity.Player;
@@ -58,7 +59,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
             } else {
                 player.sendMessage(ChatColor.GREEN + "Welcome back " + player.getName() + ", lovely to see you again =).");
 
-                try{
+                try {
 
                     if (m_plugin.getPermition(player, ".isAdmin")) {
                         player.setDisplayName(ChatColor.RED + player.getName() + ChatColor.WHITE);
@@ -143,6 +144,9 @@ public class MonkeyModPlayerListener extends PlayerListener {
                     //user has boxy enabled
                     if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                         // FIXME allowed to use boxy, shouldn't this be the FIRST thing you check?
+                        // RE:FIXME Players who are not VIP / Admin will never have the .enabled set to true, so this setting
+                        //          being first will supresss "You do not have permission to use Boxy" when non-vips right click stuff.
+                        //          The RIGHT_CLICK_BLOCK comparison is first for efficency purposes.
                         if (m_pluginBoxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
                             Block block = event.getClickedBlock();
                             int X = 0;
@@ -154,24 +158,25 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                 Z = block.getLocation().getBlockZ();
                         BoxyCommand BoxyExec = new BoxyCommand(m_plugin);
                                 //the switch compensates coords for the side of the block clicked
-                                // FIXME WARNING! ALL MISSING BREAK! Always check compiler output
                                 switch (event.getBlockFace()) {
                                     case UP:
-                                        Y++;
+                                        Y++;break;
                                     case DOWN:
-                                        Y--;
+                                        Y--;break;
                                     case NORTH:
-                                        X++;
+                                        X++;break;
                                     case SOUTH:
-                                        X--;
+                                        X--;break;
                                     case EAST:
-                                        Z++;
+                                        Z++;break;
                                     case WEST:
-                                        Z--;
+                                        Z--;break;
+                                    default:break;
                                 }
                                     
                                 //FIXME Don't like the way this is called. Why create a new listener only just to make a single call? just move the code here?
-                                playerListenerEvent(player, block, clicked);
+                                //RE:FIXME Not an actual player listener, just a funtion name ( now renamed ). Code is kept seperate so we dont have to pass over a load off stuff out of BoxyCommand.java
+                                BoxyExec.playerBoxyClickEvent(player, block, X,Y,Z);
                                 return;
                             } catch (NullPointerException e) {
                                 player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");

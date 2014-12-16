@@ -1,6 +1,7 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.commands.ChestCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,11 +16,11 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyModBlockListener extends BlockListener {
 
     private final MonkeyMod m_plugin;
-    private final Configuration m_chestPermissions;
+    private final ChestCommand ChestExec;
 
     public MonkeyModBlockListener(MonkeyMod instance) {
         m_plugin = instance;
-        m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
+        ChestExec = new ChestCommand(m_plugin);
     }
 
     @Override
@@ -51,24 +52,16 @@ public class MonkeyModBlockListener extends BlockListener {
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-
         if (player != null) {
             if (m_plugin.getPermition(player, ".canBuild")) {
 
                 // Is the item being place a chest?
                 if (event.getBlockPlaced().getType() == Material.CHEST) {
-                    //
-                    player.sendMessage("You placed a chest");
-                    String chestLocation = event.getBlockPlaced().getLocation().getX() + "," + event.getBlockPlaced().getLocation().getY()  + "," + event.getBlockPlaced().getLocation().getZ();
-
-                    m_chestPermissions.setProperty(chestLocation + ".owner", player);
+                    ChestExec.ChestPlaced(event.getBlock(),event.getPlayer());
                     return;
                 }
-
-                // nothing to do
-                return;
             } else {
-                player.sendMessage(ChatColor.RED + "You don't have permission to do that");
+                player.sendMessage(ChatColor.RED + "You don't have pemission to build");
                 event.setCancelled(true);
                 return;
             }
@@ -87,9 +80,20 @@ public class MonkeyModBlockListener extends BlockListener {
 
         // Can the player build?
         if (!m_plugin.getPermition(player, ".canBuild")){
-            player.sendMessage(ChatColor.RED + "You don't have permission to do that");
+            player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
             return;
+        }
+        else{
+            if(event.getBlock().getType() == Material.CHEST)
+            {
+                if(ChestExec.ChestDamage(event.getBlock(),event.getPlayer()) == false)
+                {
+                    player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
+                    event.setCancelled(true);
+                    return;
+                }
+            }
         }
     }
 

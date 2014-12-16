@@ -50,7 +50,7 @@ public class BoxyCommand implements CommandExecutor {
         }
     }
 
-    public boolean playerListenerEvent(Player player, Block block, int X, int Y, int Z) {
+    public boolean playerBoxyClickEvent(Player player, Block block, int X, int Y, int Z) {
         if (!(m_settings.getBoolean(player.getName().toLowerCase() + ".hasStart", false))) {
             //Start point selected
             m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", true);
@@ -256,6 +256,11 @@ public class BoxyCommand implements CommandExecutor {
                             m_settings.setProperty(player.getName().toLowerCase() + ".toId", Integer.parseInt(args[1]));
                             m_settings.setProperty(player.getName().toLowerCase() + ".step", Integer.parseInt(args[3]));
                             m_settings.setProperty(player.getName().toLowerCase() + ".height", Integer.parseInt(args[2]));
+                            if(m_settings.getInt(player.getName().toLowerCase() + ".step", -1) < 0){
+                                sender.sendMessage(ChatColor.RED + "Invalid argument value");
+                                setDefaultSettings(player.getName());
+                                m_settings.save();
+                            }
                         player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                         m_settings.save();
                         return true;
