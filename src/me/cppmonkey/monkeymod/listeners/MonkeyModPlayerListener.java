@@ -1,8 +1,11 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import java.net.URLEncoder;
+
+import me.cppmonkey.monkeymod.callback.LoginCallback;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import org.bukkit.ChatColor;
 
 import org.bukkit.entity.Player;
@@ -41,7 +44,9 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 player,
                 m_plugin.getLoggerUrl(),
                 parms,
-                false);
+                m_plugin,
+                new LoginCallback(m_plugin, player)
+                );
 
         // FIXME - improve method of checking to see if the player is known
         if (m_plugin.isKnownUser( player ) == null){

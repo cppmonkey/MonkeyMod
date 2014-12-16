@@ -2,9 +2,9 @@ package me.cppmonkey.monkeymod.threads;
 
 import org.bukkit.ChatColor;
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.interfaces.MonkeyModThread;
+import me.cppmonkey.monkeymod.interfaces.IThread;
 
-public class AnnounceThread extends Thread implements MonkeyModThread{
+public class AnnounceThread extends Thread implements IThread{
 
     private Boolean m_halt = false;
     private MonkeyMod m_plugin;

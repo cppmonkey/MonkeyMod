@@ -12,7 +12,6 @@ import org.bukkit.util.config.Configuration;
 public class BoxyCommand implements CommandExecutor {
 
 	private final MonkeyMod m_plugin;
-    @Deprecated
     private final Configuration m_settings;
 	
     public BoxyCommand(MonkeyMod instance) {

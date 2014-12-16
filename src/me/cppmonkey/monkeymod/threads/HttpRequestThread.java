@@ -1,8 +1,4 @@
 package me.cppmonkey.monkeymod.threads;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
 import org.bukkit.command.CommandSender;
 
@@ -29,7 +26,7 @@ public class HttpRequestThread extends Thread {
     private Boolean m_debug;
     
     //New for Bukkit
-    private Boolean m_callBack = false;
+    private IThreadCallback m_callback = null;
     private MonkeyMod m_plugin = null;
 
     public HttpRequestThread(String id, CommandSender player, String url, String[] parms) {
@@ -47,8 +44,23 @@ public class HttpRequestThread extends Thread {
     
     public HttpRequestThread(String id, CommandSender player, String url, String[] parms, MonkeyMod plugin) {
 
-    	m_callBack = true;
     	m_plugin = plugin;
+    	
+        m_ThreadOwner = player;
+        m_debug = false;
+
+        try {
+            m_url = new URL(url + "?" + ParseUrlParms(parms));
+        } catch (MalformedURLException e) {
+            Message("HttpRequestThread() Exception");
+            Message(e.getMessage());
+        }
+    }
+
+    public HttpRequestThread(String id, CommandSender player, String url, String[] parms, MonkeyMod plugin, IThreadCallback callback) {
+    	
+    	m_plugin = plugin;
+    	m_callback = callback;
     	
         m_ThreadOwner = player;
         m_debug = false;
@@ -156,7 +168,6 @@ public class HttpRequestThread extends Thread {
     }
 
     public void run() {
-    	Boolean outOfDate = false;
         HttpURLConnection urlConn = null;
         try {
 
@@ -169,7 +180,7 @@ public class HttpRequestThread extends Thread {
 
             try {
             	
-            	if( m_callBack ){
+            	if (m_callback != null) {
             		BufferedReader in = new BufferedReader(
 							new InputStreamReader(
 									urlConn.getInputStream()));
@@ -180,19 +191,12 @@ public class HttpRequestThread extends Thread {
 	            		// debug output
 	            		if(m_debug)
 	            			System.out.println(inputLine);
-	            		if( "false".equalsIgnoreCase(inputLine)){
-	            			//Needs updating
-	            			outOfDate = true;
-	            		}
+	            		
+	            		m_callback.processLine( inputLine );
 	            	}
 	            	in.close();
+	            	m_callback.complete();
 	            	
-	            	if (outOfDate){
-	            		Message( "Update found!" );
-	            		//Update found, now attempt to update using callers permissions
-	                	m_plugin.selfUpdate( m_ThreadOwner );
-	                }else
-	                	Message( "You have the latest version!" );
                 }else{
                 	//Basic call
                 	urlConn.getInputStream();

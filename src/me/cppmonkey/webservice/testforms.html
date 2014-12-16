@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>http request test forms</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript">
+	$().ready(function(){
+		$("#usermessage").submit(function() {
+			$("#results").prepend(
+				"<div><a href=\"" + "update.php?"+$(this).serialize() + "\">simulate chat</a></div>" );
+			//alert($(this).serialize());
+			return false;
+		});
+		
+		$("#userconnect").submit(function() {
+				$("#results").prepend(
+					"<div><a href=\"" + "update.php?"+$(this).serialize()+"\">simulate connection</a></div>");
+				//alert($(this).serialize());
+				return false;
+			});
+			
+		$.getJSON("serverlist.php", function(data){
+				for ( var i = 0; i < data.length; i++ ) {
+					$("select").append( "<option value=\"" + data[i].ip + "\">" + data[i].title + "</option>" );
+				}
+				
+			});	
+	});
+</script>
+<style type="text/css">
+	#results{
+		border: 2px solid red;
+	}
+</style>
+</head>
+<body>
+<div>
+<form id="usermessage">
+<input type="hidden" name="action" value="message" />
+<label for="serveripmessage">Server</label><select id="serveripmessage" name="serverip"></select>
+<label for="playermessage">Player</label><input type="text" id="playermessage" name="player" value="cppmonkey" />
+<label for="message">Message</label><input type="text" id="message" name="message" value="Ajax test" />
+<input type="submit" />
+</form>
+</div>
+<div>
+<form id="userconnect">
+<input type="hidden" name="action" value="connect" />
+<label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
+<label for="playerconnect">Player</label><input type="text" id="playerconnect" name="player" value="cppmonkey" />
+<label for="isVip">isVip</label><input type="checkbox" id="isVip" name="vip" />
+<label for="isAdmin">isAdmin</label><input type="checkbox" id="isAdmin" name="admin" />
+<input type="submit" />
+</form>
+</div>
+<div>
+<form id="adduser">
+<input type="hidden" name="action" value="" />
+</form>
+</div>
+<div id="results" class="results">
+</div>
+</body>
+</html>

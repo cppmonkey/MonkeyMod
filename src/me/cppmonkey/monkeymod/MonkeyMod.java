@@ -13,7 +13,7 @@ import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.PluginCommand;
-import me.cppmonkey.monkeymod.interfaces.MonkeyModThread;
+import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
 
 import org.bukkit.ChatColor;
@@ -30,13 +30,13 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin {
 
     //Plugin Details
-    private Integer m_build = 56;
+    private Integer m_build = 58;
     private PluginDescriptionFile m_pluginDescFile;
     private Configuration m_pluginConfig;
     private Configuration m_pluginPermissions;
     private Configuration m_pluginVips;
     private Configuration m_pluginBoxy;
-    private Stack<MonkeyModThread> m_announceThreads = new Stack<MonkeyModThread>();
+    private Stack<IThread> m_announceThreads = new Stack<IThread>();
     //Private members containing listeners
     private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
     private final MonkeyModBlockListener m_BlockListener = new MonkeyModBlockListener(this);
@@ -46,7 +46,7 @@ public class MonkeyMod extends JavaPlugin {
     public void onDisable() {
         System.out.println("Shutting down MonkeyMod Threads");
         while (!m_announceThreads.isEmpty()) {
-            MonkeyModThread temp = m_announceThreads.pop();
+            IThread temp = m_announceThreads.pop();
             temp.Halt();
         }
 
@@ -127,9 +127,11 @@ public class MonkeyMod extends JavaPlugin {
             pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Normal, this);
         }
 
+        if (m_pluginConfig.getBoolean("server.protection.enabled", false)){
         pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
+        }
 
         pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Normal, this);
 
@@ -179,7 +181,7 @@ public class MonkeyMod extends JavaPlugin {
                 log.info("Unable to message sender");
             }
 
-            UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this);
+            UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this /*, new CSelfUpdateCallback(this)*/ );
             updateThread.setPriority(Thread.MIN_PRIORITY);
             updateThread.start();
         } else {
@@ -259,12 +261,19 @@ public class MonkeyMod extends JavaPlugin {
                     "logger.chat "+m_pluginConfig.getBoolean("logger.chat", true),
                     "protection.grief "+m_pluginConfig.getBoolean("protection.grief", true),
                     "plugin.update.auto "+m_pluginConfig.getBoolean("plugin.update.auto", false)
-                };
+                }; // TODO global list required to ensure ALL properties are listed 
     }
 
     public String[] getUsers(){
+    	Player players[] = this.getServer().getOnlinePlayers();
 
-        return new String[]{""};
+    	String names[] = new String[players.length];
+    	
+    	for( int i = 0; i < names.length; i++ ){
+    		names[i] = players[i].getName();
+    	}
+
+        return names;
     }
 
 }

@@ -1,5 +1,6 @@
 package me.cppmonkey.monkeymod.commands;
 
+import me.cppmonkey.monkeymod.callback.CSelfUpdateCallback;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
@@ -40,7 +41,7 @@ public class MonkeyCommand implements CommandExecutor {
                 };
 
                 // Create http request thread
-                HttpRequestThread updateQuery = new HttpRequestThread("uptodate", sender, "http://cppmonkey.net/monkeymod/ajax.php", parms, m_plugin);
+                HttpRequestThread updateQuery = new HttpRequestThread("uptodate", sender, "http://cppmonkey.net/monkeymod/ajax.php", parms, m_plugin, new CSelfUpdateCallback(m_plugin,sender));
                 // Start the thread
                 updateQuery.start();
 
@@ -114,7 +115,9 @@ public class MonkeyCommand implements CommandExecutor {
             if ("enable".equalsIgnoreCase(args[0]) || "disable".equalsIgnoreCase(args[0])) {
                 // List all all the boolean options
                 String[] boolOptions = {
+                  "server.protection.enabled",
                   "plugin.update.auto",
+                  "plugin.silent", // TODO Make plugin silent by default ;-)
                   "protection.grief",
                   "protection.fire",
                   "protection.tower.strict",
@@ -178,6 +181,7 @@ public class MonkeyCommand implements CommandExecutor {
                         m_permissions.setProperty(playerName+".canIgnite", false);
                         m_permissions.setProperty(playerName+".isVip", true);
                         m_permissions.save();
+                        
                         sender.sendMessage("Vip player '"+ playerName + "' added");
                         return true;
                     }
@@ -190,6 +194,31 @@ public class MonkeyCommand implements CommandExecutor {
                         return true;
                     }
                 }// END add
+                if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
+                	// Username
+                    String playerName = args[2].toLowerCase();
+                    
+                    if("user".equalsIgnoreCase(args[1])){
+                    	m_permissions.removeProperty(playerName);
+                        m_permissions.save();
+                        sender.sendMessage("player '"+ playerName + "' removed");
+                        return true;
+                    }
+                    if("vip".equalsIgnoreCase(args[1])){
+                        m_permissions.setProperty(playerName+".isVip", false);
+                        m_permissions.save();
+                        
+                        sender.sendMessage("Vip player '"+ playerName + "' removed");
+                        return true;
+                    }
+                    if("admin".equalsIgnoreCase(args[1])){
+                        m_permissions.setProperty(playerName+".canIgnite", false);
+                        m_permissions.setProperty(playerName+".isAdmin", false);
+                        m_permissions.save();
+                        sender.sendMessage("Admin player '"+ playerName + "' removed");
+                        return true;
+	                }
+	            }
             } // END args == 4
 
             if ("user".equalsIgnoreCase(args[0])){
@@ -202,7 +231,6 @@ public class MonkeyCommand implements CommandExecutor {
             }
 
         }// END args > 0
-
 
         return false;
     }
