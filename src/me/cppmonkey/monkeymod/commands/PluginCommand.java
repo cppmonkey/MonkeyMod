@@ -7,7 +7,6 @@ package me.cppmonkey.monkeymod.commands;
 import java.io.File;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

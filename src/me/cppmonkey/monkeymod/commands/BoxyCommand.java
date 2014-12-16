@@ -18,6 +18,9 @@ public class BoxyCommand implements CommandExecutor {
 	private final MonkeyMod m_plugin;
     private final Configuration m_settings;
 	
+    //
+    //TODO: Make boxy World safe ie: considers worlds which start and end block are in...
+    //
     public BoxyCommand(MonkeyMod instance) {
 		m_plugin = instance;
         m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
@@ -55,6 +58,7 @@ public class BoxyCommand implements CommandExecutor {
             //Start point selected
             m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", true);
             m_settings.setProperty(player.getName().toLowerCase() + ".startLocation", (X + "," + Y + "," + Z));
+            m_settings.setProperty(player.getName().toLowerCase() + ".startWorld", block.getWorld().getName().toString());
             player.sendMessage(ChatColor.GREEN + "Boxy start point confirmed");
             m_settings.save();
             return true;
@@ -63,7 +67,17 @@ public class BoxyCommand implements CommandExecutor {
                 //end point selected
                 m_settings.setProperty(player.getName().toLowerCase() + ".hasEnd", true);
                 m_settings.setProperty(player.getName().toLowerCase() + ".endLocation", (X + "," + Y + "," + Z));
+                m_settings.setProperty(player.getName().toLowerCase() + ".endWorld", block.getWorld().getName().toString());
+                m_settings.save();
                 player.sendMessage(ChatColor.GREEN + "Boxy end point confirmed");
+                if(!((m_settings.getString(player.getName().toLowerCase() + ".startWorld","FAIL")).matches(block.getWorld().getName().toString()))){
+                    player.sendMessage(ChatColor.RED + "Cannot perform boxy across worlds! Aborted operation.");
+                    m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", false);
+                    m_settings.setProperty(player.getName().toLowerCase() + ".hasEnd", false);
+                    m_settings.save();
+                    return true;
+                }
+
                 player.sendMessage(ChatColor.GOLD + "Caution! You are about to commit a Boxy alteration!");
                 player.sendMessage(ChatColor.GOLD + "Converting block type " + m_settings.getProperty(player.getName().toLowerCase() + ".fromId") + " to " + (m_settings.getProperty(player.getName().toLowerCase() + ".toId")));
                 player.sendMessage(ChatColor.GOLD + "Excludeing block types: " + m_settings.getProperty(player.getName().toLowerCase() + ".exclude"));
@@ -71,7 +85,6 @@ public class BoxyCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.GOLD + "Start point (X,Y,Z): " + m_settings.getProperty(player.getName().toLowerCase() + ".startLocation"));
                 player.sendMessage(ChatColor.GOLD + "End point (X,Y,Z): " + m_settings.getProperty(player.getName().toLowerCase() + ".endLocation"));
                 player.sendMessage(ChatColor.RED + "RIGHT CLICK TO COMMIT! right click elsewhere to cancel!");
-                m_settings.save();
                 return true;
             } else {
                 if (m_settings.getProperty(player.getName().toLowerCase() + ".endLocation").toString().matches((X + "," + Y + "," + Z))) {

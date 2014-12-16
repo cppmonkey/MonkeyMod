@@ -10,6 +10,8 @@ import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.PluginCommand;
 import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModChestPlayerListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
@@ -39,6 +41,8 @@ public class MonkeyMod extends JavaPlugin {
     // Private members containing listeners
     private MonkeyModPlayerListener m_PlayerListener;
     private MonkeyModBlockListener m_BlockListener;
+    private MonkeyModChestBlockListener m_ChestBlockListener;
+    private MonkeyModChestPlayerListener m_ChestPlayerListener;
     private MonkeyModEntityListener m_EntityListener;
 
     public void onDisable() {
@@ -61,6 +65,8 @@ public class MonkeyMod extends JavaPlugin {
         // destroy Listeners
         m_PlayerListener = null;
         m_BlockListener = null;
+        m_ChestBlockListener = null;
+        m_ChestPlayerListener = null;
         m_EntityListener = null;
     }
 
@@ -86,6 +92,8 @@ public class MonkeyMod extends JavaPlugin {
 
         m_PlayerListener = new MonkeyModPlayerListener(this);
         m_BlockListener = new MonkeyModBlockListener(this);
+        m_ChestBlockListener = new MonkeyModChestBlockListener(this);
+        m_ChestPlayerListener = new MonkeyModChestPlayerListener(this);
         m_EntityListener = new MonkeyModEntityListener(this);
 
 
@@ -129,9 +137,13 @@ public class MonkeyMod extends JavaPlugin {
         pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.BLOCK_PLACE, m_ChestBlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_ChestBlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.BLOCK_BREAK, m_ChestBlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.PLAYER_INTERACT, m_ChestPlayerListener, Priority.Normal, this);
         }
 
-        pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Normal, this);
+        pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Low, this);
 
         pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_INTERACT, m_PlayerListener, Priority.Normal, this);
