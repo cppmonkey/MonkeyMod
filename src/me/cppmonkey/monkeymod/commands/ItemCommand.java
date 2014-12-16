@@ -23,7 +23,7 @@ public class ItemCommand implements CommandExecutor {
     }
 
     /*
-     * I Honserly don't know why you cast the int back to the string
+     * I Honestly don't know why you cast the int back to the string
      * It will need to be re-parsed...
      * re-use of variables good idea, just poor execution
      */
@@ -48,8 +48,10 @@ public class ItemCommand implements CommandExecutor {
                 Player player = (Player) sender;
 
                 // Permission check.
-                if (!m_plugin.getPermition(player, ".isVip") || !m_plugin.getPermition(player, ".isAdmin")) {
-                    player.sendMessage(ChatColor.RED + "You do not have permission to do that");
+                if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+                    player.sendMessage(ChatColor.RED + "You do not have permission to spawn items");
+                    System.out.println(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
+                    System.out.println(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
                     return true;
                 }
 

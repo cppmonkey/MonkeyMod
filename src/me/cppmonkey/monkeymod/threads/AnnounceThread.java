@@ -1,7 +1,6 @@
 package me.cppmonkey.monkeymod.threads;
 
 import org.bukkit.ChatColor;
-
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.MonkeyModThread;
 

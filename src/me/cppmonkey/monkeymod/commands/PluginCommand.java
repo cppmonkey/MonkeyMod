@@ -18,14 +18,11 @@ import org.bukkit.plugin.PluginManager;
  * @author CppMonkey
  */
 public class PluginCommand implements CommandExecutor {
-
     private final MonkeyMod m_plugin;
 
     public PluginCommand(MonkeyMod instance) {
         m_plugin = instance;
     }
-
-    ;
 
     @Override
     public boolean onCommand(final CommandSender sender, Command command, String label, final String[] args) {

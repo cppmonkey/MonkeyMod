@@ -137,7 +137,7 @@ public class MonkeyMod extends JavaPlugin {
 
         pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
 
-        //Process commands, these a partial commands!!
+        // Process commands, these a partial commands!!
         getCommand("monkey").setExecutor(new MonkeyCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("boxy").setExecutor(new BoxyCommand(this));

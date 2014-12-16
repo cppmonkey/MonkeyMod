@@ -118,7 +118,7 @@ public class MonkeyCommand implements CommandExecutor {
                   "plugin.update.auto",
                   "protection.grief",
                   "protection.fire",
-                  "protection.tower.stict",
+                  "protection.tower.strict",
                   "protection.tower.enable",
                   "logger.enable",
                   "logger.connect",
@@ -146,11 +146,10 @@ public class MonkeyCommand implements CommandExecutor {
 
 
 
-                //return false, the command wasnt found
+                //return false, the command wasn't found
                 return false;
             } //END /monkey [enable/disable]
             if (args.length == 3){
-
                 // Must be admin to add users
                 if( sender instanceof Player ){
                     Player player = (Player)sender;
@@ -160,7 +159,7 @@ public class MonkeyCommand implements CommandExecutor {
 
 
                 /*
-                 * Was just a quick implomentation to get it working
+                 * Was just a quick implementation to get it working
                  */
                 if ("add".equalsIgnoreCase(args[0])) {
                     // Get permission configs

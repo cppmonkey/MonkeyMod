@@ -31,12 +31,12 @@ public class MonkeyModBlockListener extends BlockListener {
                 return; // nothing else to do here
             } else {
                 //Not allowed to burn
-                player.sendMessage(ChatColor.RED + "You dont have permission to do that.");
+                player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 
                 event.setCancelled(true);
                 return;
             }
-        } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) // Is enviroment caused burning allowed? Cant be first otherwise players wouldnt be able to place fire at all
+        } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) // Is environment caused burning allowed? Cant be first otherwise players wouldn't be able to place fire at all
         {
             // cancel environment based fire
             event.setCancelled(true);
@@ -53,7 +53,7 @@ public class MonkeyModBlockListener extends BlockListener {
                 // nothing to do
                 return;
             } else {
-                player.sendMessage(ChatColor.RED + "You don't have pemission to do that");
+                player.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 event.setCancelled(true);
                 return;
             }
@@ -71,7 +71,7 @@ public class MonkeyModBlockListener extends BlockListener {
 
         // Can the player build?
         if (!m_plugin.getPermition(player, ".canBuild")){
-            player.sendMessage(ChatColor.RED + "You don't have pemission to do that");
+            player.sendMessage(ChatColor.RED + "You don't have permission to do that");
             event.setCancelled(true);
             return;
         }

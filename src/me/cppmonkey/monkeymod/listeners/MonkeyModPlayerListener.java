@@ -62,7 +62,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
                     } else if (m_plugin.getPermition(player, ".isVip")) {
                         player.setDisplayName(ChatColor.GREEN + (String)player.getName()+ChatColor.WHITE);
             }
-
                 }catch(Throwable ex){
                     player.sendMessage(ChatColor.RED + "EXCEPTION");
                 }
@@ -71,7 +70,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
         }catch(Throwable ex){
-            System.out.println("Excption within onPlayerJoin()");
+            System.out.println("Exception within onPlayerJoin()");
         }
     }
 
