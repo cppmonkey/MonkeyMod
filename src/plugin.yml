@@ -3,7 +3,7 @@ main: me.cppmonkey.monkeymod.MonkeyMod
 version: 0.1
 author: CppMonkey
 description: >
-             An admit tool along with offering Cuboid like functions
+             An admin tool along with offering Cuboid like functions
 
 commands:
   monkey:

@@ -134,6 +134,7 @@ public class MonkeyMod extends JavaPlugin {
         pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Normal, this);
 
         pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
+        pm.registerEvent(Event.Type.PLAYER_INTERACT, m_PlayerListener, Priority.Normal, this);
 
         // Process commands, these a partial commands!!
         getCommand("monkey").setExecutor(new MonkeyCommand(this));

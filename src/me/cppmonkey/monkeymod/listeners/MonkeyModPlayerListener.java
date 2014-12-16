@@ -133,7 +133,27 @@ public class MonkeyModPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
 
         if (player != null){
-            player.sendMessage(ChatColor.YELLOW+"onPlayerInteract");
+            if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+                player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
+            }
+            else{
+                Configuration m_pluginBoxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
+                if(Integer.parseInt(m_pluginBoxy.getProperty("boxyToolID").toString()) == player.getItemInHand().getTypeId()){
+                    int X=0;
+                    int Y=0;
+                    int Z=0;
+                    try{
+                        X = event.getClickedBlock().getLocation().getBlockX();
+                        Y = event.getClickedBlock().getLocation().getBlockY();
+                        Z = event.getClickedBlock().getLocation().getBlockZ();
+                        BoxyCommand BoxyExec = new BoxyCommand(m_plugin);
+                        BoxyExec.playerListenerEvent(player, X, Y, Z);
+                    }
+                    catch(NullPointerException e){
+                        player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position");
+                    }
+                }
+            }
         }
     }
 }
