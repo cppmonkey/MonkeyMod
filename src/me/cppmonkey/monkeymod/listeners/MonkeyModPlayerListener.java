@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.config.Configuration;
+import org.bukkit.event.block.Action;
+import org.bukkit.block.Block;
 
 public class MonkeyModPlayerListener extends PlayerListener {
 
@@ -29,7 +31,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
     }
 
     public void onPlayerJoin(PlayerJoinEvent event) {
-            try{
+        try {
         // reporting to cppmonkey.net
         Player player = event.getPlayer();
 
@@ -45,19 +47,16 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 m_plugin.getLoggerUrl(),
                 parms,
                 m_plugin,
-                new LoginCallback(m_plugin, player)
-                );
+                    new LoginCallback(m_plugin, player));
 
         // FIXME - improve method of checking to see if the player is known
-        if (m_plugin.isKnownUser( player ) == null){
-            player.sendMessage( ChatColor.GREEN+"Welcome "+ player.getName() +", you apear to be new around here");
-            player.sendMessage( ChatColor.GREEN+"Please wait one moment. Checking permissions with CppMonkey.NET");
+            if (m_plugin.isKnownUser(player) == null) {
+                player.sendMessage(ChatColor.GREEN + "Welcome " + player.getName() + ", you apear to be new around here");
+                player.sendMessage(ChatColor.GREEN + "Please wait one moment. Checking permissions with CppMonkey.NET");
 
             //TODO start thread with appropriate callback function to amend any user abilities
-        }
-        else
-        {
-            player.sendMessage( ChatColor.GREEN+"Welcome back "+ player.getName() +", lovely to see you again =).");
+            } else {
+                player.sendMessage(ChatColor.GREEN + "Welcome back " + player.getName() + ", lovely to see you again =).");
 
                 try{
 
@@ -122,52 +121,64 @@ public class MonkeyModPlayerListener extends PlayerListener {
     public void onInventoryOpen(PlayerInventoryEvent event) {
         Player player = event.getPlayer();
 
-        if (player != null){
-            player.sendMessage(ChatColor.YELLOW+"onInventoryOpen");
-            if (m_plugin.getPermition(player, "")){
+        if (player != null) {
+            player.sendMessage(ChatColor.YELLOW + "onInventoryOpen");
+            if (m_plugin.getPermition(player, "")) {
                 return;
-            }
-            else
-            {
-                player.sendMessage(ChatColor.RED+"You cant do that");
+            } else {
+                player.sendMessage(ChatColor.RED + "You cant do that");
             }
         }
     }
 
-    public void onPlayerInteract(PlayerInteractEvent event){
+    public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (player != null){
-            player.sendMessage(ChatColor.YELLOW+"onPlayerInteract");
-            /* HINT 
-             * Would be better asking are you, rather than arent you
-             * And use or. At the moment the user has to be VIP and Admin
-             * So deny will be at the bottom in the else section
-             * 
-             * and this action happens EVERYTIME a block is clicked
-             * should be only when the player has enabled it.
-             * so another check is required
-             * and dont forget. void functions can still return;
-             */
-            if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
-                player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
-            }
-            else{
+        if (player != null) {
+            // player interaction sent from player
+            Action click = event.getAction();
+            if (click.compareTo(Action.RIGHT_CLICK_BLOCK) == 0) {
                 Configuration m_pluginBoxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
-                /* HINT GetPropertyInt() */
-                if(Integer.parseInt(m_pluginBoxy.getProperty("boxyToolID").toString()) == player.getItemInHand().getTypeId()){
-                    int X=0;
-                    int Y=0;
-                    int Z=0;
-                    try{
-                        X = event.getClickedBlock().getLocation().getBlockX();
-                        Y = event.getClickedBlock().getLocation().getBlockY();
-                        Z = event.getClickedBlock().getLocation().getBlockZ();
+                if (m_pluginBoxy.getBoolean(player.getName().toLowerCase() + ".enabled", false)) {
+                    //user has boxy enabled
+                    if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
+                        //allowed to use boxy
+                        if (m_pluginBoxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
+                            Block block = event.getClickedBlock();
+                            int X = 0;
+                            int Y = 0;
+                            int Z = 0;
+                            try {
+                                X = block.getLocation().getBlockX();
+                                Y = block.getLocation().getBlockY();
+                                Z = block.getLocation().getBlockZ();
                         BoxyCommand BoxyExec = new BoxyCommand(m_plugin);
-                        BoxyExec.playerListenerEvent(player, X, Y, Z);
+                                //the switch compensates coords for the side of the block clicked
+                                switch (event.getBlockFace()) {
+                                    case UP:
+                                        Y++;
+                                    case DOWN:
+                                        Y--;
+                                    case NORTH:
+                                        X++;
+                                    case SOUTH:
+                                        X--;
+                                    case EAST:
+                                        Z++;
+                                    case WEST:
+                                        Z--;
+                                }
+                                BoxyExec.playerListenerEvent(player,block, X, Y, Z);
+                                return;
+                            } catch (NullPointerException e) {
+                                player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
+                                m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION FAILED!");
+                                return;
                     }
-                    catch(NullPointerException e){
-                        player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position");
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
+                        return;
                     }
                 }
             }
