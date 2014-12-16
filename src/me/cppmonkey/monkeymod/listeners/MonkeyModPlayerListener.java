@@ -62,9 +62,9 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 try{
 
                     if (m_plugin.getPermition(player, ".isAdmin")) {
-                        player.setDisplayName(ChatColor.RED + (String)player.getName()+ChatColor.WHITE);
+                        player.setDisplayName(ChatColor.RED + player.getName() + ChatColor.WHITE);
                     } else if (m_plugin.getPermition(player, ".isVip")) {
-                        player.setDisplayName(ChatColor.GREEN + (String)player.getName()+ChatColor.WHITE);
+                        player.setDisplayName(ChatColor.GREEN + player.getName() + ChatColor.WHITE);
             }
                 }catch(Throwable ex){
                     player.sendMessage(ChatColor.RED + "EXCEPTION");
@@ -138,11 +138,23 @@ public class MonkeyModPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
 
         if (player != null){
+            player.sendMessage(ChatColor.YELLOW+"onPlayerInteract");
+            /* HINT 
+             * Would be better asking are you, rather than arent you
+             * And use or. At the moment the user has to be VIP and Admin
+             * So deny will be at the bottom in the else section
+             * 
+             * and this action happens EVERYTIME a block is clicked
+             * should be only when the player has enabled it.
+             * so another check is required
+             * and dont forget. void functions can still return;
+             */
             if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
             }
             else{
                 Configuration m_pluginBoxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
+                /* HINT GetPropertyInt() */
                 if(Integer.parseInt(m_pluginBoxy.getProperty("boxyToolID").toString()) == player.getItemInHand().getTypeId()){
                     int X=0;
                     int Y=0;

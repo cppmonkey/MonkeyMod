@@ -156,6 +156,7 @@ public class MonkeyCommand implements CommandExecutor {
                 if( sender instanceof Player ){
                     Player player = (Player)sender;
                     if (!m_permissions.getBoolean(player.getName().toLowerCase()+".isAdmin", false))
+                    	sender.sendMessage("You do not have permission to do that");
                         return false;
                 }
 
@@ -232,6 +233,7 @@ public class MonkeyCommand implements CommandExecutor {
 
         }// END args > 0
 
+        sender.sendMessage("No matching commands found");
         return false;
     }
 }

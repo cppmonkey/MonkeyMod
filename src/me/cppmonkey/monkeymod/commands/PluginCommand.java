@@ -54,7 +54,6 @@ public class PluginCommand implements CommandExecutor {
 
     // Available command(s)
     private enum ECommands {
-
         RELOAD
     }
 }
