@@ -2,14 +2,15 @@ package me.cppmonkey.monkeymod.listeners;
 
 import java.net.URLEncoder;
 
-import me.cppmonkey.monkeymod.callback.LoginCallback;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.callback.LoginCallback;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
-import me.cppmonkey.monkeymod.commands.ChestCommand;
-import org.bukkit.ChatColor;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
@@ -17,8 +18,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.config.Configuration;
-import org.bukkit.event.block.Action;
-import org.bukkit.block.Block;
 
 public class MonkeyModPlayerListener extends PlayerListener {
 
@@ -40,7 +39,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         String[] parms = {
             "action=connect",
             "player=" + player.getName(),
-            "vip="+Boolean.toString(m_plugin.getPermition(player, ".isVip")),
+                "vip=" + Boolean.toString(m_plugin.getPermition(player, ".isVip")),
             "admin=" + Boolean.toString(m_plugin.getPermition(player, ".isAdmin"))};
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
@@ -64,15 +63,15 @@ public class MonkeyModPlayerListener extends PlayerListener {
                     } else if (m_plugin.getPermition(player, ".isVip")) {
                         player.setDisplayName(ChatColor.GREEN + player.getName() + ChatColor.WHITE);
             }
-                }catch(Throwable ex){
+                } catch (Throwable ex) {
                     player.sendMessage(ChatColor.RED + "EXCEPTION");
                 }
         }
 
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
-        }catch(Throwable ex){
-            System.out.println("Exception within onPlayerJoin()");
+        } catch (Throwable ex) {
+            System.out.println("Excption within onPlayerJoin()");
         }
     }
 

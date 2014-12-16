@@ -108,7 +108,6 @@ public class MonkeyModBlockListener extends BlockListener {
                     return;
                 }
             }
-
     }
 
     public void onBlockCanBuild(BlockCanBuildEvent event) {

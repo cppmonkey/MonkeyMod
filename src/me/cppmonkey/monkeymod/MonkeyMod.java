@@ -25,6 +25,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+import org.yaml.snakeyaml.error.YAMLException;
 
 public class MonkeyMod extends JavaPlugin {
 
@@ -48,6 +49,14 @@ public class MonkeyMod extends JavaPlugin {
         }
 
         System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
+
+        for (EConfig config : EConfig.values()) {
+            try{
+                m_configs[config.ordinal()].save();
+            }catch( YAMLException e ){
+                System.out.println("[ERROR] saving " + config.name() + ".yml" );
+            }
+        }
 
         // destroy Listeners
         m_PlayerListener = null;
