@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
+import me.cppmonkey.monkeymod.commands.PluginCommand;
 import me.cppmonkey.monkeymod.interfaces.MonkeyModThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
 
@@ -29,10 +30,12 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyMod extends JavaPlugin {
 
     //Plugin Details
-    private Integer m_build = 49;
+    private Integer m_build = 55;
     private PluginDescriptionFile m_pluginDescFile;
     private Configuration m_pluginConfig;
-    private Configuration m_pluginPermissions, m_pluginVips, m_pluginBoxy;
+    private Configuration m_pluginPermissions;
+    private Configuration m_pluginVips;
+    private Configuration m_pluginBoxy;
     private Stack<MonkeyModThread> m_announceThreads = new Stack<MonkeyModThread>();
     //Private members containing listeners
     private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
@@ -42,13 +45,11 @@ public class MonkeyMod extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // TODO Auto-generated method stub
         System.out.println("Shutting down MonkeyMod Threads");
         while (!m_announceThreads.isEmpty()) {
             MonkeyModThread temp = m_announceThreads.pop();
             temp.Halt();
         }
-
 
         log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
     }
@@ -136,10 +137,11 @@ public class MonkeyMod extends JavaPlugin {
 
         pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
 
-        //TODO Process commands, these a partial commands!!
+        //Process commands, these a partial commands!!
         getCommand("monkey").setExecutor(new MonkeyCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("boxy").setExecutor(new BoxyCommand(this));
+        getCommand("plugin").setExecutor(new PluginCommand(this));
 
 
         //Notify CppMonkey.NET of the new server
@@ -200,7 +202,7 @@ public class MonkeyMod extends JavaPlugin {
     };
 
     /*
-     * Retreive configuration file for plugin
+     * Retrieve configuration file for plugin
      */
     public Configuration getPluginConfiguration(EConfig config) {
         switch (config) {
@@ -222,7 +224,6 @@ public class MonkeyMod extends JavaPlugin {
     /*
      *
      */
-    @Deprecated
     public Boolean getPermition(Player player, String path) {
         // query permissions file
         // player.sendMessage(player.getName().toLowerCase() + path);

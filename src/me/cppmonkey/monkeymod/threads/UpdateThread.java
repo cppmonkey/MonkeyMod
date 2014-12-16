@@ -89,7 +89,7 @@ public class UpdateThread extends Thread {
             is.close();
             
             try{
-            	// TODO re-write auto reload, plugin only though 
+            	// FIXME re-write auto reload, plugin only though, currently not possible
             	m_plugin.getServer().reload();
             	Message( ChatColor.GREEN + "Update complete!" );
             }catch( CommandException e){

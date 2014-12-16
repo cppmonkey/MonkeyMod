@@ -12,17 +12,22 @@ import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.config.Configuration;
 
 public class MonkeyModPlayerListener extends PlayerListener {
 
-    private final MonkeyMod m_plugin;
+    private MonkeyMod m_plugin;
+    @Deprecated
+    private final Configuration m_permissions;
 
     public MonkeyModPlayerListener(MonkeyMod instance) {
         m_plugin = instance;
+        m_permissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
     }
 
     @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
+            try{
         // reporting to cppmonkey.net
         Player player = event.getPlayer();
 
@@ -44,23 +49,30 @@ public class MonkeyModPlayerListener extends PlayerListener {
             player.sendMessage( ChatColor.GREEN+"Welcome "+ player.getName() +", you apear to be new around here");
             player.sendMessage( ChatColor.GREEN+"Please wait one moment. Checking permissions with CppMonkey.NET");
 
-            //TODO start thread with appropriate callback function to ammend any user abilities
+            //TODO start thread with appropriate callback function to amend any user abilities
         }
         else
         {
             player.sendMessage( ChatColor.GREEN+"Welcome back "+ player.getName() +", lovely to see you again =).");
 
-            if (m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).getBoolean(player.getName()+".isVip", false)) {
-                player.setDisplayName(ChatColor.GREEN + player.getName()+ChatColor.WHITE);
-            }else if (m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).getBoolean(player.getName()+".isAdmin", false)) {
-                player.setDisplayName(ChatColor.RED + player.getName()+ChatColor.WHITE);
+                try{
+
+                    if (m_plugin.getPermition(player, ".isAdmin")) {
+                        player.setDisplayName(ChatColor.RED + (String)player.getName()+ChatColor.WHITE);
+                    } else if (m_plugin.getPermition(player, ".isVip")) {
+                        player.setDisplayName(ChatColor.GREEN + (String)player.getName()+ChatColor.WHITE);
             }
 
-
+                }catch(Throwable ex){
+                    player.sendMessage(ChatColor.RED + "EXCEPTION");
+                }
         }
 
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
+        }catch(Throwable ex){
+            System.out.println("Excption within onPlayerJoin()");
+        }
     }
 
     @Override

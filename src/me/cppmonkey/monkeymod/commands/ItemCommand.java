@@ -3,23 +3,32 @@ package me.cppmonkey.monkeymod.commands;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
 
 public class ItemCommand implements CommandExecutor {
 
-    @SuppressWarnings("unused")
     private final MonkeyMod m_plugin;
+    @Deprecated
+    private final Configuration m_settings;
 
     public ItemCommand(MonkeyMod instance) {
         m_plugin = instance;
+        m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
     }
 
-    private String itemName(String Item){
+    /*
+     * I Honserly don't know why you cast the int back to the string
+     * It will need to be re-parsed...
+     * re-use of variables good idea, just poor execution
+     */
+    @SuppressWarnings({ "static-access", "null", "unused" })
+    private String itemName(String Item) {
         //returns the ID of an item / block from a given string
         //eg: input = CHEST
         //return = 54
@@ -38,53 +47,49 @@ public class ItemCommand implements CommandExecutor {
 
                 Player player = (Player) sender;
 
-                // Permission check. Op only command for now
-                if (!m_plugin.getPermition(player, ".isVip")) {
+                // Permission check.
+                if (!m_plugin.getPermition(player, ".isVip") || !m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that");
                     return true;
                 }
 
 
                 try {
-                    ItemStack item;
 
-                    // Create stack of items from Supplied ID. Maybe unhandled exception from invalid IDs
+                    // Get Item from Name
+                    String itemDetails[] = args[0].split(":");
+                    Material itemMaterial = Material.matchMaterial(itemDetails[0]);
 
-                    if (args[0].contains(":")){
-                        // Split values
-                        String itemData[] = args[0].split(":");
-                        if( itemData.length != 2){
-                            //invalid syntax
-                            player.sendMessage("Invalid syntax");
+                    if (ItemRestricted(itemMaterial)) {
+                        //Item is restricted
+                        //TODO Allow exceptions to rule
+                        player.sendMessage(ChatColor.RED + "This item is restricted");
+                        return true;
+                    }
+
+                    // Material wasn't found trying again
+                    if (itemMaterial == null) {
+                        player.sendMessage(ChatColor.RED + "Item not found");
                             return true;
                         }
-                        try{
-                            String tempItemData = itemData[0];
-                            Integer.parseInt(tempItemData);
-						} catch (NumberFormatException e) {
-                                String tempItemData = itemData[0];
-                                itemData[0] = itemName(tempItemData);
-                        }
 
-                        item = new ItemStack(Integer.parseInt(itemData[0]));
-                        item.setDurability((short)Integer.parseInt(itemData[1]));
-                    } else {
-                        try{
-                            String tempItemData = args[0];
-                            Integer.parseInt(tempItemData);
-						} catch (NumberFormatException e) {
-                                String tempItemData = args[0];
-                                args[0] = itemName(tempItemData);
-                        }
-                        item = new ItemStack(Integer.parseInt(args[0]));
+                    //Create stack for item. Size is 0 to begin with!
+
+                    short durability = 0;
+                    if (itemDetails.length == 2) {
+                        durability = (short) Integer.parseInt(itemDetails[1]);
                     }
 
+                    int quantity = 1;
                     if (args.length == 2) // Parse quantity if specified else set it to 1
                     {
-                        item.setAmount(Integer.parseInt(args[1]));
-                    } else {
-                        item.setAmount(1);
+                        quantity = Integer.parseInt(args[1]);
+                        // If invalid it will be handles further down. no item will be produced
                     }
+
+                    // Collected all variables require
+                    ItemStack item = new ItemStack(itemMaterial, quantity, durability);
+
 
                     player.getInventory().addItem(item);
                     player.sendMessage(ChatColor.GREEN + "There you go " + player.getName());
@@ -94,9 +99,9 @@ public class ItemCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Invalid argument value");
                     sender.sendMessage(ex.getMessage());
                     return false;
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     System.out.println(e.getMessage());
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             } /*END /item (player) */ else {
@@ -105,6 +110,23 @@ public class ItemCommand implements CommandExecutor {
             }
         }
 
+        return false;
+    }
+
+    private boolean ItemRestricted(Material item) {
+        switch (item) {
+
+            case BEDROCK:
+            case WATER:
+            case STATIONARY_WATER:
+            case LAVA:
+            case STATIONARY_LAVA:
+            case TNT:
+            case FIRE:
+            case MOB_SPAWNER:
+            case FLINT_AND_STEEL:
+                return true;
+        }
         return false;
     }
 }

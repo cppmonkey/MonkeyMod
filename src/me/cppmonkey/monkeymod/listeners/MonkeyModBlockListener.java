@@ -20,7 +20,7 @@ public class MonkeyModBlockListener extends BlockListener {
 
     @Override
     public void onBlockIgnite(BlockIgniteEvent event) {
-        //TODO, Allow or disallow action
+        //TODO Add exceptions to burning
 
         Player player = event.getPlayer();
 
@@ -38,7 +38,7 @@ public class MonkeyModBlockListener extends BlockListener {
             }
         } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) // Is enviroment caused burning allowed? Cant be first otherwise players wouldnt be able to place fire at all
         {
-            // cancel eviroment based fire
+            // cancel environment based fire
             event.setCancelled(true);
             return;
         }

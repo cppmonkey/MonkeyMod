@@ -27,6 +27,10 @@ commands:
   item:
     description: Gives items to players
     usage: |
-           /<command> item[:data] [amount]
+           /<command> <ItemID>[:data] [Quantity]
            Example: /<command> 1 64
-                    /<command> grilled_pork 64
+  plugin:
+    description: Reload plugins
+    usage: |
+           /<command> [reload] [plugin]
+           Example: /<command> reload MonkeyMod
