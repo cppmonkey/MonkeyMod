@@ -23,22 +23,29 @@ class Minecraft
 	function BuildServerList()
 	{
 		global $dblink;
-		$query = "
-				SELECT * 
-				FROM `mc_servers`
-				";
-
-		if ( isset( $_GET['server_id']) )
+		
+		if (isset($_GET['server_id']))
 		{
 			$query = sprintf( "SELECT *
 				FROM `mc_servers`
 				WHERE `id` = '%d'
 				", $dblink->real_escape_string( $_GET['server_id']));
 		}
-			
-
-			
-			
+		else if (isset($_GET['owner_id']))
+		{
+			$query = sprintf( "SELECT *
+				FROM `mc_servers`
+				WHERE `owner_id` = '%d'
+				", $dblink->real_escape_string( $_GET['owner_id']));
+		}
+		else
+		{
+			$query = "
+				SELECT * 
+				FROM `mc_servers`
+				";
+		}
+		
 		if( !mysqli_connect_errno() )
 		{
 			if( $results = $dblink->query( $query ) )

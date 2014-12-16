@@ -58,7 +58,7 @@ class MinecraftServer
 
 	function ValidateVips()
 	{
-		if ($this->owner == 1)
+		if ($this->owner > 0)
 		{
 			return true;
 		}

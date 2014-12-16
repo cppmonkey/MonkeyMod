@@ -19,12 +19,23 @@
 				return false;
 			});
 			
-		$.getJSON("serverlist.php", function(data){
+		$.getJSON("serverlist.php?"/*,{ owner_id : "1" }*/, function(data){
 				for ( var i = 0; i < data.length; i++ ) {
-					$("select").append( "<option value=\"" + data[i].ip + "\">" + data[i].title + "</option>" );
+					$('select[id][name^="serverip"]').append( new Option( data[i].title ,data[i].ip ));
 				}
 				
-			});	
+			});
+			
+		$("#severipedituseraccess").change(function(){
+				$.getJSON("playerlist.php?", { serverip: this.value}, function(data){
+						//Get player list from server
+						alert(data.length);
+						for (var i = 0; i < data.length; i++ )
+						{
+							$('select[id][name^="serverknown"]').append( new Option( data[i].name, data[i].id ));
+						}
+					});
+			});
 	});
 </script>
 <style type="text/css">
@@ -35,6 +46,8 @@
 </head>
 <body>
 <div>
+<fieldset>
+<legend>Simulate Chat</legend>
 <form id="usermessage">
 <input type="hidden" name="action" value="message" />
 <label for="serveripmessage">Server</label><select id="serveripmessage" name="serverip"></select>
@@ -42,8 +55,9 @@
 <label for="message">Message</label><input type="text" id="message" name="message" value="Ajax test" />
 <input type="submit" />
 </form>
-</div>
-<div>
+</fieldset>
+<fieldset>
+<legend>Simulate Connection</legend>
 <form id="userconnect">
 <input type="hidden" name="action" value="connect" />
 <label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
@@ -52,12 +66,27 @@
 <label for="isAdmin">isAdmin</label><input type="checkbox" id="isAdmin" name="admin" />
 <input type="submit" />
 </form>
-</div>
-<div>
+</fieldset>
+<fieldset>
+<legend>Add User</legend>
 <form id="adduser">
 <input type="hidden" name="action" value="" />
+<select id="severipadduser" name="serverip"></select>
 </form>
-</div>
+</fieldset>
+<fieldset>
+<legend>Edit User Access</legend>
+<form id="edituseraccess">
+<input type="hidden" name="action" value="" />
+<select id="severipedituseraccess" name="serverip"></select>
+<select id="serverknownusersedituseraccess" name="serverknownusers" size="7" multiple="multiple"></select>
+<input name="isVip" type="checkbox" />
+<input name="isAdmin" type="checkbox" />
+<input name="canBuild" type="checkbox" />
+<input name="canIgnite" type="checkbox" />
+<input type="submit" />
+</form>
+</fieldset>
 <div id="results" class="results">
 </div>
 </body>
