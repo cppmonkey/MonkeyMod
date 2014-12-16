@@ -55,10 +55,10 @@ public class MonkeyMod extends JavaPlugin {
         System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
 
         for (EConfig config : EConfig.values()) {
-            try{
+            try {
                 m_configs[config.ordinal()].save();
-            }catch( YAMLException e ){
-                System.out.println("[ERROR] saving " + config.name() + ".yml" );
+            } catch (YAMLException e) {
+                System.out.println("[ERROR] saving " + config.name() + ".yml");
             }
         }
 
@@ -257,8 +257,7 @@ public class MonkeyMod extends JavaPlugin {
                 }; // TODO global list required to ensure ALL properties are listed 
     }
 
-    public void RegisterVariable( Object variable ) {
-
+    public void RegisterVariable(Object variable) {
     }
 
     public String[] getUsers() {
