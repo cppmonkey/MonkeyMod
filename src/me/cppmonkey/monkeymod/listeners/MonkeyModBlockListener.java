@@ -18,9 +18,6 @@ public class MonkeyModBlockListener extends BlockListener {
         m_plugin = instance;
     }
 
-    public void onEnable() {
-    }
-
     public void onBlockIgnite(BlockIgniteEvent event) {
         //TODO Add exceptions to burning
 

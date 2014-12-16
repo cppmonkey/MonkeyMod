@@ -169,11 +169,11 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                         Z++;break;
                                     case WEST:
                                         Z--;break;
-                                    default:break;
                                 }
                                     
                                 //FIXME Don't like the way this is called. Why create a new listener only just to make a single call? just move the code here?
                                 //RE:FIXME Not an actual player listener, just a funtion name ( now renamed ). Code is kept seperate so we dont have to pass over a load off stuff out of BoxyCommand.java
+                                //RE:RE:FIXME I know its not, but its does still have to create one using new. Its not a command and there for shouldn't be in the command class. I've managed, it wouldn't be too bad if it was possible for it to be a static call but its not.
                                 BoxyExec.playerBoxyClickEvent(player, block, X,Y,Z);
                                 return;
                             } catch (NullPointerException e) {

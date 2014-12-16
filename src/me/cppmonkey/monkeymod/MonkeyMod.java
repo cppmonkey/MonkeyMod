@@ -200,7 +200,6 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public enum EConfig {
-
         PLUGIN,
         PERMISSIONS,
         VIP,
@@ -256,6 +255,10 @@ public class MonkeyMod extends JavaPlugin {
                     "protection.grief " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true),
                     "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false)
                 }; // TODO global list required to ensure ALL properties are listed 
+    }
+
+    public void RegisterVariable( Object variable ) {
+
     }
 
     public String[] getUsers() {

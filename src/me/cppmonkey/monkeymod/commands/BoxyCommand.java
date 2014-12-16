@@ -70,7 +70,7 @@ public class BoxyCommand implements CommandExecutor {
                 m_settings.setProperty(player.getName().toLowerCase() + ".endWorld", block.getWorld().getName().toString());
                 m_settings.save();
                 player.sendMessage(ChatColor.GREEN + "Boxy end point confirmed");
-                if(!((m_settings.getString(player.getName().toLowerCase() + ".startWorld","FAIL")).matches(block.getWorld().getName().toString()))){
+                if (!((m_settings.getString(player.getName().toLowerCase() + ".startWorld", "FAIL")).matches(block.getWorld().getName().toString()))) {
                     player.sendMessage(ChatColor.RED + "Cannot perform boxy across worlds! Aborted operation.");
                     m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", false);
                     m_settings.setProperty(player.getName().toLowerCase() + ".hasEnd", false);
@@ -129,7 +129,7 @@ public class BoxyCommand implements CommandExecutor {
         start.setY(Double.parseDouble(temp[1]));
         start.setY(start.getY() + 1);
         start.setZ(Double.parseDouble(temp[2]));
-        int step = m_settings.getInt(player.getName().toLowerCase() + ".step",1);
+        int step = m_settings.getInt(player.getName().toLowerCase() + ".step", 1);
         if (step <= 0) {
             player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings! (Step fault)");
             m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] OPERATION COMPLETE!");
@@ -141,22 +141,19 @@ public class BoxyCommand implements CommandExecutor {
             player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings! (Type fault)");
             m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] OPERATION COMPLETE!");
             return false;
-        } else {
-            if (m_settings.getInt(player.getName().toLowerCase() + ".fromId", -5) == -1) {
+        } else if (m_settings.getInt(player.getName().toLowerCase() + ".fromId", -5) == -1) {
                 everything = true;
-            } else {
-                if (m_settings.getInt(player.getName().toLowerCase() + ".fromId", -5) == -2) {
+        } else if (m_settings.getInt(player.getName().toLowerCase() + ".fromId", -5) == -2) {
                     solids = true;
-                } else {
-                    if (((m_settings.getInt(player.getName().toLowerCase() + ".fromId", -5)) < 0)) {
+        } else if (((m_settings.getInt(player.getName().toLowerCase() + ".fromId", -5)) < 0)) {
                         player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings! (Type fault)");
                         m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] OPERATION COMPLETE!");
                         return false;
                     }
-                }
-            }
-        }
         String exclusions[] = m_settings.getProperty(player.getName().toLowerCase() + ".exclude").toString().split(",");
+
+        // FIXME Very inflexable Look at EnumMap!
+        // HINT private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
         int exclusionsI[] = new int[512];
         exclusionsI[0] = 0;
         for (int i = 0; i < exclusions.length; i++) {
@@ -174,7 +171,7 @@ public class BoxyCommand implements CommandExecutor {
             end.setZ(start.getZ());
             start.setZ(tempDir);
         }
-        start.setY(start.getY() + (m_settings.getInt(player.getName().toLowerCase() + ".height",0)));
+        start.setY(start.getY() + (m_settings.getInt(player.getName().toLowerCase() + ".height", 0)));
         if (start.getY() > end.getY()) {
             //force transition from bottom to top
             double tempDir = end.getY();
@@ -185,14 +182,21 @@ public class BoxyCommand implements CommandExecutor {
         boolean Excluded = false;
         if (everything) {
             player.sendMessage(ChatColor.BLUE + "everything");
+            // FIXME double? coord are ints, try using CPosition rather than Location double variables cost alot more CPU time
+            // Make sure you alter all of the variations or have a different class process the blocks accordingly
             for (double y = start.getY(); y <= end.getY(); y++) {
                 for (double z = start.getZ(); z <= end.getZ(); z++) {
                     for (double x = start.getX(); x <= end.getX(); x++) {
                         current.setX(x);
+                        // FIXME Move to appropriate location
                         current.setY(y);
+                        // FIXME Move to appropriate location
                         current.setZ(z);
                         for (int e = 0; e < exclusions.length; e++) {
-                            if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || (x%step !=0) || (y%step !=0) || (z%step !=0)) {
+                            if ((world.getBlockTypeIdAt(current) == exclusionsI[e])
+                                    || // FIXME Whats this all about? It isn't needed if the for loops are correct
+                                    // HINT for (int x = start.getX(); x <= end.getX(); x += step) {
+                                    (x % step != 0) || (y % step != 0) || (z % step != 0)) {
                                 Excluded = true;
                                 //player.sendMessage(ChatColor.BLUE + "excluded");
                             }
@@ -205,8 +209,7 @@ public class BoxyCommand implements CommandExecutor {
                     }
                 }
             }
-        } else {
-            if (solids) {
+        } else if (solids) {
                 player.sendMessage(ChatColor.BLUE + "solids");
                 for (double y = start.getY(); y <= end.getY(); y++) {
                     for (double z = start.getZ(); z <= end.getZ(); z++) {
@@ -215,7 +218,7 @@ public class BoxyCommand implements CommandExecutor {
                             current.setY(y);
                             current.setZ(z);
                             for (int e = 0; e < exclusions.length; e++) {
-                                if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || (!Solids(world.getBlockTypeIdAt(current))) || (x%step !=0) || (y%step !=0) || (z%step !=0)) {
+                            if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || (!Solids(world.getBlockTypeIdAt(current))) || (x % step != 0) || (y % step != 0) || (z % step != 0)) {
                                     Excluded = true;
                                     //player.sendMessage(ChatColor.BLUE + "excluded");
                                 }
@@ -237,7 +240,7 @@ public class BoxyCommand implements CommandExecutor {
                             current.setY(y);
                             current.setZ(z);
                             for (int e = 0; e < exclusions.length; e++) {
-                                if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || ((world.getBlockTypeIdAt(current) != fromMaterial.getId())) || (x%step !=0) || (y%step !=0) || (z%step !=0)) {
+                            if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || ((world.getBlockTypeIdAt(current) != fromMaterial.getId())) || (x % step != 0) || (y % step != 0) || (z % step != 0)) {
                                     Excluded = true;
                                     //player.sendMessage(ChatColor.BLUE + "excluded");
                                 }
@@ -251,7 +254,7 @@ public class BoxyCommand implements CommandExecutor {
                     }
                 }
             }
-        }
+
         m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION COMPLETE!");
                     return true;
                     }
@@ -269,7 +272,7 @@ public class BoxyCommand implements CommandExecutor {
                             m_settings.setProperty(player.getName().toLowerCase() + ".toId", Integer.parseInt(args[1]));
                             m_settings.setProperty(player.getName().toLowerCase() + ".step", Integer.parseInt(args[3]));
                             m_settings.setProperty(player.getName().toLowerCase() + ".height", Integer.parseInt(args[2]));
-                            if(m_settings.getInt(player.getName().toLowerCase() + ".step", -1) < 0){
+                            if (m_settings.getInt(player.getName().toLowerCase() + ".step", -1) < 0) {
                                 sender.sendMessage(ChatColor.RED + "Invalid argument value");
                                 setDefaultSettings(player.getName());
                                 m_settings.save();

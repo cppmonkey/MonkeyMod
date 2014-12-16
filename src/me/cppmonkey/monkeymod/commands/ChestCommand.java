@@ -28,21 +28,19 @@ public class ChestCommand implements CommandExecutor {
                 if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                     if (args.length == 1) {
                         String arguments = args[0];
-                        if(arguments.matches("UNLOCK") || arguments.matches("unlock")){
+                        if (arguments.matches("UNLOCK") || arguments.matches("unlock")) {
                             m_chestPermissions.setProperty(player.getName().toLowerCase() + ".key", "UNLOCK");
                             m_chestPermissions.save();
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to UNLOCK");
                         return true;
-                    }
-                        if(arguments.matches("LOCK") || arguments.matches("lock")){
+                        } else if (arguments.matches("LOCK") || arguments.matches("lock")) {
                             m_chestPermissions.setProperty(player.getName().toLowerCase() + ".key", "LOCK");
                             m_chestPermissions.save();
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to LOCK");
                             return true;
                 }
             }
-    }
-                else{
+                } else {
                     player.sendMessage(ChatColor.RED + "Advanced chest functions are for VIPs only!");
         return true;
     }
