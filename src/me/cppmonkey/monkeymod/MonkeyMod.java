@@ -1,21 +1,19 @@
 package me.cppmonkey.monkeymod;
 
-import me.cppmonkey.monkeymod.threads.UpdateThread;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
-import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
-
 import java.io.File;
 import java.util.Stack;
-import java.util.logging.Logger;
 
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
+import me.cppmonkey.monkeymod.commands.ChestCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.PluginCommand;
-import me.cppmonkey.monkeymod.commands.ChestCommand;
 import me.cppmonkey.monkeymod.interfaces.IThread;
+import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.threads.UpdateThread;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -30,20 +28,17 @@ import org.bukkit.util.config.Configuration;
 
 public class MonkeyMod extends JavaPlugin {
 
-    //Plugin Details
-    private Integer m_build = 58;
+    // Plugin Details
+    private Integer m_build = 62;
     private PluginDescriptionFile m_pluginDescFile;
-    private Configuration m_pluginConfig;
-    private Configuration m_pluginPermissions;
-    private Configuration m_pluginVips;
-    private Configuration m_pluginBoxy;
-    private Configuration m_pluginChest;
+    // Array Storage for Configs
+    private Configuration[] m_configs;
+    // Thread holder
     private Stack<IThread> m_announceThreads = new Stack<IThread>();
-    //Private members containing listeners
-    private final MonkeyModPlayerListener m_PlayerListener = new MonkeyModPlayerListener(this);
-    private final MonkeyModBlockListener m_BlockListener = new MonkeyModBlockListener(this);
-    private final MonkeyModEntityListener m_EntityListener = new MonkeyModEntityListener(this);
-    private static final Logger log = Logger.getLogger("Minecraft");
+    // Private members containing listeners
+    private MonkeyModPlayerListener m_PlayerListener;
+    private MonkeyModBlockListener m_BlockListener;
+    private MonkeyModEntityListener m_EntityListener;
 
     public void onDisable() {
         System.out.println("Shutting down MonkeyMod Threads");
@@ -52,87 +47,76 @@ public class MonkeyMod extends JavaPlugin {
             temp.Halt();
         }
 
-        log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
+        System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
+
+        // destroy Listeners
+        m_PlayerListener = null;
+        m_BlockListener = null;
+        m_EntityListener = null;
     }
 
-    @Override
     public void onEnable() {
-        System.out.println("Enableing MonkeyMod...");
+
         setNaggable(true);
         m_pluginDescFile = this.getDescription();
 
         PluginManager pm = getServer().getPluginManager();
 
-        m_pluginConfig = getConfiguration();
+        // Load configs
+        m_configs = new Configuration[EConfig.values().length];
 
-        m_pluginPermissions = new Configuration(new File(getDataFolder(), "permissions.yml"));
-        m_pluginPermissions.load();
+        for (EConfig config : EConfig.values()) {
+            if (config == EConfig.PLUGIN) {
+                m_configs[config.ordinal()] = getConfiguration();
+            } else {
+                m_configs[config.ordinal()] = new Configuration(new File(
+                        getDataFolder(), config.name().toLowerCase() + ".yml"));
+                m_configs[config.ordinal()].load();
+            }
+        }
 
-        m_pluginVips = new Configuration(new File(getDataFolder(), "vips.yml"));
-        m_pluginVips.load();
-
-        m_pluginBoxy = new Configuration(new File(getDataFolder(),"boxy.yml"));
-        m_pluginBoxy.load();
-
-        m_pluginChest = new Configuration(new File(getDataFolder(),"chests.yml"));
-        m_pluginChest.load();
-
-        //Options available to general, just place holders at the moment
-
-        /*
-        m_pluginConfig.setProperty("server.registered", false);
-        m_pluginConfig.setProperty("plugin.update.auto", false);
-        m_pluginConfig.setProperty("plugin.update.url", "http://cppmonkey.net/minecraft/");
-        m_pluginConfig.setProperty("protection.grief", true);
-        m_pluginConfig.setProperty("protection.tower", true);
-        m_pluginConfig.setProperty("protection.tower.threshold", 40);
-        m_pluginConfig.setProperty("logger.url", "http://cppmonkey.net/minecraft/update.php");
-        m_pluginConfig.setProperty("logger.enable", true);
-        m_pluginConfig.setProperty("logger.connect", true);
-        m_pluginConfig.setProperty("logger.disconnect", true);
-        m_pluginConfig.setProperty("logger.chat", true);
-
-        m_pluginConfig.setProperty("override.nag", true);
-         */
+        m_PlayerListener = new MonkeyModPlayerListener(this);
+        m_BlockListener = new MonkeyModBlockListener(this);
+        m_EntityListener = new MonkeyModEntityListener(this);
 
 
         // TODO Server verification before setting up hooks
         /*
-        if (!m_pluginConfig.getBoolean("server.registered", false) && !m_pluginConfig.getBoolean("override.nag", false)) {
+        if (!m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.registered", false) && !m_configs[EConfig.PLUGIN.ordinal()].getBoolean("override.nag", false)) {
             log.info("Creating nag thread");
 
             AnnounceThread announcement = new AnnounceThread(this);
             announcement.setPriority(AnnounceThread.MIN_PRIORITY);
-            // FIXME Annoucment thread, need to varify registration
+        // FIXME Announcement thread, need to verify registration
          * /// WARNING HIGH CPU! DO NOT USE!
           //// announcement.start();
             m_announceThreads.add(announcement);
         }
          *
          */
-        log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
+
+        System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
         // Enable various logger hooks
-        if (m_pluginConfig.getBoolean("logger.enabled", true)) {
-            //Register hooks to process events
-            if (m_pluginConfig.getBoolean("logger.connect", true)) {
+        if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.enabled", true)) {
+            // Register hooks to process events
+            if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.connect", true)) {
                 pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Monitor, this);
             }
-            if (m_pluginConfig.getBoolean("logger.disconnect", true)) {
+            if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.disconnect", true)) {
                 pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Monitor, this);
             }
-            if (m_pluginConfig.getBoolean("logger.chat", true)) {
+            if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.chat", true)) {
                 pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Monitor, this);
             }
-        } //END Logging
+        } // END Logging
 
-
-        if (m_pluginConfig.getBoolean("protection.grief", true)) {
-            //Stop the burning!!
+        if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true)) {
+            // Stop the burning!!
             pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Normal, this);
         }
 
-        if (m_pluginConfig.getBoolean("server.protection.enabled", false)){
+        if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)) {
         pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
@@ -147,11 +131,10 @@ public class MonkeyMod extends JavaPlugin {
         getCommand("monkey").setExecutor(new MonkeyCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("boxy").setExecutor(new BoxyCommand(this));
+        getCommand("plugin").setExecutor(new PluginCommand(this));
         getCommand("chest").setExecutor(new ChestCommand(this));
-        getCommand("plugin").setExecutor(new PluginCommand(this)); //FIXME: Calling this wil cause any following SetExecutors to have a null pointer exception!!!
 
-
-        //Notify CppMonkey.NET of the new server
+        // Notify CppMonkey.NET of the new server
         // Notify server about new server
 
         String[] parms = {
@@ -168,14 +151,14 @@ public class MonkeyMod extends JavaPlugin {
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
 
-        if (m_pluginConfig.getBoolean("plugin.update.auto", false)) {
+        if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false)) {
             /*
              * Check for updates from server
              */
             ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
             getServer().dispatchCommand(sender, "monkey uptodate");
         }
-        //getCommand("debug");
+        // getCommand("debug");
     }
 
     public void selfUpdate(CommandSender sender) {
@@ -184,20 +167,15 @@ public class MonkeyMod extends JavaPlugin {
             try {
                 sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");
             } catch (Exception e) {
-                log.info("Unable to message sender");
+                System.out.println("Unable to message sender");
             }
 
-            UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this /*, new CSelfUpdateCallback(this)*/ );
+            UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this /*, new CSelfUpdateCallback(this)*/);
             updateThread.setPriority(Thread.MIN_PRIORITY);
             updateThread.start();
         } else {
-            sender.sendMessage(ChatColor.RED + "You dont have permission to do that");
+            sender.sendMessage(ChatColor.RED + "You dont have permission to update");
         }
-    }
-
-    @Deprecated
-    public Configuration getPluginConfiguration() {
-        return m_pluginConfig;
     }
 
     public enum EConfig {
@@ -213,23 +191,9 @@ public class MonkeyMod extends JavaPlugin {
      * Retrieve configuration file for plugin
      */
     public Configuration getPluginConfiguration(EConfig config) {
-        switch (config) {
-            case PLUGIN:
-                return m_pluginConfig;
-            case PERMISSIONS:
-                return m_pluginPermissions;
-            case VIP:
-                return m_pluginVips;
-            case BOXY:
-                return m_pluginBoxy;
-            case CHESTS:
-                return m_pluginChest;
+        // OMG so much nicer
+        return m_configs[config.ordinal()];
         }
-
-        // returns pluginConfig by default
-        return m_pluginConfig;
-    }
-
 
     /*
      *
@@ -237,17 +201,17 @@ public class MonkeyMod extends JavaPlugin {
     public Boolean getPermition(Player player, String path) {
         // query permissions file
         // player.sendMessage(player.getName().toLowerCase() + path);
-        return m_pluginPermissions.getBoolean(player.getName().toLowerCase() + path, false);
+        return m_configs[EConfig.PERMISSIONS.ordinal()].getBoolean(player.getName().toLowerCase() + path, false);
     }
 
     public Object isKnownUser(Player player) {
-        //FIXME need to be seeing if there username exists. not, can they build!
+        // FIXME need to be seeing if there username exists. not, can they build!
         // Couldn't figure it out at the time
-        return m_pluginPermissions.getProperty(player.getName().toLowerCase() + ".canBuild");
+        return m_configs[EConfig.PERMISSIONS.ordinal()].getProperty(player.getName().toLowerCase() + ".canBuild");
     }
 
     public String getLoggerUrl() {
-        return m_pluginConfig.getString("logger.url", "http://cppmonkey.net/minecraft/update.php");
+        return m_configs[EConfig.PLUGIN.ordinal()].getString("logger.url", "http://cppmonkey.net/minecraft/update.php");
     }
 
     public String getName() {
@@ -262,27 +226,26 @@ public class MonkeyMod extends JavaPlugin {
         return m_build.toString();
     }
 
-    public String[] getStatus(){
+    public String[] getStatus() {
         return new String[]{
-                    "logger.enabled "+m_pluginConfig.getBoolean("logger.enabled", true),
-                    "logger.connect "+m_pluginConfig.getBoolean("logger.connect", true),
-                    "logger.disconnect "+m_pluginConfig.getBoolean("logger.disconnect", true),
-                    "logger.chat "+m_pluginConfig.getBoolean("logger.chat", true),
-                    "protection.grief "+m_pluginConfig.getBoolean("protection.grief", true),
-                    "plugin.update.auto "+m_pluginConfig.getBoolean("plugin.update.auto", false)
+                    "logger.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.enabled", true),
+                    "logger.connect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.connect", true),
+                    "logger.disconnect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.disconnect", true),
+                    "logger.chat " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.chat", true),
+                    "protection.grief " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true),
+                    "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false)
                 }; // TODO global list required to ensure ALL properties are listed 
     }
 
-    public String[] getUsers(){
+    public String[] getUsers() {
     	Player players[] = this.getServer().getOnlinePlayers();
 
     	String names[] = new String[players.length];
     	
-    	for( int i = 0; i < names.length; i++ ){
+        for (int i = 0; i < names.length; i++) {
     		names[i] = players[i].getName();
     	}
 
         return names;
     }
-
 }

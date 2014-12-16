@@ -24,7 +24,7 @@ public class BoxyCommand implements CommandExecutor {
 	}
 
     private int setDefaultSettings(String PlayerName) {
-        //set default settings on error occouring
+        //set default settings on error occurring
         m_settings.setProperty(PlayerName.toLowerCase() + ".fromId", 0);
         m_settings.setProperty(PlayerName.toLowerCase() + ".toId", 0);
         m_settings.setProperty(PlayerName.toLowerCase() + ".step", 1);

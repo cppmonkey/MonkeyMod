@@ -23,7 +23,6 @@ public class MonkeyModEntityListener extends EntityListener{
         m_plugin = instance;
     }
 
-    @Override
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player){
             ((Player)event.getEntity()).sendMessage(ChatColor.YELLOW+"onEntityDeath");

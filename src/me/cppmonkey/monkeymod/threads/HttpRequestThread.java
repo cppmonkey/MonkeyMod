@@ -27,7 +27,8 @@ public class HttpRequestThread extends Thread {
     
     //New for Bukkit
     private IThreadCallback m_callback = null;
-    private MonkeyMod m_plugin = null;
+    @SuppressWarnings("unused")
+    private MonkeyMod m_plugin;
 
     public HttpRequestThread(String id, CommandSender player, String url, String[] parms) {
 
@@ -187,17 +188,18 @@ public class HttpRequestThread extends Thread {
 
 	            	String inputLine;
 	            	
-	            	while ((inputLine = in.readLine() )!= null){
+                    while ((inputLine = in.readLine()) != null) {
 	            		// debug output
-	            		if(m_debug)
+                        if (m_debug) {
 	            			System.out.println(inputLine);
+                        }
 	            		
-	            		m_callback.processLine( inputLine );
+                        m_callback.processLine(inputLine);
 	            	}
 	            	in.close();
 	            	m_callback.complete();
 	            	
-                }else{
+                } else {
                 	//Basic call
                 	urlConn.getInputStream();
                 }

@@ -24,6 +24,12 @@ commands:
     usage: |
            /<command> <Replace ID> <With ID> [Height] [Spacing]
            Example: /<command> 0 1 10 2
+  chest:
+    description: Adds chest protection to chests
+    usage: |
+           /<command> allow <PlayerName>
+           /<command> block <PlayerName>
+           Example: /<command> allow Notch
   item:
     description: Gives items to players
     usage: |

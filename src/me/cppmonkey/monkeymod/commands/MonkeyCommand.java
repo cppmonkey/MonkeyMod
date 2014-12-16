@@ -1,10 +1,13 @@
 package me.cppmonkey.monkeymod.commands;
 
+import java.util.Iterator;
+import java.util.List;
 import me.cppmonkey.monkeymod.callback.CSelfUpdateCallback;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +17,6 @@ import org.bukkit.util.config.Configuration;
 public class MonkeyCommand implements CommandExecutor {
 
     private MonkeyMod m_plugin;
-    @Deprecated
     private Configuration m_permissions;
 
     public MonkeyCommand(MonkeyMod instance) {
@@ -222,12 +224,25 @@ public class MonkeyCommand implements CommandExecutor {
 	            }
             } // END args == 4
 
-            if ("user".equalsIgnoreCase(args[0])){
+            if ("user".equalsIgnoreCase(args[0])) {
                 sender.sendMessage( ChatColor.DARK_RED + "WARNING CASE SENSITIVE");
                 sender.sendMessage( args[1]+".canBuild: " + m_permissions.getBoolean(args[1]+".canBuild", false));
                 sender.sendMessage( args[1]+".canIgnite: " + m_permissions.getBoolean(args[1]+".canIgnite", false));
                 sender.sendMessage( args[1]+".isAdmin: " + m_permissions.getBoolean(args[1]+".isAdmin", false));
                 sender.sendMessage( args[1]+".isVip: " + m_permissions.getBoolean(args[1]+".isVip", false));
+                return true;
+            }
+
+            if ("world".equalsIgnoreCase(args[0])) {
+                List<World> worlds = m_plugin.getServer().getWorlds();
+
+                Iterator<World> world_iterator = worlds.iterator();
+
+                while( world_iterator.hasNext() ) {
+                    World world = world_iterator.next();
+                    sender.sendMessage( world.getName() + " : " + world.getSeed() );
+                }
+
                 return true;
             }
 

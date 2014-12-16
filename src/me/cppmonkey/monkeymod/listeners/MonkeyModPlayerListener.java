@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 public class MonkeyModPlayerListener extends PlayerListener {
 
     private MonkeyMod m_plugin;
-    @Deprecated
+    @SuppressWarnings("unused")
     private Configuration m_permissions;
 
     public MonkeyModPlayerListener(MonkeyMod instance) {
@@ -54,8 +54,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
             if (m_plugin.isKnownUser(player) == null) {
                 player.sendMessage(ChatColor.GREEN + "Welcome " + player.getName() + ", you apear to be new around here");
                 player.sendMessage(ChatColor.GREEN + "Please wait one moment. Checking permissions with CppMonkey.NET");
-
-            //TODO start thread with appropriate callback function to amend any user abilities
             } else {
                 player.sendMessage(ChatColor.GREEN + "Welcome back " + player.getName() + ", lovely to see you again =).");
 
@@ -115,6 +113,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         } catch (Exception e) {
+            //Do something?
         }
     }
 

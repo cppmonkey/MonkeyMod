@@ -17,7 +17,6 @@ public class CSelfUpdateCallback  implements IThreadCallback {
 	}
 
 	public void processLine(String result) {
-		// TODO Auto-generated method stub
 		
 		if( "false".equalsIgnoreCase(result)){
 			//Needs updating
@@ -31,8 +30,6 @@ public class CSelfUpdateCallback  implements IThreadCallback {
     }
 
 	public void complete() {
-		// TODO Auto-generated method stub
-		
 
     	if (m_outOfDate) {
     		Message( "Update found!" );

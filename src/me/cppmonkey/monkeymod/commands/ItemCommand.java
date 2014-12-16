@@ -14,7 +14,7 @@ import org.bukkit.util.config.Configuration;
 public class ItemCommand implements CommandExecutor {
 
     private MonkeyMod m_plugin;
-    @Deprecated
+    @SuppressWarnings("unused")
     private Configuration m_settings;
 
     public ItemCommand(MonkeyMod instance) {

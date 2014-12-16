@@ -23,8 +23,6 @@ public class LoginCallback implements IThreadCallback {
 
 	public void processLine(String result) {
 		
-		
-		// TODO Auto-generated method stub
 		if(!result.equals(null) || !result.isEmpty()){
 			
 			String booleanValues[] = {
