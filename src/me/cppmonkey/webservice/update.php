@@ -7,12 +7,14 @@ $dblink = new mysqli( $dbserver, $dbuser, $dbpass, "killerabbit" );
 
 function Action( $strAction )
 {
-	if( $strAction == "connect" )
+	if ($strAction == "connect")
 	return 1;
-	if( $strAction == "disconnect" )
+	if ($strAction == "disconnect")
 	return 2;
-	if( $strAction == "message" )
+	if ($strAction == "message")
 	return 3;
+	if ($strAction == "chest")
+	return 4;
 }
 
 $minecraft = new Minecraft();
@@ -33,7 +35,22 @@ if( isset($_GET["action"]) && $server )
 
 	if( isset( $_GET["player"]) )
 	{
-		if( isset($_GET["message"] ))
+		if ($_GET["action"] == "connect" || $_GET["action"] == "disconnect" )
+		{
+			$player = new Player($_GET['player']);
+			
+			$query = sprintf(
+				    "INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `isVip`, `isAdmin`, `timestamp` )
+					VALUES
+					( '%s', '%d', '%d', '%s', '%s', UTC_TIMESTAMP() )",
+					$dblink->real_escape_string( $player->GetName()),
+					$server->GetId(),
+					Action( $_GET["action"] ),
+					$player->IsVip(),
+					$player->IsAdmin()
+				);
+		}
+		else if( isset($_GET["message"] ))
 		{
 			$split = explode( " ", $_GET["message"], 3 );
 				
@@ -56,27 +73,58 @@ if( isset($_GET["action"]) && $server )
 					);
 			}
 		}
-		else
+		else if( $_GET["action"] == "chest" && isset($_GET['type']))
 		{
-			$player = new Player($_GET['player']);
+			//Log user access to chest!
+			
+			/* TODO Process this information! Chest Destroy
+			 * new Parm("action", "chest"),
+             * new Parm("type", "destroy"),
+             * new Parm("player",player.getName())
+			 */
 			
 			$query = sprintf(
-				    "INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `isVip`, `isAdmin`, `timestamp` )
-					VALUES
-					( '%s', '%d', '%d', '%s', '%s', UTC_TIMESTAMP() )",
-					$dblink->real_escape_string( $player->GetName()),
-					$server->GetId(),
-					Action( $_GET["action"] ),
-					$player->IsVip(),
-					$player->IsAdmin()
+					"INSERT INTO `` (``)",
+				$dblink->real_escape_string($_GET["player"]),
+				$dblink->real_escape_string($_GET["action"]),
+				$dblink->real_escape_string($_GET["type"])
 				);
+			
+			// AND
+			
+			/* TODO Process this information! Chest Access
+			 * Parm[] Parm = {
+             * new Parm("action", "chest"),
+             * new Parm("type", "access"),
+             * new Parm("player",player.getName())
+             * };
+             */
 		}
-
+		else if ($_GET["action"] == "tower")
+		{
+			/* TODO Process this information! DurpTower
+			 * Parm[] Parm = {
+			 * new Parm("action", "tower"),
+             * new Parm("player",player.getName()),
+             * new Parm("vip",Boolean.toString(player.isInGroup("vip"))),
+             * new Parm("admin",Boolean.toString(player.isAdmin()))
+             */
+		}
+		else if ($_GET["action"] == "ignite")
+		{
+			/* TODO Process this information! Ignite
+			 * 
+			 * Parm[] Parm = {
+             * new Parm("action", "ignite"),
+             * new Parm("source", Integer.toString(block.getStatus())),
+             * new Parm("player",player.getName()),
+             * new Parm("vip", Boolean.toString(player.isInGroup("vip")))
+             * };
+             */
+		}
 
 		if( $dblink )
 		{
-
-
 			if( $dblink->query( $query ) )
 			{
 				echo "insert complete!\n";
@@ -111,7 +159,7 @@ if( isset($_GET["action"]) && $server )
 							if( $player->HasActiveSubscription( $dblink ) )
 							{
 								print $server->ExecCommand( "tell ".$_GET['player']." Valid VIP Subscription found!" )."\n";
-								print $server->ExecCommand( "modify ".$_GET['player']." g:vip" )."\n";
+								print $server->ExecCommand( "modify ".$_GET['player']." g:vip ir:true" )."\n";
 								//echo $server->ExecCommand( "monkey add vip ".$_GET['player'] );
 								print "\nisVip:true\n";
 							}
@@ -120,7 +168,7 @@ if( isset($_GET["action"]) && $server )
 								if( !$player->IsAdmin())
 								{
 									print $server->ExecCommand( "tell ".$_GET['player']." Your VIP subscription is invalid" )."\n";
-									print $server->ExecCommand( "modify ".$_GET['player']." g:default" )."\n";
+									print $server->ExecCommand( "modify ".$_GET['player']." g:default ir:false" )."\n";
 									//echo $server->ExecCommand( "monkey remove vip ".$_GET['player'] );
 									print "\nisVip:false\n";
 								}
@@ -134,9 +182,9 @@ if( isset($_GET["action"]) && $server )
 								print "Player not vip"."\n";
 								
 								if ($permissions["canBuild"] == "true" && $permissions["isAdmin"] != "true") {
-									print $server->ExecCommand( "modify ".$_GET['player']." g:default" )."\n";
+									print $server->ExecCommand( "modify ".$_GET['player']." g:default ir:false" )."\n";
 								}else if ($permissions["isAdmin"] == "true") {
-									print $server->ExecCommand( "modify ".$_GET['player']." g:admins" )."\n";
+									print $server->ExecCommand( "modify ".$_GET['player']." g:admins ir:true" )."\n";
 								}
 							}
 						}

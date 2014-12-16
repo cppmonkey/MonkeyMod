@@ -32,6 +32,7 @@ public class BoxyCommand implements CommandExecutor {
         return 0;
     }
 
+    @Deprecated // user Material.isSolid()
     private boolean Solids(int value) {
         switch (value) {
             case 8:

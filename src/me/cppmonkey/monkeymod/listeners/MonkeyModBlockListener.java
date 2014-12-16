@@ -50,6 +50,14 @@ public class MonkeyModBlockListener extends BlockListener {
 
         if (player != null) {
             if (m_plugin.getPermition(player, ".canBuild")) {
+
+                // Is the item being place a chest?
+                if (event.getBlockPlaced().getType() == Material.CHEST) {
+                    //
+                    player.sendMessage("You placed a chest");
+                    return;
+                }
+
                 // nothing to do
                 return;
             } else {
