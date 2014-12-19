@@ -8,6 +8,7 @@ import me.cppmonkey.monkeymod.commands.ChestCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.PluginCommand;
+import me.cppmonkey.monkeymod.commands.TeleCommand;
 import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
@@ -144,6 +145,7 @@ public class MonkeyMod extends JavaPlugin {
         }
 
         pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Low, this);
+        pm.registerEvent(Event.Type.ENTITY_DAMAGE, m_EntityListener, Priority.Low, this);
 
         pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_INTERACT, m_PlayerListener, Priority.Normal, this);
@@ -154,6 +156,11 @@ public class MonkeyMod extends JavaPlugin {
         getCommand("boxy").setExecutor(new BoxyCommand(this));
         getCommand("plugin").setExecutor(new PluginCommand(this));
         getCommand("chest").setExecutor(new ChestCommand(this));
+        TeleCommand listener = new TeleCommand(this);
+        getCommand("spawn").setExecutor(listener);
+        getCommand("home").setExecutor(listener);
+        getCommand("tele").setExecutor(listener);
+
 
         // Notify CppMonkey.NET of the new server
         // Notify server about new server
@@ -204,7 +211,8 @@ public class MonkeyMod extends JavaPlugin {
         PERMISSIONS,
         VIP,
         BOXY,
-        CHESTS
+        CHESTS,
+        TELE
     };
 
     /*

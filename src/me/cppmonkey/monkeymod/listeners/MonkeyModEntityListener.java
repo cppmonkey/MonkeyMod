@@ -6,359 +6,231 @@ package me.cppmonkey.monkeymod.listeners;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByProjectileEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 
+import java.util.HashMap;
 /**
  *
  * @author CppMonkey
  */
+enum e_monsters {CraftZombie,CraftCreeper,CraftSpider,CraftPigZombie,CraftSlime,CraftGiant,CraftGhast,CraftSkeleton,CraftFireball,novalue ; public static e_monsters fromString(String Str) { try {return valueOf(Str);} catch (Exception ex){return novalue;} } };
 public class MonkeyModEntityListener extends EntityListener {
 
     MonkeyMod m_plugin;
+    HashMap <String, String> PlayerMap;
 
     public MonkeyModEntityListener(MonkeyMod instance) {
         m_plugin = instance;
+        PlayerMap = new HashMap<String, String>();
     }
+    /*
+    CraftZombie
+    CraftCreeper
+    CraftSpider
+    CraftPigZombie
+    CraftSlime
+    "WOLF:" + thisWolf.getOwner().toString();
+    CraftGiant
+    CraftGhast
+    CraftSkeleton
+    "SHOT:" + usingitem + ":" + murderer.getName()
+    "PVP:" + usingItem + ":" + murderer.getName().toString();
+     */
 
     private String DeathDescription(EntityDeathEvent event) {
-        double randomNum = Math.random() * 10;
         String cause = event.getEntity().getLastDamageCause().getCause().toString();
-        String output;
-        if (cause.equalsIgnoreCase("contact")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " hugged a cactus.";
-                    break;
-                case 1:
-                    output = " was pricked to death.";
-                    break;
-                case 2:
-                    output = " fought a cactus... and didnt win.";
-                    break;
-                case 3:
-                    output = " shoved a cactus... but the cactus shoved back.";
-                    break;
-                case 4:
-                    output = " thought a cactus was something less dangerous...";
-                    break;
-                case 5:
-                    output = " hugged a cactus";
-                    break;
-                case 6:
-                    output = " was pricked to death.";
-                    break;
-                case 7:
-                    output = " fought a cactus... and didnt win";
-                    break;
-                case 8:
-                    output = " shoved a cactus... but the cactus shoved back.";
-                    break;
-                case 9:
-                    output = " thought a cactus was something less dangerous...";
-                    break;
-                default:
-                    output = " hugged a cactus";
-                    break;
-
+        if (cause.equalsIgnoreCase("CONTACT")) {
+            String m_cactusDeath[] = {
+                " hugged a cactus.",
+                " was pricked to death.",
+                " fought a cactus... and didn't win.",
+                " shoved a cactus... but the cactus shoved back.",
+                " thought a cactus was something less dangerous..."
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_cactusDeath.length) + 0.5d); // Includes rounding up/down
+            return m_cactusDeath[randomNum];
+        }
+        if (cause.equalsIgnoreCase("ENTITY_ATTACK")) {
+            Player player = (Player) event.getEntity();
+            String killer = PlayerMap.get(player.getName().toString());
+            String killerDetails[] = killer.split(":");
+            if(killerDetails.length > 1)
+            {
+                if(killerDetails[0].equalsIgnoreCase("WOLF"))
+                {
+                    return " was mauled to  death by " + killerDetails[1].toString() + "'s wolf.";
+                }
+                if(killerDetails[0].equalsIgnoreCase("SHOT"))
+                {
+                    return " was shot by " + killerDetails[2].toString() + "'s " + killerDetails[1].toString();
+                }
+                if(killerDetails[0].equalsIgnoreCase("PVP"))
+                {
+                    return " was killed by " + killerDetails[2].toString() + ", using a " + killerDetails[1].toString();
+                }
+            }
+            else
+            {
+                String output = "";
+                switch(e_monsters.fromString(killer))
+                {
+                    case CraftZombie: output = " got their brain eaten.";break;
+                    case CraftCreeper: output = " saw a sad, green face... Breifly.";break;
+                    case CraftSpider:output = " wasnt carrying spider repellent.";break;
+                    case CraftPigZombie:output = " upset a Pig Zombie.";break;
+                    case CraftSlime:output = " got slimed.";break;
+                    case CraftGiant:output = " had their bones ground into bread.";break;
+                    case CraftGhast:output = " was spotted by a ghast.";break;
+                    case CraftSkeleton:output = " was assaninated by a skelital archer.";break;
+                    case CraftFireball:output = " should have called ghastbusters.";break;
+                    default:output = " was killed by an angry mob.";break;
             }
             return output;
         }
-        if (cause.equalsIgnoreCase("entity_attack")) {
-            // get the entity details
-            //TODO: Get the entity type of the killer
-            output = " was killed by a creature, of some kind";
-            return output;
         }
-        if (cause.equalsIgnoreCase("fall")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " went bungie jumping... without the bungie.";
-                    break;
-                case 1:
-                    output = " has poor depth perception.";
-                    break;
-                case 2:
-                    output = " wasn't wearning spring shoes.";
-                    break;
-                case 3:
-                    output = " belived they could fly... but they couldn't";
-                    break;
-                case 4:
-                    output = " didnt watch where they were going.";
-                    break;
-                case 5:
-                    output = " bellived that gravity is optional.";
-                    break;
-                case 6:
-                    output = " lost their footing.";
-                    break;
-                case 7:
-                    output = " got owned by Newton.";
-                    break;
-                case 8:
-                    output = " should have used a ladder.";
-                    break;
-                case 9:
-                    output = " saw something shiny... a long way down";
-                    break;
-                default:
-                    output = " fell to their death";
-                    break;
 
-        }
-            return output;
+        if (cause.equalsIgnoreCase("fall")) {
+            String m_fallDeath[] = {
+                " went bungie jumping... without the bungie.",
+                " has poor depth perception.",
+                " wasn't wearning spring shoes.",
+                " belived they could fly... but they couldn't",
+                " didnt watch where they were going.",
+                " bellived that gravity is optional.",
+                " lost their footing.",
+                " got owned by Newton.",
+                " should have used a ladder.",
+                " saw something shiny... a long way down",
+                " fell to their death"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_fallDeath.length) + 0.5d); // Includes rounding up/down
+            return m_fallDeath[randomNum];
         }
         if (cause.equalsIgnoreCase("fire")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " was on fire... literaly.";
-                    break;
-                case 1:
-                    output = " played with matches.";
-                    break;
-                case 2:
-                    output = " is now crispy.";
-                    break;
-                case 3:
-                    output = " put their head in a furnace.";
-                    break;
-                case 4:
-                    output = " smells like cooked pork.";
-                    break;
-                case 5:
-                    output = " cooked themselves.";
-                    break;
-                case 6:
-                    output = " stood in a fire.";
-                    break;
-                case 7:
-                    output = " thought they were a marshmellow.";
-                    break;
-                case 8:
-                    output = " is medium-rare.";
-                    break;
-                case 9:
-                    output = " thought they were the Human Torch.";
-                    break;
-                default:
-                    output = " died in a fire";
-                    break;
-            }
-            return output;
+            String m_fireDeath[] = {
+                " was on fire... literaly.",
+                " played with matches.",
+                " is now crispy.",
+                " put their head in a furnace.",
+                " smells like cooked pork.",
+                " cooked themselves.",
+                " stood in a fire.",
+                " thought they were a marshmellow.",
+                " is medium-rare.",
+                " thought they were the Human Torch.",
+                " died in a fire"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_fireDeath.length) + 0.5d); // Includes rounding up/down
+            return m_fireDeath[randomNum];
         }
 
         if (cause.equalsIgnoreCase("fire_tick")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " should have had a water-bucket.";
-                    break;
-                case 1:
-                    output = " didnt find water fast enough.";
-                    break;
-                case 2:
-                    output = " should have worn less-flamable clothing.";
-                    break;
-                case 3:
-                    output = " could have used some rain.";
-                    break;
-                case 4:
-                    output = " played with matches.";
-                    break;
-                case 5:
-                    output = " cooked themselves... slowly.";
-                    break;
-                case 6:
-                    output = " realised far too late that fire is bad.";
-                    break;
-                case 7:
-                    output = " slow-cooked themselves.";
-                    break;
-                case 8:
-                    output = " knows how the skellingtons feel now.";
-                    break;
-                case 9:
-                    output = " needed water.";
-                    break;
-                default:
-                    output = " died while on fire";
-                    break;
-            }
-            return output;
+            String m_fireTickDeath[] = {
+                " should have had a water-bucket.",
+                " didnt find water fast enough.",
+                " should have worn less-flamable clothing.",
+                " could have used some rain.",
+                " played with matches.",
+                " cooked themselves... slowly.",
+                " realised far too late that fire is bad.",
+                " slow-cooked themselves.",
+                " knows how the skellingtons feel now.",
+                " needed water.",
+                " died while on fire"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_fireTickDeath.length) + 0.5d); // Includes rounding up/down
+            return m_fireTickDeath[randomNum];
         }
 
         if (cause.equalsIgnoreCase("lava")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " took a VERY hot bath.";
-                    break;
-                case 1:
-                    output = " didnt realise how hot lava was.";
-                    break;
-                case 2:
-                    output = " liked the look of lava.";
-                    break;
-                case 3:
-                    output = " didn't realise what the hot red stuff was.";
-                    break;
-                case 4:
-                    output = " went swimming in lava.";
-                    break;
-                case 5:
-                    output = " did the burning backstroke.";
-                    break;
-                case 6:
-                    output = " needed less 10 and more 8.";
-                    break;
-                case 7:
-                    output = " is now encased in molton rock.";
-                    break;
-                case 8:
-                    output = " thought a boat would be fine on lava.";
-                    break;
-                case 9:
-                    output = " wanted obscidian... but did it wrong.";
-                    break;
-                default:
-                    output = " burnt in lava";
-                    break;
-            }
-            return output;
+            String m_lavaDeath[] = {
+                " took a VERY hot bath.",
+                " didnt realise how hot lava was.",
+                " liked the look of lava.",
+                " didn't realise what the hot red stuff was.",
+                " went swimming in lava.",
+                " did the burning backstroke.",
+                " needed less 10 and more 8.",
+                " is now encased in molton rock.",
+                " thought a boat would be fine on lava.",
+                " wanted obscidian... but did it wrong.",
+                " burnt in lava"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_lavaDeath.length) + 0.5d); // Includes rounding up/down
+            return m_lavaDeath[randomNum];
         }
         if (cause.equalsIgnoreCase("drowning")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " is sleeping with the fishes.";
-                    break;
-                case 1:
-                    output = " couldnt hold their breath.";
-                    break;
-                case 2:
-                    output = " needed a life-jacket.";
-                    break;
-                case 3:
-                    output = "; the RNLI didnt get to them in time.";
-                    break;
-                case 4:
-                    output = " wasn't a strong swimmer.";
-                    break;
-                case 5:
-                    output = " forgot their snorkel.";
-                    break;
-                case 6:
-                    output = " thought they had gills.";
-                    break;
-                case 7:
-                    output = " got taken by Davy Jones.";
-                    break;
-                case 8:
-                    output = " should have used a boat.";
-                    break;
-                case 9:
-                    output = " thought they were a fish.";
-                    break;
-                default:
-                    output = " drowned";
-                    break;
-            }
-            return output;
+            String m_drowningDeath[] = {
+                " is sleeping with the fishes.",
+                " couldnt hold their breath.",
+                " needed a life-jacket.",
+                "; the RNLI didnt get to them in time.",
+                " wasn't a strong swimmer.",
+                " forgot their snorkel.",
+                " thought they had gills.",
+                " got taken by Davy Jones.",
+                " should have used a boat.",
+                " thought they were a fish.",
+                " drowned"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_drowningDeath.length) + 0.5d); // Includes rounding up/down
+            return m_drowningDeath[randomNum];
         }
-        if (cause.equalsIgnoreCase("block_explosion")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " didnt realise what the hissing sound was.";
-                    break;
-                case 1:
-                    output = " is in several pieces.";
-                    break;
-                case 2:
-                    output = " sould stayed further away from gunpowder.";
-                    break;
-                case 3:
-                    output = " heard 'HHSSsssss'.";
-                    break;
-                case 4:
-                    output = " went boom.";
-                    break;
-                case 5:
-                    output = " was asploded.";
-                    break;
-                case 6:
-                    output = " is now in orbit.";
-                    break;
-                case 7:
-                    output = " didnt understand the term 'blast-radius' means.";
-                    break;
-                case 8:
-                    output = " should have stayed further away from the big explosion.";
-                    break;
-                case 9:
-                    output = " got blown up.";
-                    break;
-                default:
-                    output = " got blown up";
-                    break;
-            }
+        if (cause.equalsIgnoreCase("block_explosion") || cause.equalsIgnoreCase("ENTITY_EXPLOSION")) {
+            String m_explosionDeath[] = {
+                " didnt realise what the hissing sound was.",
+                " is in several pieces.",
+                " sould stayed further away from gunpowder.",
+                " heard 'HHSSsssss'.",
+                " went boom.",
+                " was asploded.",
+                " is now in orbit.",
+                " didnt understand the term 'blast-radius' means.",
+                " should have stayed further away from the big explosion.",
+                " got blown up.",
+                " got blown up"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_explosionDeath.length) + 0.5d); // Includes rounding up/down
+            return m_explosionDeath[randomNum];
         }
         if (cause.equalsIgnoreCase("void")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " fell into nothingness.";
-                    break;
-                case 1:
-                    output = " made it past bedrock; it wasnt worth it.";
-                    break;
-                case 2:
-                    output = " should have stayed above bedrock.";
-                    break;
-                case 3:
-                    output = " didn't get on with the Void.";
-                    break;
-                case 4:
-                    output = " is annother victim of the Void.";
-                    break;
-                case 5:
-                    output = " realised why people avoid the Void.";
-                    break;
-                case 6:
-                    output = " fell into nothingness.";
-                    break;
-                case 7:
-                    output = " went looking for the nether, but found nothing.";
-                    break;
-                case 8:
-                    output = " got Voided.";
-                    break;
-                case 9:
-                    output = " thought bedrock was there for show.";
-                    break;
-                default:
-                    output = " fell into the void";
-                    break;
-            }
-            return output;
+            String m_voidDeath[] = {
+                " fell into nothingness.",
+                " made it past bedrock; it wasnt worth it.",
+                " should have stayed above bedrock.",
+                " didn't get on with the Void.",
+                " is annother victim of the Void.",
+                " realised why people avoid the Void.",
+                " fell into nothingness.",
+                " went looking for the nether, but found nothing.",
+                " got Voided.",
+                " thought bedrock was there for show.",
+                " fell into the void"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_voidDeath.length) + 0.5d); // Includes rounding up/down
+            return m_voidDeath[randomNum];
         }
         if (cause.equalsIgnoreCase("custom")) {
-            switch ((int) randomNum) {
-                case 0:
-                    output = " encountered MISSINGNO.";
-                    break;
-                case 1:
-                    output = " died in mysterious circumstances.";
-                    break;
-                case 2:
-                    output = " was killd by something unusual.";
-                    break;
-                default:
-                    output = " died at the hands of an unknow source";
-                    break;
-            }
-            return output;
+            String m_customDeath[] = {
+                " encountered MISSINGNO.",
+                " died in mysterious circumstances.",
+                " was killd by something unusual.",
+                " died at the hands of an unknow source"
+            };
+            int randomNum = (int) Math.floor((Math.random() * m_customDeath.length) + 0.5d); // Includes rounding up/down
+            return m_customDeath[randomNum];
         }
         return " died!";
     }
 
+    @Override
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName().toString() + DeathDescription(event));
@@ -366,5 +238,56 @@ public class MonkeyModEntityListener extends EntityListener {
             //Animal death
         }
             
+    }
+    @Override
+    public void onEntityDamage(EntityDamageEvent event){
+        if(event.getEntity() instanceof Player){
+            Player player = (Player) event.getEntity();
+            LastDamage(player,event);
+        }
+    }
+
+    String LastDamage(Player player, EntityDamageEvent event) {
+        String lastDamage = "";
+        if (event instanceof EntityDamageByProjectileEvent) {
+            EntityDamageByProjectileEvent mprojectileEvent = (EntityDamageByProjectileEvent) event;
+            Entity attacker = mprojectileEvent.getDamager();
+            lastDamage = attacker.getClass().getSimpleName();
+            if (attacker instanceof Player) {
+                Player murderer = (Player) attacker;
+                String usingitem = murderer.getItemInHand().getType().name();
+                if (usingitem.equalsIgnoreCase("AIR")) {
+                    usingitem = "bare hands";
+                }
+                lastDamage = "SHOT:" + usingitem + ":" + murderer.getName();
+            }
+        } else if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent mobEvent = (EntityDamageByEntityEvent) event;
+            Entity attacker = mobEvent.getDamager();
+            lastDamage = attacker.getClass().getSimpleName();
+            if (attacker.getClass().getSimpleName().equalsIgnoreCase("CraftWolf")) {
+                Wolf thisWolf = (Wolf) attacker;
+                lastDamage = "WOLF:" + thisWolf.getOwner().toString();
+            }  else if (attacker instanceof Player) {
+                Player murderer = (Player) attacker;
+                String usingItem = murderer.getItemInHand().getType().name().toString();
+                if (usingItem.equalsIgnoreCase("AIR")) {
+                    usingItem = "bare hands";
+                }
+                usingItem = usingItem.toLowerCase();
+                usingItem = usingItem.replace("_", " ");
+                lastDamage = "PVP:" + usingItem + ":" + murderer.getName().toString();
+            }
+        }
+        if(PlayerMap.containsKey(player.getName().toString()))
+        {
+            PlayerMap.remove(player.getName().toString());
+            PlayerMap.put(player.getName().toString(), lastDamage);
+        }
+        else
+        {
+            PlayerMap.put(player.getName().toString(), lastDamage);
+        }
+        return lastDamage;
     }
 }

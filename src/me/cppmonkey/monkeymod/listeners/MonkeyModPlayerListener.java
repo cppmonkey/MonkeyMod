@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod.listeners;
 import java.net.URLEncoder;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.callback.LoginCallback;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
@@ -154,7 +155,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                 X = block.getLocation().getBlockX();
                                 Y = block.getLocation().getBlockY();
                                 Z = block.getLocation().getBlockZ();
-                        BoxyCommand BoxyExec = new BoxyCommand(m_plugin);
                                 //the switch compensates coords for the side of the block clicked
                                 switch (event.getBlockFace()) {
                                     case UP:
@@ -169,12 +169,15 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                         Z++;break;
                                     case WEST:
                                         Z--;break;
+                                    default:break;
                                 }
                                     
                                 //FIXME Don't like the way this is called. Why create a new listener only just to make a single call? just move the code here?
                                 //RE:FIXME Not an actual player listener, just a funtion name ( now renamed ). Code is kept seperate so we dont have to pass over a load off stuff out of BoxyCommand.java
                                 //RE:RE:FIXME I know its not, but its does still have to create one using new. Its not a command and there for shouldn't be in the command class. I've managed, it wouldn't be too bad if it was possible for it to be a static call but its not.
-                                BoxyExec.playerBoxyClickEvent(player, block, X,Y,Z);
+                                //RE:RE:RE:FIXME Now moved to seperate class. plz remove if you are happy, otherwise, plz add annother RE
+                                BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
+                                BoxyRunner.playerBoxyClickEvent(player, block, X, Y, Z);
                                 return;
                             } catch (NullPointerException e) {
                                 player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");

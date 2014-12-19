@@ -18,12 +18,15 @@ commands:
            /<command> add user [var]
            /<command> add vip [var]
            /<command> add admin [var]
+           /<command> remove user [var]
+           /<command> remove vip [var]
+           /<command> remove admin [var]
   boxy:
     aliases: [boxie]
     description: Cuboid like function for replacing blocks
     usage: |
            /<command> <Replace ID> <With ID> [Height] [Spacing]
-           Example: /<command> 0 1 10 2
+           /<command>:e <CSV list of blocks>
   chest:
     description: Adds chest protection to chests. Chests are locked by default
     usage: |
@@ -35,6 +38,22 @@ commands:
     usage: |
            /<command> <ItemID>[:data] [Quantity]
            Example: /<command> 1 64
+  tele:
+    description: Teleport to player
+    usage: |
+           /<command> <playername>
+           Example: /<command> notch
+  spawn:
+    description: Teleport to spawn
+    usage: |
+           /<command>
+           Example: /<command>
+  home:
+    description: Teleport to a home ( 1 to 5)
+    usage: |
+           /<command> <set> <home number>
+           /<command> <home number>
+           Example: /<command> 1
   plugin:
     description: Reload plugins
     usage: |

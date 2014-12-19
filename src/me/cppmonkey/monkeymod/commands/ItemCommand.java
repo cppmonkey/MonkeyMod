@@ -64,6 +64,11 @@ public class ItemCommand implements CommandExecutor {
                     if (ItemRestricted(itemMaterial)) {
                         //Item is restricted
                         //TODO Allow exceptions to rule
+                        //RE:TODO: Allowed admins to spawn stuff
+                        if(m_plugin.getPermition(player, ".isAdmin"))
+                        {
+                            return false;
+                        }
                         player.sendMessage(ChatColor.RED + "This item is restricted");
                         return true;
                     }
@@ -126,6 +131,7 @@ public class ItemCommand implements CommandExecutor {
             case FIRE:
             case MOB_SPAWNER:
             case FLINT_AND_STEEL:
+            case LAVA_BUCKET:
                 return true;
         }
         return false;

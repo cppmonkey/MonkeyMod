@@ -81,6 +81,12 @@ public class MonkeyModBlockListener extends BlockListener {
 
         if (player != null) {
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
+            // THIS MUST BE HERE!!! Otherwise people can wipe the text from signs
+            if (!m_plugin.getPermition(player, ".canBuild")) {
+            player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
+            event.setCancelled(true);
+            return;
+            }
         }
     }
 }
