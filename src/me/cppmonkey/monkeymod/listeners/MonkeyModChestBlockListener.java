@@ -70,7 +70,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
                     String nextTo = nextToChest(event);
                     if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase())) {
                         player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
-                        String chestLocation = event.getBlock().getWorld().getName().toString() + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ();
+                        String chestLocation = event.getBlock().getWorld().getName() + ":" + (int) event.getBlock().getX() + "," + (int) event.getBlock().getY() + "," + (int) event.getBlock().getZ();
                         m_chestPermissions.setProperty(chestLocation + ".owner", player.getName().toLowerCase());
                         m_chestPermissions.setProperty(chestLocation + ".lock", "CLOSED");
                     } else {
@@ -84,10 +84,9 @@ public class MonkeyModChestBlockListener extends BlockListener {
 
     public void onBlockDamage(BlockDamageEvent event) {
         Player player = event.getPlayer();
-
         if (player != null && event.getBlock().getType() == Material.CHEST) {
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
-            String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ();
+            String chestLocation = event.getBlock().getWorld().getName() + ":" + (int) event.getBlock().getX() + "," + (int) event.getBlock().getY() + "," + (int) event.getBlock().getZ();
             String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC").toString().toLowerCase();
             
             if (!chestOwner.equalsIgnoreCase(player.getName().toLowerCase()) && !m_plugin.getPermition(player, ".isAdmin")) {
@@ -95,6 +94,8 @@ public class MonkeyModChestBlockListener extends BlockListener {
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner);
                 event.setCancelled(true);
             }
+        } else if (event.getBlock().getType() == Material.CHEST) {
+            event.setCancelled(true);
         }
     }
 
@@ -118,7 +119,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
                     player.sendMessage(ChatColor.RED + "contact " + chestOwner + " if you require assistance.");
                     event.setCancelled(true);
             }
-        } else if (player == null && event.getBlock().getType() == Material.CHEST){
+        } else if (event.getBlock().getType() == Material.CHEST){
             //Chest destroyed by external force eg tnt.
             event.setCancelled(true);
         }
