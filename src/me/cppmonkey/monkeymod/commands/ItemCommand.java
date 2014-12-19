@@ -13,6 +13,7 @@ import org.bukkit.util.config.Configuration;
 
 public class ItemCommand implements CommandExecutor {
 
+    public static String command = "item";
     private MonkeyMod m_plugin;
     @SuppressWarnings("unused")
     private Configuration m_settings;

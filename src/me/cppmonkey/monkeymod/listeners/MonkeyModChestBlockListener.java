@@ -24,7 +24,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
 
     private String nextToChest(BlockPlaceEvent event) {
  
-        Location blockLocation = event.getBlock().getLocation().clone();
+        Location blockLocation = event.getBlock().getLocation();
         int X = (int) blockLocation.getX();
         int Z = (int) blockLocation.getZ();
         int Y = (int) blockLocation.getY();
@@ -32,7 +32,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
         String World = event.getBlock().getWorld().getName();
         String Owner = "NONE";
         X++;
-        if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
+        if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST ) {
             Location = World + ":" + X + "," + Y + "," + Z;
             Owner = m_chestPermissions.getString(Location + ".owner", "NONE");
         }

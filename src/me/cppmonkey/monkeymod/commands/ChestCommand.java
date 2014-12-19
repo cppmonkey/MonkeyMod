@@ -10,6 +10,7 @@ import org.bukkit.util.config.Configuration;
 
 // @author Alex
 public class ChestCommand implements CommandExecutor {
+    public static String command = "chest";
 
     private MonkeyMod m_plugin;
     private Configuration m_chestPermissions;

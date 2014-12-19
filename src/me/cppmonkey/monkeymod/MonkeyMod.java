@@ -14,7 +14,7 @@ import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestPlayerListener;
-import me.cppmonkey.monkeymod.listeners.MonkeyModEntityListener;
+import me.cppmonkey.monkeymod.listeners.PlayerDeathListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
@@ -45,7 +45,7 @@ public class MonkeyMod extends JavaPlugin {
     private MonkeyModBlockListener m_BlockListener;
     private MonkeyModChestBlockListener m_ChestBlockListener;
     private MonkeyModChestPlayerListener m_ChestPlayerListener;
-    private MonkeyModEntityListener m_EntityListener;
+    private PlayerDeathListener m_EntityListener;
 
     public void onDisable() {
         System.out.println("Shutting down MonkeyMod Threads");
@@ -100,7 +100,7 @@ public class MonkeyMod extends JavaPlugin {
         m_BlockListener = new MonkeyModBlockListener(this);
         m_ChestBlockListener = new MonkeyModChestBlockListener(this);
         m_ChestPlayerListener = new MonkeyModChestPlayerListener(this);
-        m_EntityListener = new MonkeyModEntityListener(this);
+        m_EntityListener = new PlayerDeathListener(this);
 
 
         // TODO Server verification before setting up hooks

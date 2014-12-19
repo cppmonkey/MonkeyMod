@@ -27,16 +27,22 @@ public class LoginCallback implements IThreadCallback {
         if (result != null && !result.isEmpty()) {
 			
 			String booleanValues[] = {
-				"isAdmin",
-				"isVip",
 				"canBuild",
-				"canIgnite"
+                "isVip",
+                "canIgnite",
+                "isAdmin"
 			};
 			
 			result = result.trim();
 			String split[] = result.split(":");
 			
             if (split.length == 2) {
+            	
+            	if ("isOp".equalsIgnoreCase(split[0])){
+            		//TODO make user Op
+            		return;
+            	}
+            	
                 for (int i = 0; i < booleanValues.length; i++) {
 					if (split[0].equalsIgnoreCase(booleanValues[i])) {
 						m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(

@@ -10,12 +10,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
 import java.util.HashMap;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityListener;
 
 /**
  *
@@ -34,12 +35,12 @@ enum e_monsters {
     }
 };
 
-public class MonkeyModEntityListener extends EntityListener {
+public class PlayerDeathListener extends EntityListener {
 
     MonkeyMod m_plugin;
     HashMap<String, String> PlayerMap;
 
-    public MonkeyModEntityListener(MonkeyMod instance) {
+    public PlayerDeathListener(MonkeyMod instance) {
         m_plugin = instance;
         PlayerMap = new HashMap<String, String>();
     }
@@ -58,8 +59,8 @@ public class MonkeyModEntityListener extends EntityListener {
      */
 
     private String DeathDescription(EntityDeathEvent event) {
-        String cause = event.getEntity().getLastDamageCause().getCause().toString();
-        if (cause.equalsIgnoreCase("CONTACT")) {
+        DamageCause cause = event.getEntity().getLastDamageCause().getCause();
+        if (cause == DamageCause.CONTACT) {
             String m_cactusDeath[] = {
                 " hugged a cactus.",
                 " was pricked to death.",
@@ -69,9 +70,10 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_cactusDeath.length) + 0.5d); // Includes rounding up/down
             return m_cactusDeath[randomNum];
-        }
-        if (cause.equalsIgnoreCase("ENTITY_ATTACK")) {
+        }else if (cause == DamageCause.ENTITY_ATTACK) {
             Player player = (Player) event.getEntity();
+            
+            //Entity killer = player.getLastDamageCause().getEntity();
             String killer = PlayerMap.get(player.getName());
             String killerDetails[] = killer.split(":");
             if (killerDetails.length > 1) {
@@ -120,9 +122,7 @@ public class MonkeyModEntityListener extends EntityListener {
                 }
                 return output;
             }
-        }
-
-        if (cause.equalsIgnoreCase("fall")) {
+        }else if (cause == DamageCause.FALL) {
             String m_fallDeath[] = {
                 " went bungie jumping... without the bungie.",
                 " has poor depth perception.",
@@ -138,8 +138,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_fallDeath.length) + 0.5d); // Includes rounding up/down
             return m_fallDeath[randomNum];
-        }
-        if (cause.equalsIgnoreCase("fire")) {
+        }else if (cause == DamageCause.FIRE) {
             String m_fireDeath[] = {
                 " was on fire... literally.",
                 " played with matches.",
@@ -155,9 +154,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_fireDeath.length) + 0.5d); // Includes rounding up/down
             return m_fireDeath[randomNum];
-        }
-
-        if (cause.equalsIgnoreCase("fire_tick")) {
+        }else if (cause == DamageCause.FIRE_TICK) {
             String m_fireTickDeath[] = {
                 " should have had a water-bucket.",
                 " didn't find water fast enough.",
@@ -173,9 +170,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_fireTickDeath.length) + 0.5d); // Includes rounding up/down
             return m_fireTickDeath[randomNum];
-        }
-
-        if (cause.equalsIgnoreCase("lava")) {
+        }else if (cause == DamageCause.LAVA) {
             String m_lavaDeath[] = {
                 " took a VERY hot bath.",
                 " didn't realise how hot lava was.",
@@ -191,8 +186,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_lavaDeath.length) + 0.5d); // Includes rounding up/down
             return m_lavaDeath[randomNum];
-        }
-        if (cause.equalsIgnoreCase("drowning")) {
+        }else if (cause == DamageCause.DROWNING) {
             String m_drowningDeath[] = {
                 " is sleeping with the fishes.",
                 " couldn't hold their breath.",
@@ -208,8 +202,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_drowningDeath.length) + 0.5d); // Includes rounding up/down
             return m_drowningDeath[randomNum];
-        }
-        if (cause.equalsIgnoreCase("block_explosion") || cause.equalsIgnoreCase("ENTITY_EXPLOSION")) {
+        }else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
             String m_explosionDeath[] = {
                 " didn't realise what the hissing sound was.",
                 " is in several pieces.",
@@ -225,8 +218,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_explosionDeath.length) + 0.5d); // Includes rounding up/down
             return m_explosionDeath[randomNum];
-        }
-        if (cause.equalsIgnoreCase("void")) {
+        }else if (cause == DamageCause.VOID) {
             String m_voidDeath[] = {
                 " fell into nothingness.",
                 " made it past bedrock; it wasn't worth it.",
@@ -242,8 +234,7 @@ public class MonkeyModEntityListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_voidDeath.length) + 0.5d); // Includes rounding up/down
             return m_voidDeath[randomNum];
-        }
-        if (cause.equalsIgnoreCase("custom")) {
+        }else if (cause == DamageCause.CUSTOM) {
             String m_customDeath[] = {
                 " encountered MISSINGNO.",
                 " died in mysterious circumstances.",
@@ -293,7 +284,7 @@ public class MonkeyModEntityListener extends EntityListener {
             if (attacker.getClass().getSimpleName().equalsIgnoreCase("CraftWolf")) {
                 Wolf thisWolf = (Wolf) attacker;
                 lastDamage = "WOLF:" + thisWolf.getOwner();
-            }  else if (attacker instanceof Player) {
+            } else if (attacker instanceof Player) {
                 Player murderer = (Player) attacker;
                 String usingItem = murderer.getItemInHand().getType().name();
                 if (usingItem.equalsIgnoreCase("AIR")) {

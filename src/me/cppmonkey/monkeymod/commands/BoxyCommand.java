@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 public class BoxyCommand implements CommandExecutor {
+    public static String command = "boxy";
 
 	private final MonkeyMod m_plugin;
     private final Configuration m_settings;
