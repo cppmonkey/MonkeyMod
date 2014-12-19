@@ -154,12 +154,9 @@ public class MonkeyCommand implements CommandExecutor {
             } //END /monkey [enable/disable]
             if (args.length == 3) {
                 // Must be admin to add users
-                if (sender instanceof Player) {
-                    Player player = (Player) sender;
-                    if (!m_permissions.getBoolean(player.getName().toLowerCase() + ".isAdmin", false)) {
+                if (sender instanceof Player && !m_permissions.getBoolean(((Player) sender).getName().toLowerCase() + ".isAdmin", false)) {
                     	sender.sendMessage("You do not have permission to do that");
-                    }
-                    return false;
+                    return true;
                 }
 
 
@@ -167,8 +164,6 @@ public class MonkeyCommand implements CommandExecutor {
                  * Was just a quick implementation to get it working
                  */
                 if ("add".equalsIgnoreCase(args[0])) {
-                    // Get permission configs
-
                     // Username
                     String playerName = args[2].toLowerCase();
 
@@ -177,25 +172,24 @@ public class MonkeyCommand implements CommandExecutor {
                         m_permissions.setProperty(playerName + ".canIgnite", false);
                         m_permissions.save();
                         sender.sendMessage("New player '" + playerName + "' added");
-                        return true;
-                    }
-                    if ("vip".equalsIgnoreCase(args[1])) {
+                    } else if ("vip".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canBuild", true);
                         m_permissions.setProperty(playerName + ".canIgnite", false);
                         m_permissions.setProperty(playerName + ".isVip", true);
                         m_permissions.save();
                         
                         sender.sendMessage("Vip player '" + playerName + "' added");
-                        return true;
-                    }
-                    if ("admin".equalsIgnoreCase(args[1])) {
+                    } else if ("admin".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canBuild", true);
                         m_permissions.setProperty(playerName + ".canIgnite", true);
                         m_permissions.setProperty(playerName + ".isAdmin", true);
                         m_permissions.save();
                         sender.sendMessage("Admin player '" + playerName + "' added");
-                        return true;
+                    } else {
+                    	return false;
                     }
+                    return true;
+                    
                 }// END add
                 if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
                 	// Username
@@ -205,22 +199,20 @@ public class MonkeyCommand implements CommandExecutor {
                     	m_permissions.removeProperty(playerName);
                         m_permissions.save();
                         sender.sendMessage("player '" + playerName + "' removed");
-                        return true;
-                    }
-                    if ("vip".equalsIgnoreCase(args[1])) {
+                    } else if ("vip".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".isVip", false);
                         m_permissions.save();
                         
                         sender.sendMessage("Vip player '" + playerName + "' removed");
-                        return true;
-                    }
-                    if ("admin".equalsIgnoreCase(args[1])) {
+                    } else if ("admin".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canIgnite", false);
                         m_permissions.setProperty(playerName + ".isAdmin", false);
                         m_permissions.save();
                         sender.sendMessage("Admin player '" + playerName + "' removed");
-                        return true;
+                    } else {
+                    	return false;
 	                }
+                    return true;
 	            }
             } // END args == 4
 

@@ -39,7 +39,7 @@ onerror=function handleErr( msg, url, l )
 			
 		$("#severipedituseraccess").change(function(){
 				$.getJSON("playerlist.php?", { serverip: this.value }, function(data){
-						$('select[id][name^="serverknown"]').reset();
+						$('select[id][name^="serverknown"]').empty();
 						//Get player list from server
 						for (var i = 0; i < data.length; i++ ){
 							$('select[id][name^="serverknown"]').append( new Option( data[i].name, data[i].id ));
@@ -50,7 +50,7 @@ onerror=function handleErr( msg, url, l )
 		$("#serveriphistory").change(function(){
 				$.getJSON("history.php?", { serverip: this.value }, function(data){
 						//Process data
-						alert("help!");
+						$('#chat').empty();
 						for (var i = 0; i < data.length; i++){
 							$('#chat').append( "<div>"+data[i].name + " :- "+ data[i].msg +"</div>");
 						}
@@ -100,10 +100,10 @@ onerror=function handleErr( msg, url, l )
 <input type="hidden" name="action" value="" />
 <select id="severipedituseraccess" name="serverip"></select>
 <select id="serverknownusersedituseraccess" name="serverknownusers" size="7" multiple="multiple"></select>
-<input name="isVip" type="checkbox" />
-<input name="isAdmin" type="checkbox" />
-<input name="canBuild" type="checkbox" />
-<input name="canIgnite" type="checkbox" />
+<label for="">isVip</label><input name="isVip" type="checkbox" />
+<label for="">isAdmin</label><input name="isAdmin" type="checkbox" />
+<label for="">canBuild</label><input name="canBuild" type="checkbox" />
+<label for="">canIgnite</label><input name="canIgnite" type="checkbox" />
 <input type="submit" />
 </form>
 </fieldset>

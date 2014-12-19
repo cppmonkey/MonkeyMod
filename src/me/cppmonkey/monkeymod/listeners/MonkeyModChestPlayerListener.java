@@ -31,6 +31,7 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                 if (chestOwner.equalsIgnoreCase(player.getName())) {
                     String keySetting = m_chestPermissions.getString(player.getName().toLowerCase() + ".key", "NONE");
                     if (keySetting.matches("NONE")) {
+                    	// FIXME users aren't sure what you mean by key
                         player.sendMessage(ChatColor.GOLD + "You have not set your key!");
                         player.sendMessage(ChatColor.GOLD + "Use '/chest lock' or '/chest unlock'");
                     } else if (keySetting.matches("LOCK")) {
@@ -53,7 +54,7 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                     && !m_plugin.getPermition(player, ".isAdmin")
                     && !chestLock.matches("OPEN")) {
                 player.sendMessage(ChatColor.RED + "You cannot access this chest.");
-                player.sendMessage(ChatColor.RED + "It bellongs to " + chestOwner + ", and is locked.");
+                player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner + ", and is locked.");
                 event.setCancelled(true);
             }
         }

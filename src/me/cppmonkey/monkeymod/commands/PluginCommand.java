@@ -59,6 +59,7 @@ public class PluginCommand implements CommandExecutor {
     // Available command(s)
     @SuppressWarnings("unused")
     private enum ECommands {
+
         RELOAD
     }
 }

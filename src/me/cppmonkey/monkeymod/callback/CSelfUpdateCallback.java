@@ -6,6 +6,7 @@ import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 import org.bukkit.command.CommandSender;
 
 public class CSelfUpdateCallback  implements IThreadCallback {
+
 	private MonkeyMod m_plugin;
 	CommandSender m_owner = null;
 	private boolean m_outOfDate = false;

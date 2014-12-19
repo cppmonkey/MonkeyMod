@@ -22,10 +22,6 @@ public class MonkeyModChestBlockListener extends BlockListener {
         m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
     }
 
-    public void onEnable() {
-        m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
-    }
-
     private String nextToChest(BlockPlaceEvent event) {
  
         Location blockLocation = event.getBlock().getLocation().clone();
@@ -96,7 +92,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
             
             if (!chestOwner.equalsIgnoreCase(player.getName().toLowerCase()) && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
-                player.sendMessage(ChatColor.RED + "It bellongs to " + chestOwner);
+                player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner);
                 event.setCancelled(true);
             }
         }
@@ -122,7 +118,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
                     player.sendMessage(ChatColor.RED + "contact " + chestOwner + " if you require assistance.");
                     event.setCancelled(true);
             }
-        } else {
+        } else if (player == null && event.getBlock().getType() == Material.CHEST){
             //Chest destroyed by external force eg tnt.
             event.setCancelled(true);
         }
