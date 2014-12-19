@@ -49,11 +49,16 @@ commands:
            /<command>
            Example: /<command>
   home:
-    description: Teleport to a home ( 1 to 5)
+    description: Sets your compass to point to your home ( 1 to 5)
     usage: |
            /<command> <set> <home number>
            /<command> <home number>
            Example: /<command> 1
+  compass:
+    description: Gives you a compass to find your way home
+    usage: |
+           /<command>
+           Example: /<command>
   list:
     description: Displays list of online players
     usage: |

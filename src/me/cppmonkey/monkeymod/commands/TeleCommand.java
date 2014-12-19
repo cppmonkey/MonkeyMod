@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -62,7 +64,7 @@ public class TeleCommand implements CommandExecutor {
                                     double Y = Double.parseDouble(Coords[1]);
                                     double Z = Double.parseDouble(Coords[2]);
                                     Location newLocation = new Location(player.getWorld(), X, Y, Z);
-                                    player.teleport(newLocation);
+                                    player.setCompassTarget(newLocation);
                                     return true;
                                 }
                             }
@@ -110,7 +112,7 @@ public class TeleCommand implements CommandExecutor {
                         }
                     }
                     if (playerNum != -1) {
-                        if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName())) {
+                        if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName().toString())) {
                             player.teleport(onPlayers[playerNum].getLocation());
                         } else {
                             player.sendMessage(ChatColor.GOLD + "Target player is in another world. Please go to the right world first.");
@@ -124,6 +126,17 @@ public class TeleCommand implements CommandExecutor {
         }
         return false;
     }
+    private boolean compass(CommandSender sender) {
+        if ((sender instanceof Player)) {
+            Player player = (Player) sender;
+            Material itemMaterial = Material.matchMaterial("345");
+            short durability = (short) 0;
+            ItemStack item = new ItemStack(itemMaterial, 1, durability);
+            player.getInventory().addItem(item);
+            return true;
+        }
+        return false;
+    }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equals("home")) {
@@ -132,6 +145,8 @@ public class TeleCommand implements CommandExecutor {
             return spawn(sender);
         } else if (command.getName().equals("tele")) {
             return tele(sender, args);
+        } else if (command.getName().equals("compass")){
+            return compass(sender);
         }
         return false;
     }
