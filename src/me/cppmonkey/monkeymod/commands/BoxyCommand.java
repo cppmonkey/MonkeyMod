@@ -3,15 +3,11 @@ package me.cppmonkey.monkeymod.commands;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
-import org.bukkit.block.Block;
-import org.bukkit.World;
-import org.bukkit.Location;
 
 public class BoxyCommand implements CommandExecutor {
 
@@ -23,14 +19,14 @@ public class BoxyCommand implements CommandExecutor {
         m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
 	}
 
-    private int setDefaultSettings(String PlayerName) {
+    private void setDefaultSettings(String PlayerName) {
         //set default settings on error occurring
         m_settings.setProperty(PlayerName.toLowerCase() + ".fromId", 0);
         m_settings.setProperty(PlayerName.toLowerCase() + ".toId", 0);
         m_settings.setProperty(PlayerName.toLowerCase() + ".step", 1);
         m_settings.setProperty(PlayerName.toLowerCase() + ".height", 1);
-        return 0;
     }
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0) {
             // Must be a player to use these commands

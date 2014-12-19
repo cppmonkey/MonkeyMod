@@ -51,7 +51,7 @@ public class MonkeyMod extends JavaPlugin {
         System.out.println("Shutting down MonkeyMod Threads");
         while (!m_announceThreads.isEmpty()) {
             IThread temp = m_announceThreads.pop();
-            temp.Halt();
+            temp.halt();
         }
 
         System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
@@ -61,6 +61,10 @@ public class MonkeyMod extends JavaPlugin {
                 m_configs[config.ordinal()].save();
             } catch (YAMLException e) {
                 System.out.println("[ERROR] saving " + config.name() + ".yml");
+                String msg = e.getMessage();
+                if (msg != null) {
+                    System.out.println("[ERROR] " + msg);
+                }
             }
         }
 
@@ -169,12 +173,12 @@ public class MonkeyMod extends JavaPlugin {
         // Notify CppMonkey.NET of the new server
         // Notify server about new server
 
-        String[] parms = {
-            "action=update",
-            "package=" + this.getName(),
-            "version=" + this.getVersion(),
-            "build=" + this.getBuild(),
-            "rcon-port=" + (getServer().getPort() + 10)
+        Parm[] parms = {
+            new Parm("action", "update"),
+            new Parm("package", this.getName()),
+            new Parm("version", this.getVersion()),
+            new Parm("build", this.getBuild()),
+            new Parm("rcon-port", Integer.toString(getServer().getPort() + 10))
         };
         HttpRequestThread notification = new HttpRequestThread(
                 "Notification thread: Plugin initialized", new ConsoleCommandSender(getServer()),
@@ -269,7 +273,7 @@ public class MonkeyMod extends JavaPlugin {
                 }; // TODO global list required to ensure ALL properties are listed 
     }
 
-    public void RegisterVariable(Object variable) {
+    public void registerVariable(Object variable) {
     }
 
     public String[] getUsers() {

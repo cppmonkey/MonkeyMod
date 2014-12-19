@@ -30,7 +30,6 @@ public class UpdateThread extends Thread {
     private String m_ReposUrl;
     private Boolean m_debug = false;
     private MonkeyMod m_plugin;
-    
 
     /**
      * @param args the command line arguments
@@ -51,11 +50,11 @@ public class UpdateThread extends Thread {
         m_ReposUrl = respoUrl;
     }
     
-    private void Message( String msg ){
-        if( m_ThreadOwner != null ){
-            m_ThreadOwner.sendMessage( msg );
-        }else{
-            log.info( msg );
+    private void Message(String msg) {
+        if (m_ThreadOwner != null) {
+            m_ThreadOwner.sendMessage(msg);
+        } else {
+            log.info(msg);
         }
     }
 
@@ -67,10 +66,10 @@ public class UpdateThread extends Thread {
 
             msg = "Attempting to download " + m_ReposUrl + m_PackageName + ".jar";
 
-            Message( ChatColor.GREEN + msg );
+            Message(ChatColor.GREEN + msg);
                 
             URL url = new URL(m_ReposUrl + m_PackageName + ".jar");
-            if( m_debug ){
+            if (m_debug) {
                 String hostAddr = InetAddress.getByName(url.getHost()).getHostAddress();
                 Message(hostAddr);
             }
@@ -88,13 +87,13 @@ public class UpdateThread extends Thread {
             os.close();
             is.close();
             
-            try{
+            try {
             	// FIXME re-write auto reload, plugin only though, currently not possible
             	m_plugin.getServer().reload();
-            	Message( ChatColor.GREEN + "Update complete!" );
-            }catch( CommandException e){
-            	Message( ChatColor.RED + "Something went wrong whilst updaing" );
-            	Message( ChatColor.RED + e.getMessage());
+                Message(ChatColor.GREEN + "Update complete!");
+            } catch (CommandException e) {
+                Message(ChatColor.RED + "Something went wrong whilst updaing");
+                Message(ChatColor.RED + e.getMessage());
             }
 
         } catch (Exception e) {

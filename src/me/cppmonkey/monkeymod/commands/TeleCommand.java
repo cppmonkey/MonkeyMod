@@ -101,21 +101,19 @@ public class TeleCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
                 return true;
             } else {
-                if(args.length > 0){
+                if (args.length > 0) {
                     Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                     int playerNum = -1;
-                    for( int i = 0; i < onPlayers.length;i++)
-                    {
+                    for (int i = 0; i < onPlayers.length; i++) {
                         player.sendMessage(ChatColor.GREEN + "player: " + onPlayers[i]);
-                        if(onPlayers[i].getName().toString().contains(args[0].toString())){
-                            playerNum =i;
+                        if (onPlayers[i].getName().toString().contains(args[0].toString())) {
+                            playerNum = i;
                         }
                     }
-                    if(playerNum != -1)
-                    {
-                        if(player.getWorld().getName().toString().equals(onPlayers[playerNum].getWorld().getName().toString())){
+                    if (playerNum != -1) {
+                        if (player.getWorld().getName().toString().equals(onPlayers[playerNum].getWorld().getName())) {
                             player.teleport(onPlayers[playerNum].getLocation());
-                        }else{
+                        } else {
                             player.sendMessage(ChatColor.GOLD + "Target player is in annother world. Please go to the right world first.");
                         }
                     } else {
@@ -129,12 +127,12 @@ public class TeleCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(command.getName().toString().equals("home")){
-            return home(sender,args);
-        } else if(command.getName().toString().equals("spawn")){
+        if (command.getName().toString().equals("home")) {
+            return home(sender, args);
+        } else if (command.getName().toString().equals("spawn")) {
             return spawn(sender);
-        } else if(command.getName().toString().equals("tele")){
-            return tele(sender,args);
+        } else if (command.getName().toString().equals("tele")) {
+            return tele(sender, args);
         }
         return false;
     }

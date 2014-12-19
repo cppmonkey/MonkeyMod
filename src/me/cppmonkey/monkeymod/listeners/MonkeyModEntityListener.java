@@ -16,15 +16,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
 import java.util.HashMap;
+
 /**
  *
  * @author CppMonkey
  */
-enum e_monsters {CraftZombie,CraftCreeper,CraftSpider,CraftPigZombie,CraftSlime,CraftGiant,CraftGhast,CraftSkeleton,CraftFireball,novalue ; public static e_monsters fromString(String Str) { try {return valueOf(Str);} catch (Exception ex){return novalue;} } };
+enum e_monsters {
+
+    CraftZombie, CraftCreeper, CraftSpider, CraftPigZombie, CraftSlime, CraftGiant, CraftGhast, CraftSkeleton, CraftFireball, novalue;
+
+    public static e_monsters fromString(String Str) {
+        try {
+            return valueOf(Str);
+        } catch (Exception ex) {
+            return novalue;
+        }
+    }
+};
+
 public class MonkeyModEntityListener extends EntityListener {
 
     MonkeyMod m_plugin;
-    HashMap <String, String> PlayerMap;
+    HashMap<String, String> PlayerMap;
 
     public MonkeyModEntityListener(MonkeyMod instance) {
         m_plugin = instance;
@@ -59,51 +72,64 @@ public class MonkeyModEntityListener extends EntityListener {
         }
         if (cause.equalsIgnoreCase("ENTITY_ATTACK")) {
             Player player = (Player) event.getEntity();
-            String killer = PlayerMap.get(player.getName().toString());
+            String killer = PlayerMap.get(player.getName());
             String killerDetails[] = killer.split(":");
-            if(killerDetails.length > 1)
-            {
-                if("WOLF".equalsIgnoreCase(killerDetails[0]))
-                {
-                    return " was mauled to  death by " + killerDetails[1].toString() + "'s wolf.";
+            if (killerDetails.length > 1) {
+                if("WOLF".equalsIgnoreCase(killerDetails[0])) {
+                    return " was mauled to  death by " + killerDetails[1] + "'s wolf.";
                 }
-                if("SHOT".equalsIgnoreCase(killerDetails[0]))
-                {
-                    return " was shot by " + killerDetails[2].toString() + "'s " + killerDetails[1].toString();
+                if("SHOT".equalsIgnoreCase(killerDetails[0])) {
+                    return " was shot by " + killerDetails[2] + "'s " + killerDetails[1];
                 }
-                if("PVP".equalsIgnoreCase(killerDetails[0]))
-                {
-                    return " was killed by " + killerDetails[2].toString() + ", using a " + killerDetails[1].toString();
+                if("PVP".equalsIgnoreCase(killerDetails[0])) {
+                    return " was killed by " + killerDetails[2] + ", using a " + killerDetails[1];
                 }
-            }
-            else
-            {
+            } else {
                 String output = "";
-                switch(e_monsters.fromString(killer))
-                {
-                    case CraftZombie: output = " got their brain eaten.";break;
-                    case CraftCreeper: output = " saw a sad, green face... Breifly.";break;
-                    case CraftSpider:output = " wasnt carrying spider repellent.";break;
-                    case CraftPigZombie:output = " upset a Pig Zombie.";break;
-                    case CraftSlime:output = " got slimed.";break;
-                    case CraftGiant:output = " had their bones ground into bread.";break;
-                    case CraftGhast:output = " was spotted by a ghast.";break;
-                    case CraftSkeleton:output = " was assaninated by a skelital archer.";break;
-                    case CraftFireball:output = " should have called ghastbusters.";break;
-                    default:output = " was killed by an angry mob.";break;
+                switch (e_monsters.fromString(killer)) {
+                    case CraftZombie:
+                        output = " got their brain eaten.";
+                        break;
+                    case CraftCreeper:
+                        output = " saw a sad, green face... Breifly.";
+                        break;
+                    case CraftSpider:
+                        output = " wasnt carrying spider repellent.";
+                        break;
+                    case CraftPigZombie:
+                        output = " upset a Pig Zombie.";
+                        break;
+                    case CraftSlime:
+                        output = " got slimed.";
+                        break;
+                    case CraftGiant:
+                        output = " had their bones ground into bread.";
+                        break;
+                    case CraftGhast:
+                        output = " was spotted by a ghast.";
+                        break;
+                    case CraftSkeleton:
+                        output = " was assaninated by a skelital archer.";
+                        break;
+                    case CraftFireball:
+                        output = " should have called ghastbusters.";
+                        break;
+                    default:
+                        output = " was killed by an angry mob.";
+                        break;
+                }
+                return output;
             }
-            return output;
-        }
         }
 
         if (cause.equalsIgnoreCase("fall")) {
             String m_fallDeath[] = {
                 " went bungie jumping... without the bungie.",
                 " has poor depth perception.",
-                " wasn't wearning spring shoes.",
-                " belived they could fly... but they couldn't",
-                " didnt watch where they were going.",
-                " bellived that gravity is optional.",
+                " wasn't wearing spring shoes.",
+                " believed they could fly... but they couldn't",
+                " didn't watch where they were going.",
+                " believed that gravity is optional.",
                 " lost their footing.",
                 " got owned by Newton.",
                 " should have used a ladder.",
@@ -115,7 +141,7 @@ public class MonkeyModEntityListener extends EntityListener {
         }
         if (cause.equalsIgnoreCase("fire")) {
             String m_fireDeath[] = {
-                " was on fire... literaly.",
+                " was on fire... literally.",
                 " played with matches.",
                 " is now crispy.",
                 " put their head in a furnace.",
@@ -134,7 +160,7 @@ public class MonkeyModEntityListener extends EntityListener {
         if (cause.equalsIgnoreCase("fire_tick")) {
             String m_fireTickDeath[] = {
                 " should have had a water-bucket.",
-                " didnt find water fast enough.",
+                " didn't find water fast enough.",
                 " should have worn less-flamable clothing.",
                 " could have used some rain.",
                 " played with matches.",
@@ -143,7 +169,7 @@ public class MonkeyModEntityListener extends EntityListener {
                 " slow-cooked themselves.",
                 " knows how the skellingtons feel now.",
                 " needed water.",
-                " died while on fire"
+                " died while on fire."
             };
             int randomNum = (int) Math.floor((Math.random() * m_fireTickDeath.length) + 0.5d); // Includes rounding up/down
             return m_fireTickDeath[randomNum];
@@ -152,16 +178,16 @@ public class MonkeyModEntityListener extends EntityListener {
         if (cause.equalsIgnoreCase("lava")) {
             String m_lavaDeath[] = {
                 " took a VERY hot bath.",
-                " didnt realise how hot lava was.",
+                " didn't realise how hot lava was.",
                 " liked the look of lava.",
                 " didn't realise what the hot red stuff was.",
                 " went swimming in lava.",
                 " did the burning backstroke.",
                 " needed less 10 and more 8.",
-                " is now encased in molton rock.",
+                " is now encased in molten rock.",
                 " thought a boat would be fine on lava.",
-                " wanted obscidian... but did it wrong.",
-                " burnt in lava"
+                " wanted obsidian... but did it wrong.",
+                " burnt in lava."
             };
             int randomNum = (int) Math.floor((Math.random() * m_lavaDeath.length) + 0.5d); // Includes rounding up/down
             return m_lavaDeath[randomNum];
@@ -169,9 +195,9 @@ public class MonkeyModEntityListener extends EntityListener {
         if (cause.equalsIgnoreCase("drowning")) {
             String m_drowningDeath[] = {
                 " is sleeping with the fishes.",
-                " couldnt hold their breath.",
+                " couldn't hold their breath.",
                 " needed a life-jacket.",
-                "; the RNLI didnt get to them in time.",
+                " the RNLI didn't get to them in time.",
                 " wasn't a strong swimmer.",
                 " forgot their snorkel.",
                 " thought they had gills.",
@@ -185,17 +211,17 @@ public class MonkeyModEntityListener extends EntityListener {
         }
         if (cause.equalsIgnoreCase("block_explosion") || cause.equalsIgnoreCase("ENTITY_EXPLOSION")) {
             String m_explosionDeath[] = {
-                " didnt realise what the hissing sound was.",
+                " didn't realise what the hissing sound was.",
                 " is in several pieces.",
-                " sould stayed further away from gunpowder.",
+                " should have stayed further away from gunpowder.",
                 " heard 'HHSSsssss'.",
                 " went boom.",
-                " was asploded.",
+                " was exploded.",
                 " is now in orbit.",
-                " didnt understand the term 'blast-radius' means.",
+                " didn't understand the term 'blast-radius' means.",
                 " should have stayed further away from the big explosion.",
                 " got blown up.",
-                " got blown up"
+                " got blown up."
             };
             int randomNum = (int) Math.floor((Math.random() * m_explosionDeath.length) + 0.5d); // Includes rounding up/down
             return m_explosionDeath[randomNum];
@@ -203,16 +229,16 @@ public class MonkeyModEntityListener extends EntityListener {
         if (cause.equalsIgnoreCase("void")) {
             String m_voidDeath[] = {
                 " fell into nothingness.",
-                " made it past bedrock; it wasnt worth it.",
+                " made it past bedrock; it wasn't worth it.",
                 " should have stayed above bedrock.",
                 " didn't get on with the Void.",
-                " is annother victim of the Void.",
+                " is another victim of the Void.",
                 " realised why people avoid the Void.",
                 " fell into nothingness.",
                 " went looking for the nether, but found nothing.",
                 " got Voided.",
                 " thought bedrock was there for show.",
-                " fell into the void"
+                " fell into the void."
             };
             int randomNum = (int) Math.floor((Math.random() * m_voidDeath.length) + 0.5d); // Includes rounding up/down
             return m_voidDeath[randomNum];
@@ -221,8 +247,8 @@ public class MonkeyModEntityListener extends EntityListener {
             String m_customDeath[] = {
                 " encountered MISSINGNO.",
                 " died in mysterious circumstances.",
-                " was killd by something unusual.",
-                " died at the hands of an unknow source"
+                " was killed by something unusual.",
+                " died at the hands of an unknown source"
             };
             int randomNum = (int) Math.floor((Math.random() * m_customDeath.length) + 0.5d); // Includes rounding up/down
             return m_customDeath[randomNum];
@@ -230,20 +256,21 @@ public class MonkeyModEntityListener extends EntityListener {
         return " died!";
     }
 
-    @Override
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
-            m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName().toString() + DeathDescription(event));
+            // FIXME forgive me for asking by if its player related and not general entities, then why is it in EntityListener and not PlayerListener?
+            m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + DeathDescription(event));
         } else {
             //Animal death
         }
             
     }
+
     @Override
-    public void onEntityDamage(EntityDamageEvent event){
-        if(event.getEntity() instanceof Player){
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            LastDamage(player,event);
+            LastDamage(player, event);
         }
     }
 
@@ -279,13 +306,10 @@ public class MonkeyModEntityListener extends EntityListener {
                 lastDamage = "PVP:" + usingItem + ":" + murderer.getName().toString();
             }
         }
-        if(PlayerMap.containsKey(player.getName().toString()))
-        {
+        if (PlayerMap.containsKey(player.getName().toString())) {
             PlayerMap.remove(player.getName().toString());
             PlayerMap.put(player.getName().toString(), lastDamage);
-        }
-        else
-        {
+        } else {
             PlayerMap.put(player.getName().toString(), lastDamage);
         }
         return lastDamage;

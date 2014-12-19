@@ -14,16 +14,17 @@ public class LoginCallback implements IThreadCallback {
 	Player m_player = null;
 	boolean configDirty = false;
 	
-	public LoginCallback( MonkeyMod instance, CommandSender owner ){
+    public LoginCallback(MonkeyMod instance, CommandSender owner) {
 		m_plugin = instance;
 		m_owner = owner;
-		if( owner instanceof Player )
-			m_player = (Player)owner;
+        if (owner instanceof Player) {
+            m_player = (Player) owner;
+        }
 	}
 
 	public void processLine(String result) {
 		
-		if(!result.equals(null) || !result.isEmpty()){
+        if (result != null && !result.isEmpty()) {
 			
 			String booleanValues[] = {
 				"isAdmin",
@@ -35,11 +36,11 @@ public class LoginCallback implements IThreadCallback {
 			result = result.trim();
 			String split[] = result.split(":");
 			
-			if (split.length == 2){
-				for ( int i = 0; i < booleanValues.length; i++ ){
+            if (split.length == 2) {
+                for (int i = 0; i < booleanValues.length; i++) {
 					if (split[0].equalsIgnoreCase(booleanValues[i])) {
 						m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(
-								m_player.getName().toLowerCase()+"."+booleanValues[i],
+                                m_player.getName().toLowerCase() + "." + booleanValues[i],
 								split[1].equalsIgnoreCase("true"));
 						configDirty = true;
 						return;
@@ -47,20 +48,19 @@ public class LoginCallback implements IThreadCallback {
 				}
 			}
 			
-			Message(result);
+            message(result);
 		}
 	}
 
 	public void complete() {
-		if (configDirty)
+        if (configDirty) {
 			m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).save();
-		
-		Message(ChatColor.GREEN + "Login Complete");
 	}
 	
-
-	private void Message(String msg) {
-        m_owner.sendMessage(msg);
+        message(ChatColor.GREEN + "Login Complete");
     }
 
+    private void message(String msg) {
+        m_owner.sendMessage(msg);
+    }
 }

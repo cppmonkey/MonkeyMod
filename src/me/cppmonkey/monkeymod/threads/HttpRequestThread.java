@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
+import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
@@ -30,20 +31,20 @@ public class HttpRequestThread extends Thread {
     @SuppressWarnings("unused")
     private MonkeyMod m_plugin;
 
-    public HttpRequestThread(String id, CommandSender player, String url, String[] parms) {
+    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms) {
 
         m_ThreadOwner = player;
         m_debug = false;
 
         try {
-            m_url = new URL(url + "?" + ParseUrlParms(parms));
+            m_url = new URL(url + "?" + parseUrlParms(parms));
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
     }
     
-    public HttpRequestThread(String id, CommandSender player, String url, String[] parms, MonkeyMod plugin) {
+    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, MonkeyMod plugin) {
 
     	m_plugin = plugin;
     	
@@ -51,14 +52,14 @@ public class HttpRequestThread extends Thread {
         m_debug = false;
 
         try {
-            m_url = new URL(url + "?" + ParseUrlParms(parms));
+            m_url = new URL(url + "?" + parseUrlParms(parms));
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
     }
 
-    public HttpRequestThread(String id, CommandSender player, String url, String[] parms, MonkeyMod plugin, IThreadCallback callback) {
+    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, MonkeyMod plugin, IThreadCallback callback) {
     	
     	m_plugin = plugin;
     	m_callback = callback;
@@ -67,29 +68,29 @@ public class HttpRequestThread extends Thread {
         m_debug = false;
 
         try {
-            m_url = new URL(url + "?" + ParseUrlParms(parms));
+            m_url = new URL(url + "?" + parseUrlParms(parms));
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
     }
 
-    public HttpRequestThread(String id, CommandSender player, String url, String[] parms, Boolean debug) {
+    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, Boolean debug) {
 
         m_ThreadOwner = player;
         m_debug = debug;
 
         try {
-            m_url = new URL(url + "?" + ParseUrlParms(parms));
+            m_url = new URL(url + "?" + parseUrlParms(parms));
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
 
         if (m_debug) {
-            Message(getName());
-            Message("url: " + url);
-            Message("parms: " + ParseUrlParms(parms));
+            message(getName());
+            message("url: " + url);
+            message("parms: " + parseUrlParms(parms));
         }
 
     }
@@ -103,17 +104,17 @@ public class HttpRequestThread extends Thread {
         m_debug = debug;
 
         if (m_debug) {
-            Message(getName());
-            Message("url: " + url);
-            Message("parms: " + parms);
-            Message(url + "?" + parms);
+            message(getName());
+            message("url: " + url);
+            message("parms: " + parms);
+            message(url + "?" + parms);
         }
 
         try {
             m_url = new URL(url + "?" + parms);
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
     }
 
@@ -125,42 +126,42 @@ public class HttpRequestThread extends Thread {
         m_debug = debug;
 
         if (m_debug) {
-            Message(getName());
-            Message("url: " + url);
-            Message("parms: " + parms);
+            message(getName());
+            message("url: " + url);
+            message("parms: " + parms);
         }
 
         try {
             m_url = new URL(url + "?" + parms);
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
 
     }
 
-    public HttpRequestThread(String id, String url, String parms[], Boolean debug) {
+    public HttpRequestThread(String id, String url, Parm parms[], Boolean debug) {
         super(id);
 
         m_ThreadOwner = null;
         m_debug = debug;
 
         if (m_debug) {
-            Message(getName());
-            Message("url: " + url);
-            Message("parms: " + ParseUrlParms(parms));
+            message(getName());
+            message("url: " + url);
+            message("parms: " + parseUrlParms(parms));
         }
 
         try {
-            m_url = new URL(url + "?" + ParseUrlParms(parms));
+            m_url = new URL(url + "?" + parseUrlParms(parms));
         } catch (MalformedURLException e) {
-            Message("HttpRequestThread() Exception");
-            Message(e.getMessage());
+            message("HttpRequestThread() Exception");
+            message(e.getMessage());
         }
 
     }
 
-    private void Message(String msg) {
+    private void message(String msg) {
         if (m_ThreadOwner != null) {
             m_ThreadOwner.sendMessage(msg);
         } else {
@@ -206,14 +207,14 @@ public class HttpRequestThread extends Thread {
                 	
                 
             } catch (IOException e) {
-                Message(name + " Unable to get InputStream");
+                message(name + " Unable to get InputStream");
             }
 
 
         } catch (IOException e) {
-            Message("HttpRequestThread.run() Exception");
+            message("HttpRequestThread.run() Exception");
             for (int i = 0; i < e.getMessage().length() / 50; ++i) {
-                Message(e.getMessage().substring(i * 50, (i + 1) * 50));
+                message(e.getMessage().substring(i * 50, (i + 1) * 50));
             }
         } finally {
             urlConn.disconnect();
@@ -222,16 +223,14 @@ public class HttpRequestThread extends Thread {
         }
     }
 
-    private String ParseUrlParms(String parms[]) {
-        String parsedParms = "";
+    private String parseUrlParms(Parm parms[]) {
+        StringBuilder parsedParms = new StringBuilder("?");
+        parsedParms.append(parms[0].name).append("=").append(parms[0].value);
 
-        for (int i = 0; i < parms.length; i++) {
-            parsedParms += parms[i];
-
-            if (i < parms.length - 1) {
-                parsedParms += "&";
-            }
+        for (int i = 1; i < parms.length; i++) {
+            parsedParms.append("&").append(parms[i].name).append("=").append(parms[i].value);
         }
-        return parsedParms;
+
+        return parsedParms.toString();
     }
 }

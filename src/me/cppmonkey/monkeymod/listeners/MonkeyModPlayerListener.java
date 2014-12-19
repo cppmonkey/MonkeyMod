@@ -2,10 +2,10 @@ package me.cppmonkey.monkeymod.listeners;
 
 import java.net.URLEncoder;
 
-import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.BoxyExecutor;
+import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.callback.LoginCallback;
-import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 import org.bukkit.ChatColor;
@@ -37,11 +37,11 @@ public class MonkeyModPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
 
         // setting up parms for http request
-        String[] parms = {
-            "action=connect",
-            "player=" + player.getName(),
-                "vip=" + Boolean.toString(m_plugin.getPermition(player, ".isVip")),
-            "admin=" + Boolean.toString(m_plugin.getPermition(player, ".isAdmin"))};
+            Parm[] parms = {
+                new Parm("action", "connect"),
+                new Parm("player", player.getName()),
+                new Parm("vip", Boolean.toString(m_plugin.getPermition(player, ".isVip"))),
+                new Parm("admin", Boolean.toString(m_plugin.getPermition(player, ".isAdmin")))};
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
                 player,
@@ -80,9 +80,9 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
         Player player = event.getPlayer();
         //reporting to cppmonkey.net
-        String[] parms = {
-            "action=disconnect",
-            "player=" + player.getName()
+        Parm[] parms = {
+            new Parm("action", "disconnect"),
+            new Parm("player", player.getName())
         };
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
@@ -100,10 +100,10 @@ public class MonkeyModPlayerListener extends PlayerListener {
         String message = event.getMessage();
 
         try {
-            String parms[] = {
-                "action=message",
-                "player=" + URLEncoder.encode(player.getName(), "UTF-8"),
-                "message=" + URLEncoder.encode(message, "UTF-8")
+            Parm parms[] = {
+                new Parm("action", "message"),
+                new Parm("player", URLEncoder.encode(player.getName(), "UTF-8")),
+                new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
             HttpRequestThread notification = new HttpRequestThread(
                     "Disconnection Notification Thread:" + player.getName(),
@@ -113,7 +113,8 @@ public class MonkeyModPlayerListener extends PlayerListener {
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         } catch (Exception e) {
-            //Do something?
+            //FIXME Do something with exception?
+            System.out.println(e.getMessage());
         }
     }
 
@@ -137,14 +138,14 @@ public class MonkeyModPlayerListener extends PlayerListener {
         if (player != null) {
             // player interaction sent from player
             Action click = event.getAction();
-            if (click.compareTo(Action.RIGHT_CLICK_BLOCK) == 0) {
+            if (click.equals(Action.RIGHT_CLICK_BLOCK)) {
                 Configuration m_pluginBoxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
                 if (m_pluginBoxy.getBoolean(player.getName().toLowerCase() + ".enabled", false)) {
                     //user has boxy enabled
                     if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                         // FIXME allowed to use boxy, shouldn't this be the FIRST thing you check?
                         // RE:FIXME Players who are not VIP / Admin will never have the .enabled set to true, so this setting
-                        //          being first will supresss "You do not have permission to use Boxy" when non-vips right click stuff.
+                        //          being first will suppress "You do not have permission to use Boxy" when non-vips right click stuff.
                         //          The RIGHT_CLICK_BLOCK comparison is first for efficency purposes.
                         if (m_pluginBoxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
                             Block block = event.getClickedBlock();
@@ -158,18 +159,25 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                 //the switch compensates coords for the side of the block clicked
                                 switch (event.getBlockFace()) {
                                     case UP:
-                                        Y++;break;
+                                        Y++;
+                                        break;
                                     case DOWN:
-                                        Y--;break;
+                                        Y--;
+                                        break;
                                     case NORTH:
-                                        X++;break;
+                                        X++;
+                                        break;
                                     case SOUTH:
-                                        X--;break;
+                                        X--;
+                                        break;
                                     case EAST:
-                                        Z++;break;
+                                        Z++;
+                                        break;
                                     case WEST:
-                                        Z--;break;
-                                    default:break;
+                                        Z--;
+                                        break;
+                                    default:
+                                        break;
                                 }
                                     
                                 //FIXME Don't like the way this is called. Why create a new listener only just to make a single call? just move the code here?

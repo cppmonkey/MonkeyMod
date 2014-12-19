@@ -22,21 +22,6 @@ public class ItemCommand implements CommandExecutor {
         m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
     }
 
-    /*
-     * I Honestly don't know why you cast the int back to the string
-     * It will need to be re-parsed...
-     * re-use of variables good idea, just poor execution
-     */
-    @SuppressWarnings({ "static-access", "null", "unused" })
-    private String itemName(String Item) {
-        //returns the ID of an item / block from a given string
-        //eg: input = CHEST
-        //return = 54
-        Material tempMaterial = null;
-        tempMaterial.matchMaterial(Item);
-        return Integer.toString(tempMaterial.getId());
-    }
-
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Has the sender provided arguments?
         if (args.length > 0) {
@@ -62,11 +47,9 @@ public class ItemCommand implements CommandExecutor {
                     Material itemMaterial = Material.matchMaterial(itemDetails[0]);
 
                     if (ItemRestricted(itemMaterial)) {
-                        //Item is restricted
-                        //TODO Allow exceptions to rule
-                        //RE:TODO: Allowed admins to spawn stuff
-                        if(m_plugin.getPermition(player, ".isAdmin"))
-                        {
+                        // Item is restricted
+                        // Allow exceptions to rule
+                        if (m_plugin.getPermition(player, ".isAdmin")) {
                             return false;
                         }
                         player.sendMessage(ChatColor.RED + "This item is restricted");
@@ -76,8 +59,8 @@ public class ItemCommand implements CommandExecutor {
                     // Material wasn't found trying again
                     if (itemMaterial == null) {
                         player.sendMessage(ChatColor.RED + "Item not found");
-                            return true;
-                        }
+                        return true;
+                    }
 
                     //Create stack for item. Size is 0 to begin with!
 

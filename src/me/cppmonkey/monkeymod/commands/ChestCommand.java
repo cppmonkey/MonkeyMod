@@ -27,26 +27,30 @@ public class ChestCommand implements CommandExecutor {
 
                 if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                     if (args.length == 1) {
-                        String arguments = args[0];
-                        if (arguments.matches("UNLOCK") || arguments.matches("unlock")) {
+                        if ("UNLOCK".equalsIgnoreCase(args[0])) {
                             m_chestPermissions.setProperty(player.getName().toLowerCase() + ".key", "UNLOCK");
                             m_chestPermissions.save();
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to UNLOCK");
-                        return true;
-                        } else if (arguments.matches("LOCK") || arguments.matches("lock")) {
+                            return true;
+                        } else if ("LOCK".equalsIgnoreCase(args[0])) {
                             m_chestPermissions.setProperty(player.getName().toLowerCase() + ".key", "LOCK");
                             m_chestPermissions.save();
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to LOCK");
                             return true;
-                }
-            }
+                        }
+                    } // END length 1
                 } else {
                     player.sendMessage(ChatColor.RED + "Advanced chest functions are for VIPs only!");
-        return true;
-    }
+                    return true;
+                }
+            } else {
+                // Could be an entity... Creeper that destroyed it?
+                System.out.println("[WARNING] Console cant use Chest Commands");
+                return false;
             }
+        }
+        // No args supplied
+        System.out.println("[WARNING] Chest Commands called without any args");
         return false;
-    }
-                return true;
     }
 }

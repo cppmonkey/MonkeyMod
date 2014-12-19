@@ -26,7 +26,7 @@ public class MonkeyModBlockListener extends BlockListener {
         // is player?
         if (player != null) {
             if (m_plugin.getPermition(player, ".canIgnite")) {
-                //CAN BURN!!!
+                // CAN BURN!!!
                 return; // nothing else to do here
             } else {
                 //Not allowed to burn

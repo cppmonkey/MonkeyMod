@@ -54,6 +54,16 @@ commands:
            /<command> <set> <home number>
            /<command> <home number>
            Example: /<command> 1
+  list:
+    description: Displays list of online players
+    usage: |
+           /<command>
+           Example: /<command>
+  inventory:
+    description: Outputs a players inventory ( admins only )
+    usage: |
+           /<command> <player name>
+           Example: /<command> notch
   plugin:
     description: Reload plugins
     usage: |

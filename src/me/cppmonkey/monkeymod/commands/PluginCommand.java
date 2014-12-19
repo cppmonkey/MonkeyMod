@@ -18,6 +18,7 @@ import org.bukkit.plugin.PluginManager;
  * @author CppMonkey
  */
 public class PluginCommand implements CommandExecutor {
+
     private final MonkeyMod m_plugin;
 
     public PluginCommand(MonkeyMod instance) {
@@ -32,15 +33,15 @@ public class PluginCommand implements CommandExecutor {
                 final PluginManager pm = m_plugin.getServer().getPluginManager();
                 final Plugin plugin = pm.getPlugin(args[1]);
 
-                if(plugin.isEnabled()){
-                    new Thread(new Runnable(){
-                       public void run(){
-                           synchronized (pm)
-                           {
+                if (plugin.isEnabled()) {
+                    new Thread(new Runnable() {
+
+                        public void run() {
+                            synchronized (pm) {
                                 pm.disablePlugin(plugin);
-                               try{
+                                try {
                                pm.loadPlugin(new File("plugins", args[1] + ".jar"));
-                               }catch( Throwable ex){
+                                } catch (Throwable ex) {
                                    sender.sendMessage(ChatColor.RED + "Could load plugin " + args[1] + ".jar");
                                }
                             }

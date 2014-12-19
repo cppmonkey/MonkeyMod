@@ -8,7 +8,9 @@ package me.cppmonkey.monkeymod.interfaces;
  *
  * @author CppMonkey
  */
-public interface IThread{
-    public void Halt();
+public interface IThread {
+
+    public void halt();
+
     public void start();
 }

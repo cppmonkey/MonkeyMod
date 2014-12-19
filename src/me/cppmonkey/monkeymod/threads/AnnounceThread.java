@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThread;
 
-public class AnnounceThread extends Thread implements IThread{
+public class AnnounceThread extends Thread implements IThread {
 
     private Boolean m_halt = false;
     private MonkeyMod m_plugin;
@@ -28,14 +28,15 @@ public class AnnounceThread extends Thread implements IThread{
         m_interval = interval;
     }
     /*
-     * TODO Validate server registration, if found, dont start server
+     * TODO Validate server registration, if found, don't start server
      */
 
-    public Boolean VerifyRegistration() {
+    // verify Registration
+    public Boolean verifyRegistration() {
         return true;
     }
 
-    public void Halt() {
+    public void halt() {
         m_halt = true;
     }
 
@@ -47,7 +48,7 @@ public class AnnounceThread extends Thread implements IThread{
         //While not told to halt, loop
         while (!m_halt) {
                 
-            if( System.nanoTime() - startTime > interval ){
+            if (System.nanoTime() - startTime > interval) {
                 startTime = System.nanoTime();
                 // Iterate through the message strings, broadcasting
                 for (int i = 0; i < m_msg.length; i++) {

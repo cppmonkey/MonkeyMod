@@ -41,10 +41,6 @@ public class InspectionCommand implements CommandExecutor {
             if ((sender instanceof Player)) {
                 Player player = (Player) sender;
 
-
-
-
-
                 if (!m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "Admin access only!");
                     return true;
@@ -58,30 +54,14 @@ public class InspectionCommand implements CommandExecutor {
                     }
                     if (playerNum != -1) {
                         int numOfItems = onPlayers[playerNum].getInventory().getContents().length;
-                        for(int i = 0; i < numOfItems;i++){
+                        for (int i = 0; i < numOfItems; i++) {
                             player.sendMessage(ChatColor.GOLD + onPlayers[playerNum].getInventory().toString());
                         }
                     } else {
                         player.sendMessage(ChatColor.GOLD + "Player not found.");
                     }
-                    return true;
-
-
-
-
-
-
-
-
-
-                
-                
-                
-                
-                
-                
-                
-                
+                    return true;   
+                }
             }
         }
         return false;

@@ -15,11 +15,13 @@ import org.bukkit.Location;
 public class BoxyExecutor {
     private final MonkeyMod m_plugin;
     private final Configuration m_settings;
+
     public BoxyExecutor(MonkeyMod instance) {
         m_plugin = instance;
         m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
     }
-       @Deprecated // user Material.isSolid()
+
+    @Deprecated // user Material.isSolid()
     private boolean Solids(int value) {
         switch (value) {
             case 8:
@@ -167,15 +169,15 @@ public class BoxyExecutor {
         boolean Excluded = false;
         if (everything) {
             player.sendMessage(ChatColor.BLUE + "everything");
-            CPosition position = new CPosition(0,0,0);
-            for (position.setY((int)start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
+            CPosition position = new CPosition(0, 0, 0);
+            for (position.setY((int) start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
                 current.setY(position.getY());
-                for (position.setZ((int)start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
+                for (position.setZ((int) start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
                     current.setZ(position.getZ());
-                    for (position.setX((int)start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
+                    for (position.setX((int) start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
-                            if (world.getBlockTypeIdAt(current) == exclusionsI[e]){
+                            if (world.getBlockTypeIdAt(current) == exclusionsI[e]) {
                                 Excluded = true;
                                 //player.sendMessage(ChatColor.BLUE + "excluded");
                             }
@@ -190,12 +192,12 @@ public class BoxyExecutor {
             }
         } else if (solids) {
             player.sendMessage(ChatColor.BLUE + "solids");
-            CPosition position = new CPosition(0,0,0);
-            for (position.setY((int)start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
+            CPosition position = new CPosition(0, 0, 0);
+            for (position.setY((int) start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
                 current.setY(position.getY());
-                for (position.setZ((int)start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
+                for (position.setZ((int) start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
                     current.setZ(position.getZ());
-                    for (position.setX((int)start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
+                    for (position.setX((int) start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
                             if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || (!Solids(world.getBlockTypeIdAt(current)))) {
@@ -213,12 +215,12 @@ public class BoxyExecutor {
             }
         } else {
             player.sendMessage(ChatColor.BLUE + "select group");
-            CPosition position = new CPosition(0,0,0);
-            for (position.setY((int)start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
+            CPosition position = new CPosition(0, 0, 0);
+            for (position.setY((int) start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
                 current.setY(position.getY());
-                for (position.setZ((int)start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
+                for (position.setZ((int) start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
                     current.setZ(position.getZ());
-                    for (position.setX((int)start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
+                    for (position.setX((int) start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
                             if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || ((world.getBlockTypeIdAt(current) != fromMaterial.getId()))) {
@@ -239,5 +241,4 @@ public class BoxyExecutor {
         m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION COMPLETE!");
         return true;
     }
-
 }
