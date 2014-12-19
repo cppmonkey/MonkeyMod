@@ -121,7 +121,7 @@ if( isset($_GET["action"]) && $server )
              * new Parm("vip", Boolean.toString(player.isInGroup("vip")))
              * };
              */
-		}
+		}	
 
 		if( $dblink )
 		{
@@ -181,14 +181,14 @@ if( isset($_GET["action"]) && $server )
 							{
 								print "Player not vip"."\n";
 								
-								if ($permissions["canBuild"] == "true" && $permissions["isAdmin"] != "true") {
+								if ( (isset($permissions["canBuild"]) && $permissions["canBuild"] == "true") && (isset($permissions["isAdmin"]) && $permissions["isAdmin"] != "true")) {
 									print $server->ExecCommand( "modify ".$_GET['player']." g:default ir:false" )."\n";
-								}else if ($permissions["isAdmin"] == "true") {
+								}else if (isset($permissions["isAdmin"]) && $permissions["isAdmin"] == "true") {
 									print $server->ExecCommand( "modify ".$_GET['player']." g:admins ir:true" )."\n";
 								}
 							}
 						}
-
+							
 						if ($results->num_rows > 0 )
 						{
 							while ($row = $results->fetch_row())
@@ -204,18 +204,18 @@ if( isset($_GET["action"]) && $server )
 					{
 						echo "unable to execute<br>".$query."<br>".$dblink->sqlstate;
 					}
-
-
+						
+						
 					//Process Subscriptions
-
-
+						
+						
 				}
 			}
 			else
 			{
 				echo "unable to insert<br>".$query."<br>".$dblink->sqlstate;
 			}
-
+				
 		}
 		else
 		{

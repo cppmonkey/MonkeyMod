@@ -19,22 +19,32 @@ if (isset($_GET['serverip']))
 	$server = $minecraft->ServerFromIp($_GET['serverip']);
 	
 	if ($server)
-	
 	{
-		$query = sprintf( "SELECT
-			DISTINCT `mc_transition`.`player`, `mc_players`.`player_id`
-		FROM
-			`mc_transition` 
-		INNER JOIN
-			`mc_players`
-		ON
-			`mc_transition`.`player` = `mc_players`.`player_name`
+		if (isset($_GET['userid'])) {
+			$query = sprintf( "SELECT `permission`, `value`
+				FROM
+					`mc_permissions`
 
-		WHERE `server_id` = '%d';", $dblink->real_escape_string( $server->GetId() ) );
+				WHERE `server_id` = '%d' AND `player_id` = '%d';", 
+					$dblink->real_escape_string( $server->GetId() ),
+					$dblink->real_escape_string( $_GET['userid'] )
+					);
+		}else{
+			$query = sprintf( "SELECT
+					DISTINCT `mc_transition`.`player` AS `name`, `mc_players`.`player_id` as `id`
+				FROM
+					`mc_transition` 
+				INNER JOIN
+					`mc_players`
+				ON
+					`mc_transition`.`player` = `mc_players`.`player_name`
+
+				WHERE `server_id` = '%d';", $dblink->real_escape_string( $server->GetId() ) );
+		}
 	}
 	else
 	{
-		echo "ERROR";
+		echo '{"name":"error :- '.$dblink->error.'","id":"-1"}';
 	}
 }
 else
@@ -76,8 +86,7 @@ if( !mysqli_connect_errno() )
 		echo "]";
 	}
 }else{
-	echo "invalid database link<br>";
-	echo "Connect Error: " . mysqli_connect_error();
+	echo '{"name":"error :- '.mysqli_connect_error().'","id":"-1"}';
 }
 
 ?>

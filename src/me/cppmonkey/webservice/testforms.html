@@ -19,14 +19,12 @@ onerror=function handleErr( msg, url, l )
 		$("#usermessage").submit(function() {
 			$("#results").prepend(
 				"<div><a href=\"" + "update.php?"+$(this).serialize() + "\">simulate chat</a></div>" );
-			//alert($(this).serialize());
 			return false;
 		});
 		
 		$("#userconnect").submit(function() {
 				$("#results").prepend(
 					"<div><a href=\"" + "update.php?"+$(this).serialize()+"\">simulate connection</a></div>");
-				//alert($(this).serialize());
 				return false;
 			});
 			
@@ -53,6 +51,20 @@ onerror=function handleErr( msg, url, l )
 						$('#chat').empty();
 						for (var i = 0; i < data.length; i++){
 							$('#chat').append( "<div>"+data[i].name + " :- "+ data[i].msg +"</div>");
+						}
+					});
+			});
+		$("#refreshserveriphistory").click(function(){
+				$("#serveriphistory").trigger("change");
+			});
+		$("#serverknownusersedituseraccess").change(function(){
+				$.getJSON("playerlist.php?", {serverip: $("#severipedituseraccess").val(), userid: this.value},function(data){
+						$("form#edituseraccess input:checkbox").removeAttr("checked");
+						
+						for (var i = 0; i < data.length; i++) {
+							if (data[i].value == "true") {
+								$("#edituseraccess"+data[i].permission).attr("checked","checked");
+							}							
 						}
 					});
 			});
@@ -100,17 +112,17 @@ onerror=function handleErr( msg, url, l )
 <input type="hidden" name="action" value="" />
 <select id="severipedituseraccess" name="serverip"></select>
 <select id="serverknownusersedituseraccess" name="serverknownusers" size="7" multiple="multiple"></select>
-<label for="">isVip</label><input name="isVip" type="checkbox" />
-<label for="">isAdmin</label><input name="isAdmin" type="checkbox" />
-<label for="">canBuild</label><input name="canBuild" type="checkbox" />
-<label for="">canIgnite</label><input name="canIgnite" type="checkbox" />
+<label for="">isVip</label><input id="edituseraccessisVip" name="isVip" type="checkbox" />
+<label for="">isAdmin</label><input id="edituseraccessisAdmin" name="isAdmin" type="checkbox" />
+<label for="">canBuild</label><input id="edituseraccesscanBuild" name="canBuild" type="checkbox" />
+<label for="">canIgnite</label><input id="edituseraccesscanIgnite" name="canIgnite" type="checkbox" />
 <input type="submit" />
 </form>
 </fieldset>
 </div>
 <div>
 <form id="serverhistory">
-<label for="serveriphistory">Server</label><select id="serveriphistory" name="serveriphistory"></select>
+<label for="serveriphistory">Server</label><select id="serveriphistory" name="serveriphistory"></select><input type="button" id="refreshserveriphistory" value="Refresh"></input>
 </form>
 </div>
 <div id="results" class="results">
