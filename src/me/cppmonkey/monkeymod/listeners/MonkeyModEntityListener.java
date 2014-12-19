@@ -63,15 +63,15 @@ public class MonkeyModEntityListener extends EntityListener {
             String killerDetails[] = killer.split(":");
             if(killerDetails.length > 1)
             {
-                if(killerDetails[0].equalsIgnoreCase("WOLF"))
+                if("WOLF".equalsIgnoreCase(killerDetails[0]))
                 {
                     return " was mauled to  death by " + killerDetails[1].toString() + "'s wolf.";
                 }
-                if(killerDetails[0].equalsIgnoreCase("SHOT"))
+                if("SHOT".equalsIgnoreCase(killerDetails[0]))
                 {
                     return " was shot by " + killerDetails[2].toString() + "'s " + killerDetails[1].toString();
                 }
-                if(killerDetails[0].equalsIgnoreCase("PVP"))
+                if("PVP".equalsIgnoreCase(killerDetails[0]))
                 {
                     return " was killed by " + killerDetails[2].toString() + ", using a " + killerDetails[1].toString();
                 }
