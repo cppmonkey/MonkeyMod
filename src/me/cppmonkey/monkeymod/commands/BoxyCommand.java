@@ -58,7 +58,7 @@ public class BoxyCommand implements CommandExecutor {
             //Start point selected
             m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", true);
             m_settings.setProperty(player.getName().toLowerCase() + ".startLocation", (X + "," + Y + "," + Z));
-            m_settings.setProperty(player.getName().toLowerCase() + ".startWorld", block.getWorld().getName().toString());
+            m_settings.setProperty(player.getName().toLowerCase() + ".startWorld", block.getWorld().getName().toString()); // FIXME toString? why it is a string...?
             player.sendMessage(ChatColor.GREEN + "Boxy start point confirmed");
             m_settings.save();
             return true;
