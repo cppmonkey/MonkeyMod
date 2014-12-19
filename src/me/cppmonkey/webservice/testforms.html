@@ -4,6 +4,17 @@
 <title>http request test forms</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript">
+
+onerror=function handleErr( msg, url, l )
+{
+	txt = "";
+	txt+="msg=" + msg + "&";
+	txt+="url=" + url + "&";
+	txt+="line=" + l + "&";
+	alert( txt );
+	return true;
+}
+
 	$().ready(function(){
 		$("#usermessage").submit(function() {
 			$("#results").prepend(
@@ -27,12 +38,21 @@
 			});
 			
 		$("#severipedituseraccess").change(function(){
-				$.getJSON("playerlist.php?", { serverip: this.value}, function(data){
+				$.getJSON("playerlist.php?", { serverip: this.value }, function(data){
+						$('select[id][name^="serverknown"]').reset();
 						//Get player list from server
-						alert(data.length);
-						for (var i = 0; i < data.length; i++ )
-						{
+						for (var i = 0; i < data.length; i++ ){
 							$('select[id][name^="serverknown"]').append( new Option( data[i].name, data[i].id ));
+						}
+					});
+			});
+			
+		$("#serveriphistory").change(function(){
+				$.getJSON("history.php?", { serverip: this.value }, function(data){
+						//Process data
+						alert("help!");
+						for (var i = 0; i < data.length; i++){
+							$('#chat').append( "<div>"+data[i].name + " :- "+ data[i].msg +"</div>");
 						}
 					});
 			});
@@ -88,7 +108,14 @@
 </form>
 </fieldset>
 </div>
+<div>
+<form id="serverhistory">
+<label for="serveriphistory">Server</label><select id="serveriphistory" name="serveriphistory"></select>
+</form>
+</div>
 <div id="results" class="results">
+	<div id="chat"></div>
+	<div id="users"></div>
 </div>
 </body>
 </html>

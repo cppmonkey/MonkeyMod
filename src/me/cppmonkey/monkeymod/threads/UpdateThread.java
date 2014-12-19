@@ -21,8 +21,8 @@ import org.bukkit.command.CommandSender;
  * @author CppMonkey
  */
 public class UpdateThread extends Thread {
-    protected static final Logger log = Logger.getLogger("Minecraft");
 
+    protected static final Logger log = Logger.getLogger("Minecraft");
     public static String name = "Update Thread";
     public static String version = "1.3.1";
     private CommandSender m_ThreadOwner = null;
@@ -58,7 +58,6 @@ public class UpdateThread extends Thread {
         }
     }
 
-    @Override
     public void run() {
         String msg = "";
 

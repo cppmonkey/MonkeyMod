@@ -40,7 +40,6 @@ public class AnnounceThread extends Thread implements IThread {
         m_halt = true;
     }
 
-    @Override
     public void run() {
         m_plugin.getServer().broadcastMessage("Announcement thread started");
         long startTime = System.nanoTime();

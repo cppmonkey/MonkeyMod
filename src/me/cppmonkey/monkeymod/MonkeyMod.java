@@ -34,7 +34,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 62;
+    private Integer m_build = 107;
     private PluginDescriptionFile m_pluginDescFile;
     // Array Storage for Configs
     private Configuration[] m_configs;
@@ -215,6 +215,7 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public enum EConfig {
+
         PLUGIN,
         PERMISSIONS,
         VIP,
@@ -269,7 +270,8 @@ public class MonkeyMod extends JavaPlugin {
                     "logger.disconnect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.disconnect", true),
                     "logger.chat " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.chat", true),
                     "protection.grief " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true),
-                    "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false)
+                    "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false),
+                    "server.protection.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)
                 }; // TODO global list required to ensure ALL properties are listed 
     }
 

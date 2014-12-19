@@ -113,7 +113,11 @@ class RCon {
 		$ret = $this->Read();
 
 		//ATM: Source servers don't return the request id, but if they fix this the code below should read as
-		return $ret[$this->_Id]['S1'];
+		if (isset($ret[$this->_Id]['S1'])) {
+			return $ret[$this->_Id]['S1'];
+		} else {
+			return null;
+		}
 		//return $ret[0]['S1'];
 	}
 }

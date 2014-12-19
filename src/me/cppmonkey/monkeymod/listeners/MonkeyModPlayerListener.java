@@ -25,10 +25,12 @@ public class MonkeyModPlayerListener extends PlayerListener {
     private MonkeyMod m_plugin;
     @SuppressWarnings("unused")
     private Configuration m_permissions;
+    private Configuration m_boxy;
 
     public MonkeyModPlayerListener(MonkeyMod instance) {
         m_plugin = instance;
         m_permissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
+        m_boxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
     }
 
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -40,8 +42,8 @@ public class MonkeyModPlayerListener extends PlayerListener {
             Parm[] parms = {
                 new Parm("action", "connect"),
                 new Parm("player", player.getName()),
-                new Parm("vip", Boolean.toString(m_plugin.getPermition(player, ".isVip"))),
-                new Parm("admin", Boolean.toString(m_plugin.getPermition(player, ".isAdmin")))};
+                new Parm("vip", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase() + ".isVip", false))),
+                new Parm("admin", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase() + ".isAdmin", false)))};
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
                 player,
@@ -138,16 +140,14 @@ public class MonkeyModPlayerListener extends PlayerListener {
         if (player != null) {
             // player interaction sent from player
             Action click = event.getAction();
-            if (click.equals(Action.RIGHT_CLICK_BLOCK)) {
-                Configuration m_pluginBoxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
-                if (m_pluginBoxy.getBoolean(player.getName().toLowerCase() + ".enabled", false)) {
-                    //user has boxy enabled
-                    if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
-                        // FIXME allowed to use boxy, shouldn't this be the FIRST thing you check?
-                        // RE:FIXME Players who are not VIP / Admin will never have the .enabled set to true, so this setting
-                        //          being first will suppress "You do not have permission to use Boxy" when non-vips right click stuff.
-                        //          The RIGHT_CLICK_BLOCK comparison is first for efficency purposes.
-                        if (m_pluginBoxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
+            if (click.equals(Action.RIGHT_CLICK_BLOCK)
+                    && m_boxy.getBoolean(player.getName().toLowerCase() + ".enabled", false)
+                    && m_boxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
+
+                if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+                    player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
+                } else {
+
                             Block block = event.getClickedBlock();
                             int X = 0;
                             int Y = 0;
@@ -179,23 +179,15 @@ public class MonkeyModPlayerListener extends PlayerListener {
                                     default:
                                         break;
                                 }
-                                    
                                 //FIXME Don't like the way this is called. Why create a new listener only just to make a single call? just move the code here?
                                 //RE:FIXME Not an actual player listener, just a funtion name ( now renamed ). Code is kept seperate so we dont have to pass over a load off stuff out of BoxyCommand.java
                                 //RE:RE:FIXME I know its not, but its does still have to create one using new. Its not a command and there for shouldn't be in the command class. I've managed, it wouldn't be too bad if it was possible for it to be a static call but its not.
                                 //RE:RE:RE:FIXME Now moved to seperate class. plz remove if you are happy, otherwise, plz add annother RE
                                 BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
                                 BoxyRunner.playerBoxyClickEvent(player, block, X, Y, Z);
-                                return;
                             } catch (NullPointerException e) {
                                 player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
                                 m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION FAILED!");
-                                return;
-                    }
-                        }
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
-                        return;
                     }
                 }
             }

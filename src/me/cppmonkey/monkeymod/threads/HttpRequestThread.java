@@ -37,7 +37,7 @@ public class HttpRequestThread extends Thread {
         m_debug = false;
 
         try {
-            m_url = new URL(url + "?" + parseUrlParms(parms));
+            m_url = new URL(url + parseUrlParms(parms));
         } catch (MalformedURLException e) {
             message("HttpRequestThread() Exception");
             message(e.getMessage());
@@ -52,7 +52,7 @@ public class HttpRequestThread extends Thread {
         m_debug = false;
 
         try {
-            m_url = new URL(url + "?" + parseUrlParms(parms));
+            m_url = new URL(url + parseUrlParms(parms));
         } catch (MalformedURLException e) {
             message("HttpRequestThread() Exception");
             message(e.getMessage());
@@ -68,7 +68,7 @@ public class HttpRequestThread extends Thread {
         m_debug = false;
 
         try {
-            m_url = new URL(url + "?" + parseUrlParms(parms));
+            m_url = new URL(url + parseUrlParms(parms));
         } catch (MalformedURLException e) {
             message("HttpRequestThread() Exception");
             message(e.getMessage());
@@ -81,7 +81,7 @@ public class HttpRequestThread extends Thread {
         m_debug = debug;
 
         try {
-            m_url = new URL(url + "?" + parseUrlParms(parms));
+            m_url = new URL(url + parseUrlParms(parms));
         } catch (MalformedURLException e) {
             message("HttpRequestThread() Exception");
             message(e.getMessage());
@@ -91,51 +91,6 @@ public class HttpRequestThread extends Thread {
             message(getName());
             message("url: " + url);
             message("parms: " + parseUrlParms(parms));
-        }
-
-    }
-
-    // Legacy support
-    @Deprecated
-    public HttpRequestThread(String id, CommandSender player, String url, String parms, Boolean debug) {
-        super(id);
-
-        m_ThreadOwner = player;
-        m_debug = debug;
-
-        if (m_debug) {
-            message(getName());
-            message("url: " + url);
-            message("parms: " + parms);
-            message(url + "?" + parms);
-        }
-
-        try {
-            m_url = new URL(url + "?" + parms);
-        } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
-        }
-    }
-
-    @Deprecated
-    public HttpRequestThread(String id, String url, String parms, Boolean debug) {
-        super(id);
-
-        m_ThreadOwner = null;
-        m_debug = debug;
-
-        if (m_debug) {
-            message(getName());
-            message("url: " + url);
-            message("parms: " + parms);
-        }
-
-        try {
-            m_url = new URL(url + "?" + parms);
-        } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
         }
 
     }
@@ -153,7 +108,7 @@ public class HttpRequestThread extends Thread {
         }
 
         try {
-            m_url = new URL(url + "?" + parseUrlParms(parms));
+            m_url = new URL(url + parseUrlParms(parms));
         } catch (MalformedURLException e) {
             message("HttpRequestThread() Exception");
             message(e.getMessage());

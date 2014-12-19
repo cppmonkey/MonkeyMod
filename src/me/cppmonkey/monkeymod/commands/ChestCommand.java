@@ -20,21 +20,19 @@ public class ChestCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length > 0) {
-            // Must be a player to use these commands
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                if (args.length > 0) {
+                // Must be a player to use these commands
 
                 if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                     if (args.length == 1) {
                         if ("UNLOCK".equalsIgnoreCase(args[0])) {
                             m_chestPermissions.setProperty(player.getName().toLowerCase() + ".key", "UNLOCK");
-                            m_chestPermissions.save();
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to UNLOCK");
                             return true;
                         } else if ("LOCK".equalsIgnoreCase(args[0])) {
                             m_chestPermissions.setProperty(player.getName().toLowerCase() + ".key", "LOCK");
-                            m_chestPermissions.save();
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to LOCK");
                             return true;
                         }
@@ -44,13 +42,14 @@ public class ChestCommand implements CommandExecutor {
                     return true;
                 }
             } else {
-                // Could be an entity... Creeper that destroyed it?
-                System.out.println("[WARNING] Console cant use Chest Commands");
+                // No args supplied
+                player.sendMessage(ChatColor.RED + "Chest Commands called without any args");
                 return false;
             }
         }
-        // No args supplied
-        System.out.println("[WARNING] Chest Commands called without any args");
+
+        // Could be an entity... Creeper that destroyed it?
+        System.out.println("[WARNING] Console cant use Chest Commands");
         return false;
     }
 }

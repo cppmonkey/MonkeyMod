@@ -263,10 +263,8 @@ public class MonkeyModEntityListener extends EntityListener {
         } else {
             //Animal death
         }
-            
     }
 
-    @Override
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -294,23 +292,23 @@ public class MonkeyModEntityListener extends EntityListener {
             lastDamage = attacker.getClass().getSimpleName();
             if (attacker.getClass().getSimpleName().equalsIgnoreCase("CraftWolf")) {
                 Wolf thisWolf = (Wolf) attacker;
-                lastDamage = "WOLF:" + thisWolf.getOwner().toString();
+                lastDamage = "WOLF:" + thisWolf.getOwner();
             }  else if (attacker instanceof Player) {
                 Player murderer = (Player) attacker;
-                String usingItem = murderer.getItemInHand().getType().name().toString();
+                String usingItem = murderer.getItemInHand().getType().name();
                 if (usingItem.equalsIgnoreCase("AIR")) {
                     usingItem = "bare hands";
                 }
                 usingItem = usingItem.toLowerCase();
                 usingItem = usingItem.replace("_", " ");
-                lastDamage = "PVP:" + usingItem + ":" + murderer.getName().toString();
+                lastDamage = "PVP:" + usingItem + ":" + murderer.getName();
             }
         }
-        if (PlayerMap.containsKey(player.getName().toString())) {
-            PlayerMap.remove(player.getName().toString());
-            PlayerMap.put(player.getName().toString(), lastDamage);
+        if (PlayerMap.containsKey(player.getName())) {
+            PlayerMap.remove(player.getName());
+            PlayerMap.put(player.getName(), lastDamage);
         } else {
-            PlayerMap.put(player.getName().toString(), lastDamage);
+            PlayerMap.put(player.getName(), lastDamage);
         }
         return lastDamage;
     }

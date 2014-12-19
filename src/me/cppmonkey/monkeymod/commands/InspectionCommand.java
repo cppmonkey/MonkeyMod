@@ -28,19 +28,16 @@ public class InspectionCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().toString().equals("list")) {
-            if ((sender instanceof Player)) {
-                Player player = (Player) sender;
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if ("list".equalsIgnoreCase(command.getName())) {
                 Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                 player.sendMessage(ChatColor.GREEN + "players: ");
                 for (int i = 0; i < onPlayers.length; i++) {
                     player.sendMessage(ChatColor.GREEN + onPlayers[i].getDisplayName() + ",");
                 }
-            }
-        } else if (command.getName().toString().equals("inventory")) {
-            if ((sender instanceof Player)) {
-                Player player = (Player) sender;
-
+                return true;
+            } else if ("inventory".equalsIgnoreCase(command.getName())) {
                 if (!m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "Admin access only!");
                     return true;
@@ -48,7 +45,7 @@ public class InspectionCommand implements CommandExecutor {
                     Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                     int playerNum = -1;
                     for (int i = 0; i < onPlayers.length; i++) {
-                        if (onPlayers[i].getName().toString().contains(args[0].toString())) {
+                        if (onPlayers[i].getName().toString().contains(args[0])) {
                             playerNum = i;
                         }
                     }

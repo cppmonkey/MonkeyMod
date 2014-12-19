@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod;
 import org.bukkit.block.Block;
 
 public class CPosition {
+
 	private Integer x;
 	private Integer y;
 	private Integer z;

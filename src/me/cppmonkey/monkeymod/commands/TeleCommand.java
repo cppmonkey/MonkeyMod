@@ -30,7 +30,7 @@ public class TeleCommand implements CommandExecutor {
     private boolean home(CommandSender sender, String[] args) {
         if (args.length > 0) {
             // is the sender a player?
-            if ((sender instanceof Player)) {
+            if (sender instanceof Player) {
 
                 Player player = (Player) sender;
 
@@ -41,8 +41,7 @@ public class TeleCommand implements CommandExecutor {
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("set")) {
                         if (args[1].matches("[1-5]")) {
-                            m_settings.setProperty((player.getName().toLowerCase() + "-" + args[1].toString()), (player.getWorld().getName().toString() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()));
-                            m_settings.save();
+                            m_settings.setProperty(player.getName().toLowerCase() + "-" + args[1], player.getWorld().getName() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ());
                             player.sendMessage(ChatColor.GREEN + "Saved");
                             return true;
                         }
@@ -50,13 +49,13 @@ public class TeleCommand implements CommandExecutor {
                 } else if (args.length == 1) {
                     if (args[0].matches("[1-5]")) {
                         try {
-                            String Pos = m_settings.getString((player.getName().toLowerCase() + "-" + args[0].toString()), "empty");
+                            String Pos = m_settings.getString(player.getName().toLowerCase() + "-" + args[0], "empty");
                             if (Pos.equals("empty")) {
                                 player.sendMessage(ChatColor.RED + "Input error. Are you sure you have saved a home warp here?");
                                 return false;
                             } else {
                                 String Details[] = Pos.split(":");
-                                if (Details[0].equalsIgnoreCase(player.getWorld().getName().toString())) {
+                                if (Details[0].equalsIgnoreCase(player.getWorld().getName())) {
                                     // csv xyz = [1]
                                     String Coords[] = Details[1].split(",");
                                     double X = Double.parseDouble(Coords[0]);
@@ -87,7 +86,7 @@ public class TeleCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
                 return true;
             } else {
-                player.teleport(m_plugin.getServer().getWorld(player.getWorld().getName().toString()).getSpawnLocation());
+                player.teleport(m_plugin.getServer().getWorld(player.getWorld().getName()).getSpawnLocation());
                 return true;
             }
         }
@@ -106,15 +105,15 @@ public class TeleCommand implements CommandExecutor {
                     int playerNum = -1;
                     for (int i = 0; i < onPlayers.length; i++) {
                         player.sendMessage(ChatColor.GREEN + "player: " + onPlayers[i]);
-                        if (onPlayers[i].getName().toString().contains(args[0].toString())) {
+                        if (onPlayers[i].getName().contains(args[0])) {
                             playerNum = i;
                         }
                     }
                     if (playerNum != -1) {
-                        if (player.getWorld().getName().toString().equals(onPlayers[playerNum].getWorld().getName())) {
+                        if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName())) {
                             player.teleport(onPlayers[playerNum].getLocation());
                         } else {
-                            player.sendMessage(ChatColor.GOLD + "Target player is in annother world. Please go to the right world first.");
+                            player.sendMessage(ChatColor.GOLD + "Target player is in another world. Please go to the right world first.");
                         }
                     } else {
                         player.sendMessage(ChatColor.GOLD + "Player not found.");
@@ -127,11 +126,11 @@ public class TeleCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().toString().equals("home")) {
+        if (command.getName().equals("home")) {
             return home(sender, args);
-        } else if (command.getName().toString().equals("spawn")) {
+        } else if (command.getName().equals("spawn")) {
             return spawn(sender);
-        } else if (command.getName().toString().equals("tele")) {
+        } else if (command.getName().equals("tele")) {
             return tele(sender, args);
         }
         return false;

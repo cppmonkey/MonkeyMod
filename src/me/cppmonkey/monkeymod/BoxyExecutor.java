@@ -13,6 +13,7 @@ import org.bukkit.Location;
  * @author Alex
  */
 public class BoxyExecutor {
+
     private final MonkeyMod m_plugin;
     private final Configuration m_settings;
 

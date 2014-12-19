@@ -27,30 +27,24 @@ public class MonkeyModBlockListener extends BlockListener {
         if (player != null) {
             if (m_plugin.getPermition(player, ".canIgnite")) {
                 // CAN BURN!!!
-                return; // nothing else to do here
             } else {
                 //Not allowed to burn
                 player.sendMessage(ChatColor.RED + "You dont have permission to ignite");
 
                 event.setCancelled(true);
-                return;
             }
-        } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) // Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all
-        {
+            /* Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all */
+        } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) {
             // cancel environment based fire
             event.setCancelled(true);
-            return;
         }
     }
 
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null) {
-            if (!m_plugin.getPermition(player, ".canBuild")) {
+        if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
                 player.sendMessage(ChatColor.RED + "You don't have pemission to build");
                 event.setCancelled(true);
-                return;
-            }
         }
     }
 
@@ -58,17 +52,10 @@ public class MonkeyModBlockListener extends BlockListener {
         Player player = event.getPlayer();
 
         //return is not a player
-        if (player == null) {
-            return;
-        }
-            //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
-
-        // Can the player build?
-        if (!m_plugin.getPermition(player, ".canBuild")) {
+        if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
             player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
-            return;
-            }
+        }
     }
 
     public void onBlockCanBuild(BlockCanBuildEvent event) {
@@ -78,15 +65,10 @@ public class MonkeyModBlockListener extends BlockListener {
     public void onBlockBreak(BlockBreakEvent event) {
 
         Player player = event.getPlayer();
-
-        if (player != null) {
-            //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
             // THIS MUST BE HERE!!! Otherwise people can wipe the text from signs
-            if (!m_plugin.getPermition(player, ".canBuild")) {
+        if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
             player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
-            return;
-            }
         }
     }
 }

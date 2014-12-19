@@ -1,10 +1,11 @@
 <?php
+error_reporting(E_ALL | E_STRICT);
 
 include "config.php";
 
 include "minecraft.class.php";
 
-if (!$dblink)
+if (!isset($dblink))
 {
 	$dblink = new mysqli( "mysql.cppmonkey.net", $dbuser, $dbpass, "killerabbit" );
 }
@@ -39,7 +40,7 @@ if (isset($_GET['serverip']))
 else
 {
 	$query = "SELECT
-		DISTINCT `mc_transition`.`player`, `mc_players`.`player_id`
+		DISTINCT `mc_transition`.`player` AS 'name', `mc_players`.`player_id` AS 'id'
 	FROM
 		`mc_transition` 
 	INNER JOIN
@@ -56,24 +57,21 @@ if( !mysqli_connect_errno() )
 		// echo "Servers found ".$results->num_rows."<br />\n";
 		
 		$first = true;
-		
-		while ( $record = $results->fetch_assoc() )
-		{
-			if( $first )
+		if( $results->num_rows > 0 ){
+			while ( $record = $results->fetch_assoc() )
 			{
-				echo sprintf( "{\"name\":\"%s\",\"id\":\"%s\"}",
-					$record['player'],
-					$record['player_id']
-				);
-				$first = false;
+				if( $first )
+				{
+					echo json_encode($record);
+					$first = false;
+				}
+				else
+				{
+					echo ",".json_encode($record);
+				}
 			}
-			else
-			{
-				echo sprintf( ",{\"name\":\"%s\",\"id\":\"%s\"}",
-					$record['player'],
-					$record['player_id']
-				);
-			}
+		} else {
+			echo '{"name":"none","id":"-1"}';
 		}
 		echo "]";
 	}
