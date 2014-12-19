@@ -9,18 +9,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
 
 public class ItemCommand implements CommandExecutor {
 
     public static String command = "item";
     private MonkeyMod m_plugin;
-    @SuppressWarnings("unused")
-    private Configuration m_settings;
 
     public ItemCommand(MonkeyMod instance) {
         m_plugin = instance;
-        m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -35,8 +31,8 @@ public class ItemCommand implements CommandExecutor {
                 // Permission check.
                 if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to spawn items");
-                    System.out.println(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
-                    System.out.println(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
+                   MonkeyMod.log.info(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
+                   MonkeyMod.log.info(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
                     return true;
                 }
 
@@ -90,9 +86,9 @@ public class ItemCommand implements CommandExecutor {
                     sender.sendMessage(ex.getMessage());
                     return false;
                 } catch (NullPointerException e) {
-                    System.out.println(e.getMessage());
+                   MonkeyMod.log.info(e.getMessage());
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                   MonkeyMod.log.info(e.getMessage());
                 }
             } /*END /item (player) */ else {
                 //TODO Process Console /item Commands. Will require player name!

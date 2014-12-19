@@ -2,6 +2,7 @@ package me.cppmonkey.monkeymod;
 
 import java.io.File;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ChestCommand;
@@ -47,23 +48,25 @@ public class MonkeyMod extends JavaPlugin {
     private MonkeyModChestPlayerListener m_ChestPlayerListener;
     private PlayerDeathListener m_EntityListener;
 
+    public static final Logger log = Logger.getLogger("Minecraft");
+
     public void onDisable() {
-        System.out.println("Shutting down MonkeyMod Threads");
+       MonkeyMod.log.info("Shutting down MonkeyMod Threads");
         while (!m_announceThreads.isEmpty()) {
             IThread temp = m_announceThreads.pop();
             temp.halt();
         }
 
-        System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
+       MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is disabled!");
 
         for (EConfig config : EConfig.values()) {
             try {
                 m_configs[config.ordinal()].save();
             } catch (YAMLException e) {
-                System.out.println("[ERROR] saving " + config.name() + ".yml");
+               MonkeyMod.log.info("[ERROR] saving " + config.name() + ".yml");
                 String msg = e.getMessage();
                 if (msg != null) {
-                    System.out.println("[ERROR] " + msg);
+                   MonkeyMod.log.info("[ERROR] " + msg);
                 }
             }
         }
@@ -118,7 +121,7 @@ public class MonkeyMod extends JavaPlugin {
          *
          */
 
-        System.out.println(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
+       MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
         // Enable various logger hooks
         if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.enabled", true)) {
@@ -140,9 +143,9 @@ public class MonkeyMod extends JavaPlugin {
         }
 
         if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)) {
-        pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.BLOCK_PLACE, m_ChestBlockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_ChestBlockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.BLOCK_BREAK, m_ChestBlockListener, Priority.Normal, this);
@@ -204,7 +207,7 @@ public class MonkeyMod extends JavaPlugin {
             try {
                 sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");
             } catch (Exception e) {
-                System.out.println("Unable to message sender");
+                MonkeyMod.log.info("Unable to message sender");
             }
 
             UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this /*, new CSelfUpdateCallback(this)*/);
@@ -266,14 +269,14 @@ public class MonkeyMod extends JavaPlugin {
 
     public String[] getStatus() {
         return new String[]{
-                    "logger.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.enabled", true),
-                    "logger.connect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.connect", true),
-                    "logger.disconnect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.disconnect", true),
-                    "logger.chat " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.chat", true),
-                    "protection.grief " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true),
-                    "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false),
-                    "server.protection.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)
-                }; // TODO global list required to ensure ALL properties are listed 
+            "logger.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.enabled", true),
+            "logger.connect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.connect", true),
+            "logger.disconnect " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.disconnect", true),
+            "logger.chat " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.chat", true),
+            "protection.grief " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true),
+            "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false),
+            "server.protection.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)
+        }; // TODO global list required to ensure ALL properties are listed 
     }
 
     public void registerVariable(Object variable) {

@@ -19,24 +19,24 @@ public class CSelfUpdateCallback  implements IThreadCallback {
 	public void processLine(String result) {
 		
         if ("false".equalsIgnoreCase(result)) {
-			//Needs updating
+			// Needs updating
 			m_outOfDate = true;
 		}
 		
 	}
 	
-	private void Message(String msg) {
+    private void message(String msg) {
         m_owner.sendMessage(msg);
     }
 
 	public void complete() {
 
     	if (m_outOfDate) {
-            Message("Update found!");
-    		//Update found, now attempt to update using callers permissions
+            message("Update found!");
+			// Update found, now attempt to update using callers permissions
             m_plugin.selfUpdate(m_owner);
         } else {
-            Message("You have the latest version!");
+            message("You have the latest version!");
         }
 	}
 }

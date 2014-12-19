@@ -1,15 +1,19 @@
 package me.cppmonkey.monkeymod.threads;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.logging.Logger;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
@@ -29,10 +33,12 @@ public class UpdateThread extends Thread {
     private String m_PackageName;
     private String m_ReposUrl;
     private Boolean m_debug = false;
+	private Boolean m_isPlugin = true;
     private MonkeyMod m_plugin;
 
     /**
-     * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
      */
     public UpdateThread(String id, CommandSender player, String packageName, String respoUrl, MonkeyMod plugin) {
         super(id);
@@ -42,6 +48,15 @@ public class UpdateThread extends Thread {
         m_ReposUrl = respoUrl;
     }
 
+	public UpdateThread(String id, CommandSender player, String packageName, String respoUrl, Boolean isPlugin, MonkeyMod plugin) {
+		super(id);
+		m_plugin = plugin;
+		m_ThreadOwner = player;
+		m_PackageName = packageName;
+		m_ReposUrl = respoUrl;
+		m_isPlugin = isPlugin;
+	}
+
     @Deprecated
     public UpdateThread(String id, String packageName, String respoUrl) {
         super(id);
@@ -50,7 +65,7 @@ public class UpdateThread extends Thread {
         m_ReposUrl = respoUrl;
     }
     
-    private void Message(String msg) {
+	private void message(String msg) {
         if (m_ThreadOwner != null) {
             m_ThreadOwner.sendMessage(msg);
         } else {
@@ -65,17 +80,45 @@ public class UpdateThread extends Thread {
 
             msg = "Attempting to download " + m_ReposUrl + m_PackageName + ".jar";
 
-            Message(ChatColor.GREEN + msg);
+			message(ChatColor.GREEN + msg);
                 
             URL url = new URL(m_ReposUrl + m_PackageName + ".jar");
             if (m_debug) {
                 String hostAddr = InetAddress.getByName(url.getHost()).getHostAddress();
-                Message(hostAddr);
+				message(hostAddr);
             }
             
-            InputStream is = url.openStream();
+			if (!HttpURLConnection.getFollowRedirects()) {
+				System.out.println("[WARNING] HTTP Redirections are not allowed");
+            }
 
-            OutputStream os = new FileOutputStream("plugins//" + m_PackageName + ".jar");
+			HttpURLConnection urlConn = null;
+
+			while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+
+				urlConn = (HttpURLConnection) url.openConnection();
+
+				urlConn.setRequestMethod("GET");
+
+				urlConn.connect();
+
+				if (urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+					url = new URL(urlConn.getHeaderField("Location"));
+					urlConn.disconnect();
+				}
+			}
+
+			if (urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED || urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+				InputStream is = urlConn.getInputStream();
+
+				OutputStream os;
+
+				if (m_isPlugin) {
+					os = new FileOutputStream("plugins//" + m_PackageName + ".jar");
+				} else {
+					os = new FileOutputStream(m_PackageName + ".jar");
+				}
 
             int data = is.read();
 
@@ -87,20 +130,27 @@ public class UpdateThread extends Thread {
             is.close();
             
             try {
-            	// FIXME re-write auto reload, plugin only though, currently not possible
-            	m_plugin.getServer().reload();
-                Message(ChatColor.GREEN + "Update complete!");
+				if (m_isPlugin) {
+            	   m_plugin.getServer().reload();
+				} else {
+				    m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
+				}
+				message(ChatColor.GREEN + "Update complete!");
             } catch (CommandException e) {
-                Message(ChatColor.RED + "Something went wrong whilst updaing");
-                Message(ChatColor.RED + e.getMessage());
+					message(ChatColor.RED + "Something went wrong whilst updaing");
+					message(ChatColor.RED + e.getMessage());
+				}
+			} else {
+				System.out.println("[ERROR] Http request failed (" + urlConn.getURL() + ")");
+				System.out.println("[ERROR] Server response to request - " + urlConn.getResponseCode());
             }
 
-        } catch (Exception e) {
+		} catch (IOException e) {
             msg = "Sorry master something went wrong!";
-            Message(ChatColor.RED + msg);
+			message(ChatColor.RED + msg);
 
             msg = e.getMessage();
-            Message(ChatColor.RED + msg);
+			message(ChatColor.RED + msg);
         }
     }
 }

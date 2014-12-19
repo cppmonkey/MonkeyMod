@@ -11,44 +11,32 @@ public class LoginCallback implements IThreadCallback {
 	
 	private MonkeyMod m_plugin;
 	CommandSender m_owner;
-	Player m_player = null;
-	boolean configDirty = false;
 	
     public LoginCallback(MonkeyMod instance, CommandSender owner) {
 		m_plugin = instance;
 		m_owner = owner;
-        if (owner instanceof Player) {
-            m_player = (Player) owner;
-        }
 	}
 
 	public void processLine(String result) {
 		
-        if (result != null && !result.isEmpty()) {
+        if (m_owner instanceof Player && result != null && !result.isEmpty()) {
+            Player player = (Player) m_owner;
 			
-			String booleanValues[] = {
-				"canBuild",
-                "isVip",
-                "canIgnite",
-                "isAdmin"
-			};
+            String booleanValues[] = {"canBuild", "isVip", "canIgnite", "isAdmin"};
 			
 			result = result.trim();
 			String split[] = result.split(":");
 			
             if (split.length == 2) {
             	
-            	if ("isOp".equalsIgnoreCase(split[0])){
-            		//TODO make user Op
+                if ("isOp".equalsIgnoreCase(split[0])) {
+                    // TODO make user Op
             		return;
             	}
             	
                 for (int i = 0; i < booleanValues.length; i++) {
 					if (split[0].equalsIgnoreCase(booleanValues[i])) {
-						m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(
-                                m_player.getName().toLowerCase() + "." + booleanValues[i],
-								split[1].equalsIgnoreCase("true"));
-						configDirty = true;
+                        m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(player.getName().toLowerCase() + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
 						return;
 					}
 				}
@@ -59,10 +47,6 @@ public class LoginCallback implements IThreadCallback {
 	}
 
 	public void complete() {
-        if (configDirty) {
-			m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).save();
-	}
-	
         message(ChatColor.GREEN + "Login Complete");
     }
 

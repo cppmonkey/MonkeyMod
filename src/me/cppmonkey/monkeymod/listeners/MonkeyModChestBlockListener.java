@@ -99,7 +99,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
     }
 
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-        System.out.println("onBlockCanBuild");
+       MonkeyMod.log.info("onBlockCanBuild");
     }
 
     public void onBlockBreak(BlockBreakEvent event) {

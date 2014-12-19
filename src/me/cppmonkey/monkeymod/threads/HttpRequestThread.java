@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 import me.cppmonkey.monkeymod.Parm;
-import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
 import org.bukkit.command.CommandSender;
@@ -28,8 +27,6 @@ public class HttpRequestThread extends Thread {
     
     //New for Bukkit
     private IThreadCallback m_callback = null;
-    @SuppressWarnings("unused")
-    private MonkeyMod m_plugin;
 
     public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms) {
 
@@ -44,24 +41,7 @@ public class HttpRequestThread extends Thread {
         }
     }
     
-    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, MonkeyMod plugin) {
-
-    	m_plugin = plugin;
-    	
-        m_ThreadOwner = player;
-        m_debug = false;
-
-        try {
-            m_url = new URL(url + parseUrlParms(parms));
-        } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
-        }
-    }
-
-    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, MonkeyMod plugin, IThreadCallback callback) {
-    	
-    	m_plugin = plugin;
+    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, IThreadCallback callback) {
     	m_callback = callback;
     	
         m_ThreadOwner = player;
@@ -127,21 +107,31 @@ public class HttpRequestThread extends Thread {
     public void run() {
         HttpURLConnection urlConn = null;
         try {
-
+            while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
             urlConn = (HttpURLConnection) m_url.openConnection();
 
             urlConn.setRequestMethod("GET");
             urlConn.setAllowUserInteraction(false);
             urlConn.setDoOutput(true);
             urlConn.addRequestProperty("Content-type", "text/xml");
+                HttpURLConnection.setFollowRedirects(true);
+
+                urlConn.connect();
+
+                if (urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+                    m_url = new URL(urlConn.getHeaderField("Location"));
+                    urlConn.disconnect();
+                }
+            }
+
+            BufferedReader in = null;
 
             try {
             	
             	if (m_callback != null) {
-            		BufferedReader in = new BufferedReader(
-							new InputStreamReader(
-									urlConn.getInputStream()));
+                    in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
 
+                    if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK || urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED) {
 	            	String inputLine;
 	            	
                     while ((inputLine = in.readLine()) != null) {
@@ -154,18 +144,23 @@ public class HttpRequestThread extends Thread {
 	            	}
 	            	in.close();
 	            	m_callback.complete();
+                    } else {
+                        System.out.println("[ERROR] Http request failed (" + urlConn.getURL() + ")");
+                        System.out.println("[ERROR] Server response to request - " + urlConn.getResponseCode());
+                    }
 	            	
                 } else {
-                	//Basic call
+                    // Basic call
                 	urlConn.getInputStream();
                 }
                 	
-                
             } catch (IOException e) {
                 message(name + " Unable to get InputStream");
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
             }
-
-
         } catch (IOException e) {
             message("HttpRequestThread.run() Exception");
             for (int i = 0; i < e.getMessage().length() / 50; ++i) {

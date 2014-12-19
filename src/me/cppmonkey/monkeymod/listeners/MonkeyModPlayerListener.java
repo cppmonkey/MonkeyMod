@@ -48,7 +48,6 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 player,
                 m_plugin.getLoggerUrl(),
                 parms,
-                m_plugin,
                     new LoginCallback(m_plugin, player));
 
         // FIXME - improve method of checking to see if the player is known
@@ -73,7 +72,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
         } catch (Throwable ex) {
-            System.out.println("Excption within onPlayerJoin()");
+           MonkeyMod.log.info("Excption within onPlayerJoin()");
         }
     }
 
@@ -115,7 +114,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
             notification.start();
         } catch (Exception e) {
             //FIXME Do something with exception?
-            System.out.println(e.getMessage());
+           MonkeyMod.log.info(e.getMessage());
         }
     }
 

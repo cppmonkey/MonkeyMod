@@ -65,10 +65,12 @@ commands:
            /<command>
            Example: /<command>
   inventory:
-    description: Outputs a players inventory ( admins only )
+    description: Outputs a players inventory, and / or any risk items ( admins only )
     usage: |
            /<command> <player name>
+           /<command> <playername> risk
            Example: /<command> notch
+           Example: /<command> notch risk
   plugin:
     description: Reload plugins
     usage: |

@@ -4,18 +4,20 @@
  */
 package me.cppmonkey.monkeymod.listeners;
 
+import java.util.HashMap;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
+
 import org.bukkit.ChatColor;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-
-import java.util.HashMap;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
 
 /**
@@ -70,7 +72,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_cactusDeath.length) + 0.5d); // Includes rounding up/down
             return m_cactusDeath[randomNum];
-        }else if (cause == DamageCause.ENTITY_ATTACK) {
+        } else if (cause == DamageCause.ENTITY_ATTACK) {
             Player player = (Player) event.getEntity();
             
             //Entity killer = player.getLastDamageCause().getEntity();
@@ -122,7 +124,7 @@ public class PlayerDeathListener extends EntityListener {
                 }
                 return output;
             }
-        }else if (cause == DamageCause.FALL) {
+        } else if (cause == DamageCause.FALL) {
             String m_fallDeath[] = {
                 " went bungie jumping... without the bungie.",
                 " has poor depth perception.",
@@ -138,7 +140,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_fallDeath.length) + 0.5d); // Includes rounding up/down
             return m_fallDeath[randomNum];
-        }else if (cause == DamageCause.FIRE) {
+        } else if (cause == DamageCause.FIRE) {
             String m_fireDeath[] = {
                 " was on fire... literally.",
                 " played with matches.",
@@ -154,7 +156,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_fireDeath.length) + 0.5d); // Includes rounding up/down
             return m_fireDeath[randomNum];
-        }else if (cause == DamageCause.FIRE_TICK) {
+        } else if (cause == DamageCause.FIRE_TICK) {
             String m_fireTickDeath[] = {
                 " should have had a water-bucket.",
                 " didn't find water fast enough.",
@@ -170,7 +172,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_fireTickDeath.length) + 0.5d); // Includes rounding up/down
             return m_fireTickDeath[randomNum];
-        }else if (cause == DamageCause.LAVA) {
+        } else if (cause == DamageCause.LAVA) {
             String m_lavaDeath[] = {
                 " took a VERY hot bath.",
                 " didn't realise how hot lava was.",
@@ -186,7 +188,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_lavaDeath.length) + 0.5d); // Includes rounding up/down
             return m_lavaDeath[randomNum];
-        }else if (cause == DamageCause.DROWNING) {
+        } else if (cause == DamageCause.DROWNING) {
             String m_drowningDeath[] = {
                 " is sleeping with the fishes.",
                 " couldn't hold their breath.",
@@ -202,7 +204,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_drowningDeath.length) + 0.5d); // Includes rounding up/down
             return m_drowningDeath[randomNum];
-        }else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
+        } else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
             String m_explosionDeath[] = {
                 " didn't realise what the hissing sound was.",
                 " is in several pieces.",
@@ -218,7 +220,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_explosionDeath.length) + 0.5d); // Includes rounding up/down
             return m_explosionDeath[randomNum];
-        }else if (cause == DamageCause.VOID) {
+        } else if (cause == DamageCause.VOID) {
             String m_voidDeath[] = {
                 " fell into nothingness.",
                 " made it past bedrock; it wasn't worth it.",
@@ -234,7 +236,7 @@ public class PlayerDeathListener extends EntityListener {
             };
             int randomNum = (int) Math.floor((Math.random() * m_voidDeath.length) + 0.5d); // Includes rounding up/down
             return m_voidDeath[randomNum];
-        }else if (cause == DamageCause.CUSTOM) {
+        } else if (cause == DamageCause.CUSTOM) {
             String m_customDeath[] = {
                 " encountered MISSINGNO.",
                 " died in mysterious circumstances.",
@@ -265,20 +267,24 @@ public class PlayerDeathListener extends EntityListener {
 
     String LastDamage(Player player, EntityDamageEvent event) {
         String lastDamage = "";
-        if (event instanceof EntityDamageByProjectileEvent) {
-            EntityDamageByProjectileEvent mprojectileEvent = (EntityDamageByProjectileEvent) event;
-            Entity attacker = mprojectileEvent.getDamager();
-            lastDamage = attacker.getClass().getSimpleName();
-            if (attacker instanceof Player) {
-                Player murderer = (Player) attacker;
-                String usingitem = murderer.getItemInHand().getType().name();
-                if (usingitem.equalsIgnoreCase("AIR")) {
-                    usingitem = "bare hands";
-                }
-                lastDamage = "SHOT:" + usingitem + ":" + murderer.getName();
-            }
-        } else if (event instanceof EntityDamageByEntityEvent) {
+
+        if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent mobEvent = (EntityDamageByEntityEvent) event;
+            
+            if (mobEvent.getDamager() instanceof Arrow) {
+            	Arrow projectile = (Arrow) mobEvent.getDamager();
+            	
+            	LivingEntity attacker = projectile.getShooter();
+            	
+               if (attacker instanceof Player) {
+                   Player murderer = (Player) attacker;
+                   String usingitem = murderer.getItemInHand().getType().name();
+                   if (usingitem.equalsIgnoreCase("AIR")) {
+                       usingitem = "bare hands";
+                   }
+                   lastDamage = "SHOT:" + usingitem + ":" + murderer.getName();
+               }
+            } else {
             Entity attacker = mobEvent.getDamager();
             lastDamage = attacker.getClass().getSimpleName();
             if (attacker.getClass().getSimpleName().equalsIgnoreCase("CraftWolf")) {
@@ -293,6 +299,7 @@ public class PlayerDeathListener extends EntityListener {
                 usingItem = usingItem.toLowerCase();
                 usingItem = usingItem.replace("_", " ");
                 lastDamage = "PVP:" + usingItem + ":" + murderer.getName();
+	            }
             }
         }
         if (PlayerMap.containsKey(player.getName())) {

@@ -10,8 +10,8 @@ import org.bukkit.util.config.Configuration;
 
 // @author Alex
 public class ChestCommand implements CommandExecutor {
-    public static String command = "chest";
 
+    public static String command = "chest";
     private MonkeyMod m_plugin;
     private Configuration m_chestPermissions;
 
@@ -50,7 +50,7 @@ public class ChestCommand implements CommandExecutor {
         }
 
         // Could be an entity... Creeper that destroyed it?
-        System.out.println("[WARNING] Console cant use Chest Commands");
+       MonkeyMod.log.info("[WARNING] Console cant use Chest Commands");
         return false;
     }
 }

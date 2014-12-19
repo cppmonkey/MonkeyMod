@@ -44,7 +44,7 @@ public class MonkeyCommand implements CommandExecutor {
                 };
 
                 // Create http request thread
-                HttpRequestThread updateQuery = new HttpRequestThread("uptodate", sender, "http://cppmonkey.net/monkeymod/ajax.php", parms, m_plugin, new CSelfUpdateCallback(m_plugin, sender));
+                HttpRequestThread updateQuery = new HttpRequestThread("uptodate", sender, "http://cppmonkey.net/monkeymod/ajax.php", parms, new CSelfUpdateCallback(m_plugin, sender));
                 // Start the thread
                 updateQuery.start();
 

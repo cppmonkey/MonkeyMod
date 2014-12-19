@@ -9,7 +9,6 @@ package me.cppmonkey.monkeymod;
  * @author CppMonkey
  */
 public class Parm {
-    // TODO copy constructor needed!
 
     public Parm(String name, String value) {
         this.name = name;
