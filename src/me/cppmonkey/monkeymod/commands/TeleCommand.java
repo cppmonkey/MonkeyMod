@@ -43,6 +43,7 @@ public class TeleCommand implements CommandExecutor {
                         if (args[1].matches("[1-5]")) {
                             m_settings.setProperty((player.getName().toLowerCase() + "-" + args[1].toString()), (player.getWorld().getName().toString() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()));
                             m_settings.save();
+                            player.sendMessage(ChatColor.GREEN + "Saved");
                             return true;
                         }
                     }
@@ -50,7 +51,6 @@ public class TeleCommand implements CommandExecutor {
                     if (args[0].matches("[1-5]")) {
                         try {
                             String Pos = m_settings.getString((player.getName().toLowerCase() + "-" + args[0].toString()), "empty");
-                            player.sendMessage(ChatColor.GREEN + "POS " + Pos);
                             if (Pos.equals("empty")) {
                                 player.sendMessage(ChatColor.RED + "Input error. Are you sure you have saved a home warp here?");
                                 return false;
@@ -58,7 +58,6 @@ public class TeleCommand implements CommandExecutor {
                                 String Details[] = Pos.split(":");
                                 if (Details[0].equalsIgnoreCase(player.getWorld().getName().toString())) {
                                     // csv xyz = [1]
-                                    player.sendMessage(ChatColor.GREEN + "teleporting");
                                     String Coords[] = Details[1].split(",");
                                     double X = Double.parseDouble(Coords[0]);
                                     double Y = Double.parseDouble(Coords[1]);
@@ -107,15 +106,21 @@ public class TeleCommand implements CommandExecutor {
                     int playerNum = -1;
                     for( int i = 0; i < onPlayers.length;i++)
                     {
-                        if(onPlayers[i].getName().toString().equals(args[0])){
+                        player.sendMessage(ChatColor.GREEN + "player: " + onPlayers[i]);
+                        if(onPlayers[i].getName().toString().contains(args[0].toString())){
                             playerNum =i;
                         }
                     }
                     if(playerNum != -1)
                     {
+                        if(player.getWorld().getName().toString().equals(onPlayers[playerNum].getWorld().getName().toString())){
                             player.teleport(onPlayers[playerNum].getLocation());
+                        }else{
+                            player.sendMessage(ChatColor.GOLD + "Target player is in annother world. Please go to the right world first.");
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.GOLD + "Player not found.");
                     }
-                    player.teleport(m_plugin.getServer().getWorld(player.getWorld().getName().toString()).getSpawnLocation());
                 return true; 
                 }
             }
