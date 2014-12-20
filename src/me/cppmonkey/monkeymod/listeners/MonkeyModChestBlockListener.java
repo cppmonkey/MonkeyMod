@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -121,12 +120,6 @@ public class MonkeyModChestBlockListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockCanBuild(BlockCanBuildEvent event) {
-       //MonkeyMod.log.info("onBlockCanBuild");
-       // FIXME: Is this needed? Commented out for now
-    }
-
-    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
         Player player = event.getPlayer();
@@ -144,7 +137,7 @@ public class MonkeyModChestBlockListener implements Listener {
                 event.setCancelled(true);
             }
         } else if (event.getBlock().getType() == Material.CHEST){
-            //Chest destroyed by external force eg tnt.
+            // Chest destroyed by external force eg tnt.
             event.setCancelled(true);
         }
     }

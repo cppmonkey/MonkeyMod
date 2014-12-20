@@ -4,7 +4,6 @@ package me.cppmonkey.monkeymod.threads;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;

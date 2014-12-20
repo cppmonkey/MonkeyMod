@@ -1,5 +1,6 @@
 package me.cppmonkey.monkeymod;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class MonkeyMod extends JavaPlugin {
     private Integer m_build = 136;
     private PluginDescriptionFile m_pluginDescFile;
     // Array Storage for Configs
-//  private Config[] m_configs;
+    //  private Config[] m_configs;
     // Thread holder
     private Stack<IThread> m_announceThreads = new Stack<IThread>();
     // Private members containing listeners
@@ -50,6 +51,9 @@ public class MonkeyMod extends JavaPlugin {
 
     public static final Logger log = Logger.getLogger("Minecraft");
 
+    // Temp
+    public final HashMap<Player,Boolean> canBuild = new HashMap<Player,Boolean>();
+    public final HashMap<Player,Boolean> canIgnite = new HashMap<Player,Boolean>();
     public void onDisable() {
 
         this.saveConfig();
@@ -62,21 +66,21 @@ public class MonkeyMod extends JavaPlugin {
         MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build
                 + ") is disabled!");
 
-//      for (EConfig config : EConfig.values()) {
-//          try {
-//              if (config == EConfig.PLUGIN) {
-//                  this.saveConfig();
-//              } else {
-//                  // TODO Save other configs
-//              }
-//          } catch (YAMLException e) {
-//              MonkeyMod.log.severe("saving " + config.name() + ".yml");
-//              String msg = e.getMessage();
-//              if (msg != null) {
-//                  MonkeyMod.log.severe(msg);
-//              }
-//          }
-//      }
+        //      for (EConfig config : EConfig.values()) {
+        //          try {
+        //              if (config == EConfig.PLUGIN) {
+        //                  this.saveConfig();
+        //              } else {
+        //                  // TODO Save other configs
+        //              }
+        //          } catch (YAMLException e) {
+        //              MonkeyMod.log.severe("saving " + config.name() + ".yml");
+        //              String msg = e.getMessage();
+        //              if (msg != null) {
+        //                  MonkeyMod.log.severe(msg);
+        //              }
+        //          }
+        //      }
 
         // destroy Listeners
         m_PlayerListener = null;
@@ -121,7 +125,7 @@ public class MonkeyMod extends JavaPlugin {
                         + config.name().toLowerCase(Locale.ENGLISH) + ".yml");
             }
         }
-*/
+         */
         m_PlayerListener = new MonkeyModPlayerListener(this);
         m_BlockListener = new MonkeyModBlockListener(this);
         m_ChestBlockListener = new MonkeyModChestBlockListener(this);
@@ -272,6 +276,27 @@ public class MonkeyMod extends JavaPlugin {
         // query permissions file
         // player.sendMessage(player.getName().toLowerCase(Locale.ENGLISH) +
         // path);
+
+        if( path.matches("isVip") || path.matches("isAdmin")) {
+            return this.getConfig().getBoolean(
+                    player.getName().toLowerCase(Locale.ENGLISH) + path, false);
+        }
+
+        if( path.matches("canBuild")) {
+            if( this.canBuild.containsKey(player) ) {
+                return this.canBuild.get(player);
+            } else {
+                return false;
+            }
+        }
+
+        if( path.matches("canIgnite")) {
+            if( this.canIgnite.containsKey(player)) {
+                return this.canIgnite.get(player);
+            }
+            return false;
+        }
+
         return this.getConfig().getBoolean(
                 player.getName().toLowerCase(Locale.ENGLISH) + path, true);
     }

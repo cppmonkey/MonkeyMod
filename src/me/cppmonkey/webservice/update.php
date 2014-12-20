@@ -3,6 +3,20 @@ error_reporting(E_ALL | E_STRICT);
 include "config.php";
 include "minecraft.class.php";
 
+define("IGNITE", 3);
+
+function ReportError( $strMsg = "" ){
+	$mailTo = "paul@cppmonkey.net";
+	$mailSubject = "update.php error";
+
+	$bt = debug_backtrace();
+     $caller = array_shift($bt);
+
+	$mailMessage = "\$_GET data: \n".print_r($_GET, TRUE)."\n\n\n\n\$_POST data:\n".print_r($_POST, TRUE)."\n\n\n\n".$strMsg."\n\n\n\n".$caller['file']." ".$caller['line'];
+
+	mail($mailTo, $mailSubject, $mailMessage);
+}
+
 $dblink = new mysqli( $dbserver, $dbuser, $dbpass, "killerabbit" );
 
 function Action( $strAction )
@@ -11,9 +25,9 @@ function Action( $strAction )
 	return 1;
 	if ($strAction == "disconnect")
 	return 2;
-	if ($strAction == "ignite")
-	return 3;
-	if ($strAction == "chest" || $strAction == "chest-break-attempt")
+	if ($strAction == "ignite" || $strAction == "ignite-attempt")
+	return IGNITE;
+	if ($strAction == "chest" || $strAction == "chest-break-attempt" || $strAction == "attempt_to_open_chest" || $strAction == "attempt_to_unlock_chest")
 	return 4;
 	if ($strAction == "tower")
 	return 5;
@@ -79,7 +93,7 @@ if( isset($_GET["action"]) && $server )
 					);
 			}
 		}
-		else if( $_GET["action"] == "chest" && isset($_GET['type']))
+		else if( Action($_GET["action"]) == 4 )
 		{
 			//Log user access to chest!
 
@@ -135,7 +149,7 @@ if( isset($_GET["action"]) && $server )
              * new Parm("admin",Boolean.toString(player.isAdmin()))
              */
 		}
-		else if ($_GET["action"] == "ignite")
+		else if (Action($_GET["action"])== IGNITE)
 		{
 
 			$query = sprintf(
@@ -265,6 +279,7 @@ if( isset($_GET["action"]) && $server )
 					else
 					{
 						echo "unable to execute<br>".$query."<br>".$dblink->sqlstate;
+						ReportError("unable to insert<br>".$query."<br>".$dblink->sqlstate);
 					}
 
 
@@ -276,12 +291,14 @@ if( isset($_GET["action"]) && $server )
 			else
 			{
 				echo "unable to insert<br>".$query."<br>".$dblink->sqlstate;
+				ReportError("unable to insert<br>".$query."<br>".$dblink->sqlstate);
 			}
 
 		}
 		else
 		{
 			echo "unable to connect to mysql";
+			ReportError("unable to connect to mysql");
 		}
 
 
@@ -292,20 +309,22 @@ if( isset($_GET["action"]) && $server )
 
 	if( isset( $_GET["package"] ) && isset( $_GET["version"] ) && isset( $_GET["build"] ) )
 	{
-		echo "processing server update request<br/>";
-		echo "get server package list<br>";
-		echo "search package list for package<br>";
-		echo "compare package versions<br>";
-		echo "update is needed<br>";
+		echo "processing server update request<br/>\n";
+		echo "get server package list<br/>\n";
+		echo "search package list for package<br/>\n";
+		echo "compare package versions<br/>\n";
+		echo "update is needed<br/>\n";
 		$package = new CServerPackage( array( "name" => $_GET["package"], "version" => $_GET["version"], "build" => $_GET["build"]));
 
 		if( !$package->IsUptodate( "mc_packages"  ))
 		{
-			echo "Attempting to update server";
+			echo "Attempting to update server<br/>\n";
+			echo "false\n<br/>"; //for original build 16
+
 			$server->Connect();
 			if( $server->Auth() )
 			{
-				echo "excuting update<br/>";
+				echo "excuting update<br/>\n";
 				echo $server->ExecCommand( "say <PHP> forcing update" );
 				echo $server->ExecCommand( $package->GetUpdateCmd() );
 
@@ -318,6 +337,7 @@ if( isset($_GET["action"]) && $server )
 			else
 			{
 				echo "Auth failed";
+				ReportError( "Auth failed<br/>\n" );
 			}
 		}
 	}
@@ -329,6 +349,10 @@ else
 		echo "Unable to load server<br/>No servers with the IP {$server_ip}<br>";
 		$server = $minecraft->CreateServer( $server_ip, $_GET['rcon-port']);
 	}
+
+
 	echo "invalid query";
+	ReportError("invalid query<br>\n".$server);
+
 }
 ?>

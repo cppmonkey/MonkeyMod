@@ -10,45 +10,58 @@ import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
 public class LoginCallback implements IThreadCallback {
-	
-	private MonkeyMod m_plugin;
-	CommandSender m_owner;
-	
+
+    private MonkeyMod m_plugin;
+    CommandSender m_owner;
+
     public LoginCallback(MonkeyMod instance, CommandSender owner) {
-		m_plugin = instance;
-		m_owner = owner;
-	}
+        m_plugin = instance;
+        m_owner = owner;
+    }
 
-	public void processLine(String result) {
-		
-        if (m_owner instanceof Player && result != null && !result.isEmpty()) {
-            Player player = (Player) m_owner;
-			
-            String booleanValues[] = {"canBuild", "isVip", "canIgnite", "isAdmin"};
-			
-			result = result.trim();
-			String split[] = result.split(":");
-			
-            if (split.length == 2) {
-            	
-                if ("isOp".equalsIgnoreCase(split[0])) {
-                    // TODO make user Op
-            		return;
-            	}
-            	
-                for (int i = 0; i < booleanValues.length; i++) {
-					if (split[0].equalsIgnoreCase(booleanValues[i])) {
-                        m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).set(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
-						return;
-					}
-				}
-			}
-			
-            message(result);
-		}
-	}
+    public void processLine(String result) {
+        try{
+             if (m_owner instanceof Player && result != null && !result.isEmpty()) {
+                 Player player = (Player) m_owner;
 
-	public void complete() {
+                 String booleanValues[] = {"canBuild", "isVip", "canIgnite", "isAdmin"};
+
+                result = result.trim();
+                String split[] = result.split(":");
+
+                 if (split.length == 2) {
+
+                     if ("isOp".equalsIgnoreCase(split[0])) {
+                         // TODO make user Op
+                        return;
+                    }
+
+                    if (split[0].equalsIgnoreCase("canBuild")) {
+                        m_plugin.canBuild.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        return;
+                    }
+
+                    if (split[0].equalsIgnoreCase("canIgnite")) {
+                        m_plugin.canIgnite.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        return;
+                    }
+
+                     for (int i = 0; i < booleanValues.length; i++) {
+                        if (split[0].equalsIgnoreCase(booleanValues[i])) {
+                             m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).set(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
+                            return;
+                        }
+                    }
+                }
+
+                 message(result);
+            }
+        }catch(Exception e){
+            message("Exception within LoginCallback.java");
+        }
+    }
+
+    public void complete() {
         message(ChatColor.GREEN + "Login Complete");
     }
 

@@ -23,7 +23,7 @@ class Minecraft
 	function BuildServerList()
 	{
 		global $dblink;
-		
+
 		if (isset($_GET['server_id']))
 		{
 			$query = sprintf( "SELECT *
@@ -41,11 +41,11 @@ class Minecraft
 		else
 		{
 			$query = "
-				SELECT * 
+				SELECT *
 				FROM `mc_servers`
 				";
 		}
-		
+
 		if( !mysqli_connect_errno() )
 		{
 			if( $results = $dblink->query( $query ) )
@@ -73,7 +73,7 @@ class Minecraft
 		foreach( $this->servers as &$server )
 		{
 			$server->Connect();
-				
+
 			if( $server->Auth() )
 			{
 				$playerList = new PlayerList( $server->ExecCommand( "list" ), $this->dblink );
@@ -94,7 +94,7 @@ class Minecraft
 			);
 		}
 	}
-	
+
 	function DumpJSON()
 	{
 		echo "[";
@@ -104,13 +104,13 @@ class Minecraft
 			);
 		for( $i = 1; $i < count($this->servers); $i++ )
 		{
-			
+
 			echo sprintf( ",{\"title\":\"%s\",\"ip\":\"%s\"}",
 				$this->servers[$i]->GetTitle(),
 				$this->servers[$i]->GetIp()
 			);
 		}
-		
+
 		echo "]";
 	}
 
@@ -124,13 +124,15 @@ class Minecraft
 			return $server;
 		}
 
+		echo "Unable to find server assosiated with the ip ".$ip."<br>\n";
+
 		return 0;
 	}
-	
+
 	function CreateServer( $ip, $port )
 	{
 		Global $dblink;
-		
+
 		$server = new MinecraftServer( array(
 			"id" => -1,
 			"title" => $ip,
@@ -141,9 +143,9 @@ class Minecraft
 			"admin_password" => "",
 			"owner_id" => 0
 			));
-			
+
 		$query = sprintf(
-			"INSERT INTO `mc_servers` 
+			"INSERT INTO `mc_servers`
 				(`title`, `address`, `server_ip`, `game_port`, `admin_port`, `admin_password`, `owner_id`)
 			VALUES
 				('%s', '%s', '%s', '%d', '%d', '%s', '%d')
@@ -156,12 +158,12 @@ class Minecraft
 				$server->GetAdminPass(),
 				$server->GetOwnerId()
 			);
-		
+
 		$dblink->query( $query );
-		
-			
+
+
 		array_push($this->servers, $server);
-		
+
 		return $server;
 	}
 }
