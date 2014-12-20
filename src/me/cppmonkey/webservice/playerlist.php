@@ -37,7 +37,7 @@ if (isset($_GET['serverip'])) {
                     ON
                     `mc_transition`.`player_id` = `mc_players`.`player_id`
 
-                    WHERE `server_id` = '%d';", $dblink->real_escape_string( $server->GetId() ) );
+                    WHERE `server_id` = '%d' AND `mc_transition`.`timestamp` > NOW() - INTERVAL 3 MONTH;", $dblink->real_escape_string( $server->GetId() ) );
         }
     }
     else

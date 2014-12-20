@@ -5,75 +5,7 @@
 <title>http request test forms</title>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script type="text/javascript">
-
-onerror=function handleErr( msg, url, l )
-{
-	txt = "";
-	txt+="msg=" + msg + "&amp;";
-	txt+="url=" + url + "&amp;";
-	txt+="line=" + l + "&amp;";
-	alert( txt );
-	return true;
-}
-
-	$().ready(function(){
-		$("#usermessage").submit(function() {
-			$("#results").prepend(
-				"<div><a href=\"" + "update.php?"+$(this).serialize() + "\">simulate chat</a></div>" );
-			return false;
-		});
-
-		$("#userconnect").submit(function() {
-				$("#results").prepend(
-					"<div><a href=\"" + "update.php?"+$(this).serialize()+"\">simulate connection</a></div>");
-				return false;
-			});
-
-		$.getJSON("serverlist.php?"/*,{ owner_id : "1" }*/, function(data){
-				for ( var i = 0; i < data.length; i++ ) {
-					$('select[id][name^="serverip"]').append( new Option( data[i].title ,data[i].ip ));
-				}
-
-			});
-
-		$("#severipedituseraccess").change(function(){
-				$.getJSON("playerlist.php?", { serverip: this.value }, function(data){
-						$('select[id][name^="serverknown"]').empty();
-						//Get player list from server
-						for (var i = 0; i < data.length; i++ ){
-							$('select[id][name^="serverknown"]').append( new Option( data[i].name, data[i].id ));
-						}
-					});
-			});
-
-		$("#serveriphistory").change(function(){
-				$.getJSON("history.php?", { serverip: this.value, limit: $("#historylimit").val() }, function(data){
-						//Process data
-						$('#chat tbody').empty();
-						for (var i = 0; i < data.length; i++){
-							$('#chat tbody').append( "<tr><td>" + data[i].timestamp + "</td><td>"+data[i].name + "</td><td>" + data[i].msg +"</td></tr>");
-						}
-
-						$("#chat tbody tr:even").addClass("alt");
-					});
-			});
-		$("#refreshserveriphistory").click(function(){
-				$("#serveriphistory").trigger("change");
-			});
-		$("#serverknownusersedituseraccess").change(function(){
-				$.getJSON("playerlist.php?", {serverip: $("#severipedituseraccess").val(), userid: this.value},function(data){
-						$("form#edituseraccess input:checkbox").removeAttr("checked");
-
-						for (var i = 0; i < data.length; i++) {
-							if (data[i].value == "true") {
-								$("#edituseraccess"+data[i].permission).attr("checked","checked");
-							}
-						}
-					});
-			});
-	});
-</script>
+<script type="text/javascript" src="./js/testforms.js"></script>
 <style type="text/css">
 #results {
 	border: 2px solid red;
@@ -111,7 +43,7 @@ select, input.text {
             <form id="usermessage">
                 <input type="hidden" name="action" value="message" />
                 <label for="serveripmessage">Server<select id="serveripmessage" name="serverip"></select></label>
-                <label for="playermessage">Player<input type="text" id="playermessage" name="player" value="cppmonkey" /></label>
+                <label for="playermessage">Player<select id="playermessage" name="player"></select></label>
                 <label for="message">Message<input type="text" id="message" name="message" value="Ajax test" /></label>
                 <input type="submit" />
             </form>
@@ -121,9 +53,7 @@ select, input.text {
             <form id="userconnect">
                 <input type="hidden" name="action" value="connect" />
                 <label for="serveripconnect">Server<select id="serveripconnect" name="serverip"></select></label>
-                <label for="playerconnect">Player<input type="text" id="playerconnect" name="player" value="cppmonkey" /></label>
-                <label for="isVip">isVip<input type="checkbox" id="isVip" name="vip" /></label>
-                <label for="isAdmin">isAdmin<input type="checkbox" id="isAdmin" name="admin" /></label>
+                <label for="playerconnect">Player<select id="playerconnect" name="player" ></select></label>
                 <input type="submit" />
             </form>
         </fieldset>
@@ -164,7 +94,7 @@ select, input.text {
                 <label>isAdmin<input id="edituseraccessisAdmin" name="isAdmin" type="checkbox" /></label>
                 <label>canBuild<input id="edituseraccesscanBuild" name="canBuild" type="checkbox" /></label>
                 <label>canIgnite<input id="edituseraccesscanIgnite" name="canIgnite" type="checkbox" /></label>
-                <input type="submit" />
+                <input type="submit" disabled="disabled"/>
             </form>
         </fieldset>
     </div>

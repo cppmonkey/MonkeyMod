@@ -21,9 +21,11 @@ function ReportError( $strMsg = "" ){
     $mailMessage = "
     \$_GET data: \n".print_r($_GET, TRUE)."\n\n".
     "\$_POST data:\n".print_r($_POST, TRUE)."\n\n".
+    "\$_SERVER data:\n".print_r($_SERVER, TRUE)."\n\n".
+    
     $strMsg."\n\n".
     $caller['file']." ".$caller['line']."\n\n".
-    $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+    $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."&serverip=".$_SERVER['REMOTE_ADDR'];
 
     mail($mailTo, $mailSubject, $mailMessage);
 }
@@ -97,6 +99,10 @@ if( isset($_GET["action"]) && $server ) {
                     $dblink->real_escape_string( $_GET["message"])
             );
         }
+        
+        if( $action == CONNECT ){
+            echo "playerUID:".$player->GetId()."\n";
+        }
     } else if ($_GET["action"] == "update") {
 
         $package = new CServerPackage($_GET);
@@ -162,6 +168,7 @@ if( isset($_GET["action"]) && $server ) {
         echo "search package list for package<br/>\n";
         echo "compare package versions<br/>\n";
         echo "update is needed<br/>\n";
+        echo "serverUID:".$server->id()."\n";
         $package = new CServerPackage();
 
         if( !$package->IsUptodate("mc_packages")) {

@@ -25,7 +25,7 @@ public class ModeCommand implements CommandExecutor {
             // For console use and administrators
             if (sender instanceof Player && !m_plugin.getPermition((Player) sender, ".isAdmin")) {
                 // Doesn't have access to do this
-                sender.sendMessage(ChatColor.RED + "You do not have permission to use " + command + " commands");
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use " + ModeCommand.command + " commands");
                 return true;
             }
             player = m_plugin.getServer().getPlayer(args[0]);
@@ -42,9 +42,7 @@ public class ModeCommand implements CommandExecutor {
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + "Unable to find player");
-            }
-
-        return false;
+            return true;
+        }
     }
-
 }

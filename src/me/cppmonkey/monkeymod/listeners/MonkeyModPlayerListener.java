@@ -6,7 +6,7 @@ import java.util.Locale;
 import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.Parm;
-import me.cppmonkey.monkeymod.callback.LoginCallback;
+import me.cppmonkey.monkeymod.callback.Login;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 import org.bukkit.ChatColor;
@@ -44,7 +44,7 @@ public class MonkeyModPlayerListener implements Listener {
                 new Parm("ip", player.getAddress().getAddress().toString())
             };
 
-            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new LoginCallback(m_plugin, player));
+            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new Login(m_plugin, player));
 
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();

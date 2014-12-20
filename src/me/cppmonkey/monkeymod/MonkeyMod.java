@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import me.cppmonkey.monkeymod.callback.LoginCallback;
+import me.cppmonkey.monkeymod.callback.Login;
 import me.cppmonkey.monkeymod.commands.BackCommand;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ChestCommand;
@@ -27,6 +27,7 @@ import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -37,7 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 145;
+    private Integer m_build = 146;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -56,6 +57,8 @@ public class MonkeyMod extends JavaPlugin {
     public final HashMap<Player, Boolean> isVip = new HashMap<Player, Boolean>();
     public final HashMap<Player, Boolean> isAdmin = new HashMap<Player, Boolean>();
 
+    public final HashMap<Material, Boolean> canSpawn = new HashMap<Material, Boolean>();
+    
     // Server Details
     public Integer serverUID = null;
 
@@ -94,7 +97,7 @@ public class MonkeyMod extends JavaPlugin {
                     player,
                     this.getLoggerUrl(),
                     parms,
-                    new LoginCallback(this, player));
+                    new Login(this, player));
             notification.start();
         }
 

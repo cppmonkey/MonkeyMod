@@ -153,42 +153,47 @@ public class MonkeyCommand implements CommandExecutor {
                  * Was just a quick implementation to get it working
                  */
                 if ("add".equalsIgnoreCase(args[0])) {
-                    // Username
-                    String playerName = args[2].toLowerCase(Locale.ENGLISH);
 
+                    Player player = m_plugin.getServer().getPlayer(args[2]);
+
+                    if( player == null ) {
+                        sender.sendMessage("Unable to find player called "+ args[2]);
+                        return true;
+                    }
+                    
+                    Parm admin = new Parm("admin", sender.getName());
+                    
+                    
                     Parm permission;
 
-                    Player player = m_plugin.getServer().getPlayer(playerName);
-
                     if ("user".equalsIgnoreCase(args[1])) {
-                        if (player != null && !m_plugin.canBuild.containsKey(player)) {
+                        if (!m_plugin.canBuild.containsKey(player)) {
                             m_plugin.canBuild.put(player, true);
                         }
                         permission = new Parm("add", "user");
-                        sender.sendMessage("User player '" + playerName + "' added");
+                        sender.sendMessage("User player '" + player.getName() + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        if (player != null && !m_plugin.isVip.containsKey(player)) {
                             m_plugin.isVip.put(player, true);
-                        }
+                        m_plugin.canBuild.put(player, true);
                         permission = new Parm("add", "vip");
-                        sender.sendMessage("Vip player '" + playerName + "' added");
+                        sender.sendMessage("Vip player '" + player.getName() + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        if (player != null && !m_plugin.isAdmin.containsKey(player)) {
                             m_plugin.isAdmin.put(player, true);
-                        }
+                        m_plugin.canBuild.put(player, true);
                         permission = new Parm("add", "admin");
-                        sender.sendMessage("Admin player '" + playerName + "' added");
+                        sender.sendMessage("Admin player '" + player.getName() + "' added");
                     } else {
                         return false;
                     }
 
                     Parm[] parms = {
                             new Parm("action", "modify"),
-                            new Parm("player", playerName),
+                            new Parm("player", player.getName()),
+                            admin,
                             permission
                     };
 
-                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms);
+                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + player.getName(), sender, m_plugin.getLoggerUrl(), parms);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                     return true;
@@ -199,6 +204,11 @@ public class MonkeyCommand implements CommandExecutor {
                     Parm permission;
                     
                     Player player = m_plugin.getServer().getPlayer(playerName);
+
+                    if( player == null ) {
+                        sender.sendMessage("Unable to find player called "+ args[2]);
+                        return true;
+                    }
 
                     if ("user".equalsIgnoreCase(args[1])) {
                         if (player != null && m_plugin.canBuild.containsKey(player)) {
@@ -239,16 +249,16 @@ public class MonkeyCommand implements CommandExecutor {
                     }
                     return true;
             } /* END args == 4 */else if ("user".equalsIgnoreCase(args[0])) {
-                sender.sendMessage(ChatColor.DARK_RED + "WARNING CASE SENSITIVE");
                 // FIXME Update to new variables
                 Player player = m_plugin.getServer().getPlayer(args[1]);
                 if (player != null) {
-                    sender.sendMessage(args[1] + ".canBuild: " + m_plugin.getPermition(player,".canBuild"));
-                    sender.sendMessage(args[1] + ".canIgnite: " + m_plugin.getPermition(player,".canIgnite"));
-                    sender.sendMessage(args[1] + ".isAdmin: " + m_plugin.getPermition(player,".isAdmin"));
-                    sender.sendMessage(args[1] + ".isVip: " + m_plugin.getPermition(player,".isVip"));
+                    sender.sendMessage(player.getName() + ".canBuild: " + m_plugin.getPermition(player,".canBuild"));
+                    sender.sendMessage(player.getName() + ".canIgnite: " + m_plugin.getPermition(player,".canIgnite"));
+                    sender.sendMessage(player.getName() + ".isAdmin: " + m_plugin.getPermition(player,".isAdmin"));
+                    sender.sendMessage(player.getName() + ".isVip: " + m_plugin.getPermition(player,".isVip"));
+                    sender.sendMessage(player.getName() + ".UID: " + m_plugin.playerUIDs.get(player));;
                 } else {
-                    sender.sendMessage("User maybe offline");
+                    sender.sendMessage("User is offline");
                 }
                 return true;
             } else if ("world".equalsIgnoreCase(args[0])) {
