@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -125,21 +124,6 @@ public class MonkeyModPlayerListener implements Listener {
         }
     }
 
-    // Something not right here.... Removed to see if there is a warning generated
-    @EventHandler
-    public void onInventoryOpen(PlayerInventoryEvent event) {
-        Player player = event.getPlayer();
-
-        if (player != null) {
-            player.sendMessage(ChatColor.YELLOW + "onInventoryOpen");
-            if (m_plugin.getPermition(player, "")) {
-                return;
-            } else {
-                player.sendMessage(ChatColor.RED + "You cant do that");
-            }
-        }
-    }
-
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -149,7 +133,7 @@ public class MonkeyModPlayerListener implements Listener {
             Action click = event.getAction();
             if (click.equals(Action.RIGHT_CLICK_BLOCK)
                     && m_boxy.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false)
-                    && m_boxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
+                    && m_boxy.getInt("boxy.tool") == player.getItemInHand().getTypeId()) {
 
                 if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");

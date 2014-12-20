@@ -1,0 +1,24 @@
+server:
+  registered: false
+  protection:
+    enabled: true
+
+protection:
+  greif:true
+
+logger:
+  enabled: true
+  onconnect: true
+  ondisconnect: true
+  chat: true
+  url: http://cppmonkey.net/minecraft/update.php
+
+override:
+  nage: false
+
+plugin:
+  update:
+    auto: true
+
+boxy:
+  tool: 279
