@@ -2,6 +2,8 @@ package me.cppmonkey.monkeymod.commands;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
 import me.cppmonkey.monkeymod.callback.CSelfUpdateCallback;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.MonkeyMod;
@@ -17,6 +19,7 @@ import org.bukkit.util.config.Configuration;
 
 public class MonkeyCommand implements CommandExecutor {
 
+    public final static String command = "monkey";
     private MonkeyMod m_plugin;
     private Configuration m_permissions;
 
@@ -80,9 +83,7 @@ public class MonkeyCommand implements CommandExecutor {
                         // Option found
                         if (stringOptions[i].equalsIgnoreCase(args[1])) {
                             Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
-                            config.setProperty(
-                                    stringOptions[i],
-                                    args[2]);
+                            config.setProperty(stringOptions[i], args[2]);
                             sender.sendMessage(ChatColor.GREEN + stringOptions[i] + " has been altered");
                             sender.sendMessage(ChatColor.GREEN + "A restart maybe required to apply changes");
                             return true;
@@ -90,9 +91,7 @@ public class MonkeyCommand implements CommandExecutor {
                     }
                 }
 
-                String[] intOptions = {
-                    "protection.tower.threshold"
-                };
+                String[] intOptions = {"protection.tower.threshold"};
 
                 if (args.length == 3) {
                     for (int i = 0; i < intOptions.length; i++) {
@@ -154,7 +153,7 @@ public class MonkeyCommand implements CommandExecutor {
             } //END /monkey [enable/disable]
             if (args.length == 3) {
                 // Must be admin to add users
-                if (sender instanceof Player && !m_permissions.getBoolean(((Player) sender).getName().toLowerCase() + ".isAdmin", false)) {
+                if (sender instanceof Player && !m_permissions.getBoolean(((Player) sender).getName().toLowerCase(Locale.ENGLISH) + ".isAdmin", false)) {
                     	sender.sendMessage("You do not have permission to do that");
                     return true;
                 }
@@ -165,7 +164,7 @@ public class MonkeyCommand implements CommandExecutor {
                  */
                 if ("add".equalsIgnoreCase(args[0])) {
                     // Username
-                    String playerName = args[2].toLowerCase();
+                    String playerName = args[2].toLowerCase(Locale.ENGLISH);
 
                     if ("user".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canBuild", true);
@@ -193,7 +192,7 @@ public class MonkeyCommand implements CommandExecutor {
                 }// END add
                 if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
                 	// Username
-                    String playerName = args[2].toLowerCase();
+                    String playerName = args[2].toLowerCase(Locale.ENGLISH);
                     
                     if ("user".equalsIgnoreCase(args[1])) {
                     	m_permissions.removeProperty(playerName);

@@ -1,5 +1,7 @@
 package me.cppmonkey.monkeymod.callback;
 
+import java.util.Locale;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,7 +38,7 @@ public class LoginCallback implements IThreadCallback {
             	
                 for (int i = 0; i < booleanValues.length; i++) {
 					if (split[0].equalsIgnoreCase(booleanValues[i])) {
-                        m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(player.getName().toLowerCase() + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
+                        m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
 						return;
 					}
 				}

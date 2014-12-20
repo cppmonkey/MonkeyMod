@@ -5,6 +5,7 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 
@@ -40,11 +41,11 @@ enum e_monsters {
 public class PlayerDeathListener extends EntityListener {
 
     MonkeyMod m_plugin;
-    HashMap<String, String> PlayerMap;
+    HashMap<String, String> playerMap;
 
     public PlayerDeathListener(MonkeyMod instance) {
         m_plugin = instance;
-        PlayerMap = new HashMap<String, String>();
+        playerMap = new HashMap<String, String>();
     }
     /*
     CraftZombie
@@ -57,10 +58,10 @@ public class PlayerDeathListener extends EntityListener {
     CraftGhast
     CraftSkeleton
     "SHOT:" + usingitem + ":" + murderer.getName()
-    "PVP:" + usingItem + ":" + murderer.getName().toString();
+    "PVP:" + usingItem + ":" + murderer.getName();
      */
 
-    private String DeathDescription(EntityDeathEvent event) {
+    private String deathDescription(EntityDeathEvent event) {
         DamageCause cause = event.getEntity().getLastDamageCause().getCause();
         if (cause == DamageCause.CONTACT) {
             String m_cactusDeath[] = {
@@ -76,7 +77,7 @@ public class PlayerDeathListener extends EntityListener {
             Player player = (Player) event.getEntity();
             
             //Entity killer = player.getLastDamageCause().getEntity();
-            String killer = PlayerMap.get(player.getName());
+            String killer = playerMap.get(player.getName());
             String killerDetails[] = killer.split(":");
             if (killerDetails.length > 1) {
                 if("WOLF".equalsIgnoreCase(killerDetails[0])) {
@@ -252,7 +253,7 @@ public class PlayerDeathListener extends EntityListener {
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             // FIXME forgive me for asking by if its player related and not general entities, then why is it in EntityListener and not PlayerListener?
-            m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + DeathDescription(event));
+            m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + deathDescription(event));
         } else {
             //Animal death
         }
@@ -261,11 +262,11 @@ public class PlayerDeathListener extends EntityListener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            LastDamage(player, event);
+            lastDamage(player, event);
         }
     }
 
-    String LastDamage(Player player, EntityDamageEvent event) {
+    String lastDamage(Player player, EntityDamageEvent event) {
         String lastDamage = "";
 
         if (event instanceof EntityDamageByEntityEvent) {
@@ -296,17 +297,17 @@ public class PlayerDeathListener extends EntityListener {
                 if (usingItem.equalsIgnoreCase("AIR")) {
                     usingItem = "bare hands";
                 }
-                usingItem = usingItem.toLowerCase();
+                usingItem = usingItem.toLowerCase(Locale.ENGLISH);
                 usingItem = usingItem.replace("_", " ");
                 lastDamage = "PVP:" + usingItem + ":" + murderer.getName();
 	            }
             }
         }
-        if (PlayerMap.containsKey(player.getName())) {
-            PlayerMap.remove(player.getName());
-            PlayerMap.put(player.getName(), lastDamage);
+        if (playerMap.containsKey(player.getName())) {
+            playerMap.remove(player.getName());
+            playerMap.put(player.getName(), lastDamage);
         } else {
-            PlayerMap.put(player.getName(), lastDamage);
+            playerMap.put(player.getName(), lastDamage);
         }
         return lastDamage;
     }

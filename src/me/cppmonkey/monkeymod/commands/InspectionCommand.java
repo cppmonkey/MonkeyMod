@@ -4,6 +4,8 @@
  */
 package me.cppmonkey.monkeymod.commands;
 
+import java.util.Locale;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -44,7 +46,7 @@ public class InspectionCommand implements CommandExecutor {
                              Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                              int playerNum = -1;
                              for (int i = 0; i < onPlayers.length; i++) {
-                                 if (onPlayers[i].getName().toString().contains(args[0])) {
+                                if (onPlayers[i].getName().contains(args[0])) {
                                      playerNum = i;
                                  }
                              }
@@ -61,12 +63,12 @@ public class InspectionCommand implements CommandExecutor {
                              return true;   
                          }
                      case 2:
-                        if (args[1].toLowerCase().equalsIgnoreCase("risk")) {
+                        if (args[1].toLowerCase(Locale.ENGLISH).equalsIgnoreCase("risk")) {
                             String dangerItems = "";
                             Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                             int playerNum = -1;
                             for (int i = 0; i < onPlayers.length; i++) {
-                                if (onPlayers[i].getName().toString().contains(args[0])) {
+                                if (onPlayers[i].getName().contains(args[0])) {
                                     playerNum = i;
                                 }
                             }
@@ -87,15 +89,11 @@ public class InspectionCommand implements CommandExecutor {
                                             case 7:
                                                 dangerItems += "BEDROCK,";
                                                 break;
-                                            case 8:
-                                                dangerItems += "WATER,";
-                                                break;
+                                                case 8: // Both water
                                             case 9:
                                                 dangerItems += "WATER,";
                                                 break;
-                                            case 10:
-                                                dangerItems += "LAVA,";
-                                                break;
+                                                case 10: // Both lava
                                             case 11:
                                                 dangerItems += "LAVA,";
                                                 break;
@@ -126,7 +124,8 @@ public class InspectionCommand implements CommandExecutor {
                                             case 327:
                                                 dangerItems += "LAVA BUCKET,";
                                                 break;
-                                        }
+                                                default:
+                                                	break;                                            }
                                     }
                                 }
                             if (dangerItems.length() > 1) {

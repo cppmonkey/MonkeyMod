@@ -6,7 +6,7 @@ import me.cppmonkey.monkeymod.interfaces.IThread;
 
 public class AnnounceThread extends Thread implements IThread {
 
-    private Boolean m_halt = false;
+    private boolean m_halt = false;
     private MonkeyMod m_plugin;
     private long m_interval = 20; // seconds
     private String[] m_msg = {
@@ -32,7 +32,7 @@ public class AnnounceThread extends Thread implements IThread {
      */
 
     // verify Registration
-    public Boolean verifyRegistration() {
+    public boolean verifyRegistration() {
         return true;
     }
 

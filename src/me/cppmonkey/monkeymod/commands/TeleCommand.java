@@ -4,7 +4,10 @@
  */
 package me.cppmonkey.monkeymod.commands;
 
+import java.util.Locale;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class TeleCommand implements CommandExecutor {
 
+    public final static String command = "tele";
     private MonkeyMod m_plugin;
     private final Configuration m_settings;
 
@@ -43,7 +47,7 @@ public class TeleCommand implements CommandExecutor {
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("set")) {
                         if (args[1].matches("[1-5]")) {
-                            m_settings.setProperty(player.getName().toLowerCase() + "-" + args[1], player.getWorld().getName() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ());
+                            m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + "-" + args[1], player.getWorld().getName() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ());
                             player.sendMessage(ChatColor.GREEN + "Saved");
                             return true;
                         }
@@ -51,7 +55,7 @@ public class TeleCommand implements CommandExecutor {
                 } else if (args.length == 1) {
                     if (args[0].matches("[1-5]")) {
                         try {
-                            String Pos = m_settings.getString(player.getName().toLowerCase() + "-" + args[0], "empty");
+                            String Pos = m_settings.getString(player.getName().toLowerCase(Locale.ENGLISH) + "-" + args[0], "empty");
                             if (Pos.equals("empty")) {
                                 player.sendMessage(ChatColor.RED + "Input error. Are you sure you have saved a home warp here?");
                                 return false;
@@ -112,7 +116,7 @@ public class TeleCommand implements CommandExecutor {
                         }
                     }
                     if (playerNum != -1) {
-                        if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName().toString())) {
+                        if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName())) {
                             player.teleport(onPlayers[playerNum].getLocation());
                         } else {
                             player.sendMessage(ChatColor.GOLD + "Target player is in another world. Please go to the right world first.");

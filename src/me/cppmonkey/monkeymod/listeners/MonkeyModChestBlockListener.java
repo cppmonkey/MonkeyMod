@@ -1,5 +1,7 @@
 package me.cppmonkey.monkeymod.listeners;
 
+import java.util.Locale;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -68,10 +70,10 @@ public class MonkeyModChestBlockListener extends BlockListener {
                 // Is the item being place a chest?
                 if (event.getBlockPlaced().getType() == Material.CHEST) {
                     String nextTo = nextToChest(event);
-                    if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase())) {
+                if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
                         player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
                         String chestLocation = event.getBlock().getWorld().getName() + ":" + (int) event.getBlock().getX() + "," + (int) event.getBlock().getY() + "," + (int) event.getBlock().getZ();
-                        m_chestPermissions.setProperty(chestLocation + ".owner", player.getName().toLowerCase());
+                        m_chestPermissions.setProperty(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
                         m_chestPermissions.setProperty(chestLocation + ".lock", "CLOSED");
                     } else {
                         player.sendMessage(ChatColor.RED + "You cannot place a chest here.");
@@ -87,9 +89,9 @@ public class MonkeyModChestBlockListener extends BlockListener {
         if (player != null && event.getBlock().getType() == Material.CHEST) {
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
             String chestLocation = event.getBlock().getWorld().getName() + ":" + (int) event.getBlock().getX() + "," + (int) event.getBlock().getY() + "," + (int) event.getBlock().getZ();
-            String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC").toString().toLowerCase();
+            String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC").toLowerCase(Locale.ENGLISH);
             
-            if (!chestOwner.equalsIgnoreCase(player.getName().toLowerCase()) && !m_plugin.getPermition(player, ".isAdmin")) {
+            if (!chestOwner.equalsIgnoreCase(player.getName().toLowerCase(Locale.ENGLISH)) && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner);
                 event.setCancelled(true);
@@ -109,7 +111,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
 
         if (player != null && event.getBlock().getType() == Material.CHEST) {
             String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ();
-                String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC").toString();
+                String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC");
             if (chestOwner.equalsIgnoreCase(player.getName()) || m_plugin.getPermition(player, ".isAdmin")) {
                     m_chestPermissions.removeProperty(chestLocation + ".owner");
                     m_chestPermissions.removeProperty(chestLocation + ".lock");

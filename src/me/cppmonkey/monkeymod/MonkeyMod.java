@@ -1,6 +1,7 @@
 package me.cppmonkey.monkeymod;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Stack;
 import java.util.logging.Logger;
 
@@ -35,7 +36,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 107;
+    private Integer m_build = 132;
     private PluginDescriptionFile m_pluginDescFile;
     // Array Storage for Configs
     private Configuration[] m_configs;
@@ -63,10 +64,10 @@ public class MonkeyMod extends JavaPlugin {
             try {
                 m_configs[config.ordinal()].save();
             } catch (YAMLException e) {
-               MonkeyMod.log.info("[ERROR] saving " + config.name() + ".yml");
+                MonkeyMod.log.severe("saving " + config.name() + ".yml");
                 String msg = e.getMessage();
                 if (msg != null) {
-                   MonkeyMod.log.info("[ERROR] " + msg);
+                    MonkeyMod.log.severe(msg);
                 }
             }
         }
@@ -94,7 +95,7 @@ public class MonkeyMod extends JavaPlugin {
                 m_configs[config.ordinal()] = getConfiguration();
             } else {
                 m_configs[config.ordinal()] = new Configuration(new File(
-                        getDataFolder(), config.name().toLowerCase() + ".yml"));
+                        getDataFolder(), config.name().toLowerCase(Locale.ENGLISH) + ".yml"));
                 m_configs[config.ordinal()].load();
             }
         }
@@ -241,14 +242,14 @@ public class MonkeyMod extends JavaPlugin {
      */
     public Boolean getPermition(Player player, String path) {
         // query permissions file
-        // player.sendMessage(player.getName().toLowerCase() + path);
-        return m_configs[EConfig.PERMISSIONS.ordinal()].getBoolean(player.getName().toLowerCase() + path, false);
+        // player.sendMessage(player.getName().toLowerCase(Locale.ENGLISH) + path);
+        return m_configs[EConfig.PERMISSIONS.ordinal()].getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + path, false);
     }
 
     public Object isKnownUser(Player player) {
         // FIXME need to be seeing if there username exists. not, can they build!
         // Couldn't figure it out at the time
-        return m_configs[EConfig.PERMISSIONS.ordinal()].getProperty(player.getName().toLowerCase() + ".canBuild");
+        return m_configs[EConfig.PERMISSIONS.ordinal()].getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".canBuild");
     }
 
     public String getLoggerUrl() {

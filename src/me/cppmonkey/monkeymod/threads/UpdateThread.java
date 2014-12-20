@@ -5,6 +5,7 @@ package me.cppmonkey.monkeymod.threads;
  * and open the template in the editor.
  */
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +13,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 
@@ -26,9 +26,8 @@ import org.bukkit.command.CommandSender;
  */
 public class UpdateThread extends Thread {
 
-    protected static final Logger log = Logger.getLogger("Minecraft");
-    public static String name = "Update Thread";
-    public static String version = "1.3.1";
+	public final static String name = "Update Thread";
+	public final static String version = "1.3.1";
     private CommandSender m_ThreadOwner = null;
     private String m_PackageName;
     private String m_ReposUrl;
@@ -69,7 +68,7 @@ public class UpdateThread extends Thread {
         if (m_ThreadOwner != null) {
             m_ThreadOwner.sendMessage(msg);
         } else {
-            log.info(msg);
+			MonkeyMod.log.info(msg);
         }
     }
 
@@ -89,7 +88,7 @@ public class UpdateThread extends Thread {
             }
             
 			if (!HttpURLConnection.getFollowRedirects()) {
-				System.out.println("[WARNING] HTTP Redirections are not allowed");
+				MonkeyMod.log.warning("HTTP Redirections are not allowed");
             }
 
 			HttpURLConnection urlConn = null;
@@ -111,38 +110,43 @@ public class UpdateThread extends Thread {
 			if (urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED || urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
 				InputStream is = urlConn.getInputStream();
-
-				OutputStream os;
-
-				if (m_isPlugin) {
-					os = new FileOutputStream("plugins//" + m_PackageName + ".jar");
-				} else {
-					os = new FileOutputStream(m_PackageName + ".jar");
-				}
-
-            int data = is.read();
-
-            while (data != -1) {
-                os.write(data);
-                data = is.read();
-            }
-            os.close();
-            is.close();
-            
-            try {
-				if (m_isPlugin) {
-            	   m_plugin.getServer().reload();
-				} else {
-				    m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
-				}
-				message(ChatColor.GREEN + "Update complete!");
-            } catch (CommandException e) {
-					message(ChatColor.RED + "Something went wrong whilst updaing");
-					message(ChatColor.RED + e.getMessage());
-				}
+				OutputStream os = null;
+				try {
+                    if (m_isPlugin) {
+                    	os = new FileOutputStream("plugins//" + m_PackageName + ".jar");
+                    } else {
+                    	os = new FileOutputStream(m_PackageName + ".jar");
+                    }
+                    
+                    int data = is.read();
+                    
+                    while (data != -1) {
+                       os.write(data);
+                       data = is.read();
+                    }
+				}catch(FileNotFoundException e){
+					
+				}finally{
+					if (os != null) {
+                        os.close();
+        			}
+        		}
+                is.close();
+                
+                try {
+    				if (m_isPlugin) {
+                	   m_plugin.getServer().reload();
+    				} else {
+    				    m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
+    				}
+    				message(ChatColor.GREEN + "Update complete!");
+                } catch (CommandException e) {
+    				message(ChatColor.RED + "Something went wrong whilst updaing");
+    				message(ChatColor.RED + e.getMessage());
+    			}
 			} else {
-				System.out.println("[ERROR] Http request failed (" + urlConn.getURL() + ")");
-				System.out.println("[ERROR] Server response to request - " + urlConn.getResponseCode());
+				MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
+				MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
             }
 
 		} catch (IOException e) {

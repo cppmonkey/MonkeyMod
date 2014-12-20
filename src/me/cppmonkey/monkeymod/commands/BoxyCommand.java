@@ -1,5 +1,7 @@
 package me.cppmonkey.monkeymod.commands;
 
+import java.util.Locale;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
@@ -10,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 public class BoxyCommand implements CommandExecutor {
-    public static String command = "boxy";
+	public final static String command = "boxy";
 
 	private final MonkeyMod m_plugin;
     private final Configuration m_settings;
@@ -22,10 +24,10 @@ public class BoxyCommand implements CommandExecutor {
 
     private void setDefaultSettings(String PlayerName) {
         //set default settings on error occurring
-        m_settings.setProperty(PlayerName.toLowerCase() + ".fromId", 0);
-        m_settings.setProperty(PlayerName.toLowerCase() + ".toId", 0);
-        m_settings.setProperty(PlayerName.toLowerCase() + ".step", 1);
-        m_settings.setProperty(PlayerName.toLowerCase() + ".height", 1);
+		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".fromId", 0);
+		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".toId", 0);
+		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".step", 1);
+		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".height", 1);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -37,11 +39,11 @@ public class BoxyCommand implements CommandExecutor {
                 if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                     if (args.length == 4) {
                         try {
-                            m_settings.setProperty(player.getName().toLowerCase() + ".fromId", Integer.parseInt(args[0]));
-                            m_settings.setProperty(player.getName().toLowerCase() + ".toId", Integer.parseInt(args[1]));
-                            m_settings.setProperty(player.getName().toLowerCase() + ".step", Integer.parseInt(args[3]));
-                            m_settings.setProperty(player.getName().toLowerCase() + ".height", Integer.parseInt(args[2]));
-                            if (m_settings.getInt(player.getName().toLowerCase() + ".step", -1) < 0) {
+                            m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId", Integer.parseInt(args[0]));
+                            m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".toId", Integer.parseInt(args[1]));
+                            m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".step", Integer.parseInt(args[3]));
+                            m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".height", Integer.parseInt(args[2]));
+                            if (m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".step", -1) < 0) {
                                 sender.sendMessage(ChatColor.RED + "Invalid argument value");
                                 setDefaultSettings(player.getName());
                                 m_settings.save();
@@ -61,19 +63,19 @@ public class BoxyCommand implements CommandExecutor {
                         try {
                         String boxyDetails[] = args[0].split(":");
                             if (boxyDetails[0].equals("h")) {
-                                m_settings.setProperty(player.getName().toLowerCase() + ".height", Integer.parseInt(boxyDetails[1]));
+                                m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".height", Integer.parseInt(boxyDetails[1]));
                             player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                             m_settings.save();
                                 return true;
                         }
                             if (boxyDetails[0].equals("s")) {
-                                m_settings.setProperty(player.getName().toLowerCase() + ".step", Integer.parseInt(boxyDetails[1]));
+                                m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".step", Integer.parseInt(boxyDetails[1]));
                             player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                             m_settings.save();
                                 return true;
                         }
                             if (boxyDetails[0].equals("e")) {
-                                m_settings.setProperty(player.getName().toLowerCase() + ".exclude", boxyDetails[1]);
+                                m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude", boxyDetails[1]);
                             player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                             m_settings.save();
                                 return true;
@@ -88,19 +90,19 @@ public class BoxyCommand implements CommandExecutor {
                                 return true;
                             }
                             if (boxyDetails[0].equals("enable")) {
-                                if (m_settings.getBoolean(player.getName().toLowerCase() + ".enabled", false)) {
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".enabled", false);
+                                if (m_settings.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false)) {
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false);
                                     player.sendMessage(ChatColor.GREEN + "Boxy disabled");
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", false);
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".hasEnd", false);
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false);
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
                                     m_settings.save();
                                     return true;
                                 } else {
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".enabled", true);
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", true);
                                     player.sendMessage(ChatColor.GREEN + "Boxy enabled");
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".hasStart", false);
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".hasEnd", false);
-                                    m_settings.setProperty(player.getName().toLowerCase() + ".exclude", "7");
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false);
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
+                                    m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude", "7");
                                     m_settings.save();
                                     return true;
                         }

@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
+
+import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
@@ -18,14 +19,13 @@ import org.bukkit.command.CommandSender;
  */
 public class HttpRequestThread extends Thread {
 
-    protected static final Logger log = Logger.getLogger("Minecraft");
-    public static String name = "Http Request Thread";
-    public static String version = "1.4.1";
+    public final static String name = "Http Request Thread";
+    public final static String version = "1.4.1";
     private CommandSender m_ThreadOwner;
     private URL m_url;
     private Boolean m_debug;
     
-    //New for Bukkit
+    // New for Bukkit
     private IThreadCallback m_callback = null;
 
     public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms) {
@@ -100,7 +100,7 @@ public class HttpRequestThread extends Thread {
         if (m_ThreadOwner != null) {
             m_ThreadOwner.sendMessage(msg);
         } else {
-            log.info(msg);
+            MonkeyMod.log.info(msg);
         }
     }
 
@@ -136,17 +136,15 @@ public class HttpRequestThread extends Thread {
 	            	
                     while ((inputLine = in.readLine()) != null) {
 	            		// debug output
-                        if (m_debug) {
-	            			System.out.println(inputLine);
-                        }
+                        MonkeyMod.log.finest(inputLine);
 	            		
                         m_callback.processLine(inputLine);
 	            	}
 	            	in.close();
 	            	m_callback.complete();
                     } else {
-                        System.out.println("[ERROR] Http request failed (" + urlConn.getURL() + ")");
-                        System.out.println("[ERROR] Server response to request - " + urlConn.getResponseCode());
+                        MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
+                        MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
                     }
 	            	
                 } else {

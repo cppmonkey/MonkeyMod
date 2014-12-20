@@ -1,6 +1,7 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import java.net.URLEncoder;
+import java.util.Locale;
 
 import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.MonkeyMod;
@@ -41,8 +42,8 @@ public class MonkeyModPlayerListener extends PlayerListener {
             Parm[] parms = {
                 new Parm("action", "connect"),
                 new Parm("player", player.getName()),
-                new Parm("vip", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase() + ".isVip", false))),
-                new Parm("admin", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase() + ".isAdmin", false)))};
+                new Parm("vip", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".isVip", false))),
+                new Parm("admin", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".isAdmin", false)))};
         HttpRequestThread notification = new HttpRequestThread(
                 "Connection Notification Thread:" + player.getName(),
                 player,
@@ -139,7 +140,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
             // player interaction sent from player
             Action click = event.getAction();
             if (click.equals(Action.RIGHT_CLICK_BLOCK)
-                    && m_boxy.getBoolean(player.getName().toLowerCase() + ".enabled", false)
+                    && m_boxy.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false)
                     && m_boxy.getInt("boxyToolID", -1) == player.getItemInHand().getTypeId()) {
 
                 if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {

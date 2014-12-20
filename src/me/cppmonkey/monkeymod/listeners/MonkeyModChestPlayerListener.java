@@ -1,5 +1,7 @@
 package me.cppmonkey.monkeymod.listeners;
 
+import java.util.Locale;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
@@ -29,7 +31,7 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
             String chestLock = m_chestPermissions.getString(chestLocation + ".lock", "OPEN");
             if (player.getItemInHand().getType() == Material.BONE) {
                 if (chestOwner.equalsIgnoreCase(player.getName())) {
-                    String keySetting = m_chestPermissions.getString(player.getName().toLowerCase() + ".key", "NONE");
+                    String keySetting = m_chestPermissions.getString(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "NONE");
                     if (keySetting.matches("NONE")) {
                     	// FIXME users aren't sure what you mean by key
                         player.sendMessage(ChatColor.GOLD + "You have not set your key!");

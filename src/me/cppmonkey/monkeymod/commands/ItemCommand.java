@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemCommand implements CommandExecutor {
 
-    public static String command = "item";
+	public final static String command = "item";
     private MonkeyMod m_plugin;
 
     public ItemCommand(MonkeyMod instance) {
@@ -43,7 +43,7 @@ public class ItemCommand implements CommandExecutor {
                     String itemDetails[] = args[0].split(":");
                     Material itemMaterial = Material.matchMaterial(itemDetails[0]);
 
-                    if (ItemRestricted(itemMaterial)) {
+                    if (itemRestricted(itemMaterial)) {
                         // Item is restricted
                         // Allow exceptions to rule
                         if (m_plugin.getPermition(player, ".isAdmin")) {
@@ -99,7 +99,7 @@ public class ItemCommand implements CommandExecutor {
         return false;
     }
 
-    private boolean ItemRestricted(Material item) {
+    private boolean itemRestricted(Material item) {
         switch (item) {
 
             case BEDROCK:
@@ -113,7 +113,9 @@ public class ItemCommand implements CommandExecutor {
             case FLINT_AND_STEEL:
             case LAVA_BUCKET:
                 return true;
+			default:
+				return false;
         }
-        return false;
+        
     }
 }
