@@ -11,7 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 //TODO: change to new configuration format as this is getting depricated next version: http://wiki.bukkit.org/Introduction_to_the_New_Configuration
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
@@ -19,7 +19,7 @@ import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 public class MonkeyModChestPlayerListener implements Listener {
 
     private MonkeyMod m_plugin;
-    private Configuration m_chestPermissions;
+    private FileConfiguration m_chestPermissions;
 
     public MonkeyModChestPlayerListener(MonkeyMod instance) {
         m_plugin = instance;
@@ -42,11 +42,11 @@ public class MonkeyModChestPlayerListener implements Listener {
                         player.sendMessage(ChatColor.GOLD + "Use '/chest lock' or '/chest unlock'");
                     } else if (keySetting.matches("LOCK")) {
                         player.sendMessage(ChatColor.GOLD + "You have locked this chest");
-                        m_chestPermissions.setProperty(chestLocation + ".lock", "CLOSED");
+                        m_chestPermissions.set(chestLocation + ".lock", "CLOSED");
                     } else if (keySetting.matches("UNLOCK")) {
                         player.sendMessage(ChatColor.GOLD + "You have un-locked this chest");
                         player.sendMessage(ChatColor.GOLD + "Anybody can now access its contents!");
-                        m_chestPermissions.setProperty(chestLocation + ".lock", "OPEN");
+                        m_chestPermissions.set(chestLocation + ".lock", "OPEN");
                     }
                     // Cancel the appearance of the inventory
                     event.setCancelled(true);

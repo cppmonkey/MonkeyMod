@@ -1,17 +1,17 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.entity.EndermanPickupEvent;
-import org.bukkit.event.Listener;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
-import me.cppmonkey.monkeymod.Parm;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 public class MonkeyModBlockListener implements Listener {
 
@@ -101,11 +101,6 @@ public class MonkeyModBlockListener implements Listener {
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         }
-    }
-
-    @EventHandler
-    public void onEndermanPickup(EndermanPickupEvent event) {
-        event.setCancelled(true);
     }
 
     @EventHandler

@@ -20,13 +20,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class MonkeyModPlayerListener implements Listener {
 
     private MonkeyMod m_plugin;
-    private Configuration m_permissions;
-    private Configuration m_boxy;
+    private FileConfiguration m_permissions;
+    private FileConfiguration m_boxy;
 
     public MonkeyModPlayerListener(MonkeyMod instance) {
         m_plugin = instance;
@@ -160,9 +160,10 @@ public class MonkeyModPlayerListener implements Listener {
                             int Y = 0;
                             int Z = 0;
                             try {
-                                X = block.getLocation().getBlockX();
-                                Y = block.getLocation().getBlockY();
-                                Z = block.getLocation().getBlockZ();
+                        X = block.getX();
+                        Y = block.getY();
+                        Z = block.getZ();
+                        /*
 
                         /*
                                 //the switch compensates coords for the side of the block clicked

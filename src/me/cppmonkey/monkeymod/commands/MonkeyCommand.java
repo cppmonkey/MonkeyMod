@@ -14,14 +14,14 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 public class MonkeyCommand implements CommandExecutor {
 
     public final static String command = "monkey";
     private MonkeyMod m_plugin;
-    private Configuration m_permissions;
+    private FileConfiguration m_permissions;
 
     public MonkeyCommand(MonkeyMod instance) {
         m_plugin = instance;
@@ -82,8 +82,8 @@ public class MonkeyCommand implements CommandExecutor {
                     for (int i = 0; i < stringOptions.length; i++) {
                         // Option found
                         if (stringOptions[i].equalsIgnoreCase(args[1])) {
-                            Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
-                            config.setProperty(stringOptions[i], args[2]);
+                            FileConfiguration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
+                            config.set(stringOptions[i], args[2]);
                             sender.sendMessage(ChatColor.GREEN + stringOptions[i] + " has been altered");
                             sender.sendMessage(ChatColor.GREEN + "A restart maybe required to apply changes");
                             return true;
@@ -97,8 +97,8 @@ public class MonkeyCommand implements CommandExecutor {
                     for (int i = 0; i < intOptions.length; i++) {
                         // Option found
                         if (intOptions[i].equalsIgnoreCase(args[1])) {
-                            Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
-                            config.setProperty(intOptions[i], Integer.parseInt(args[2]));
+                            FileConfiguration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
+                            config.set(intOptions[i], Integer.parseInt(args[2]));
                             sender.sendMessage(ChatColor.GREEN + intOptions[i] + " has been altered");
                             sender.sendMessage(ChatColor.GREEN + "A restart maybe required to apply changes");
                             return true;
@@ -131,8 +131,8 @@ public class MonkeyCommand implements CommandExecutor {
                     for (int i = 0; i < boolOptions.length; i++) {
                         // Option found
                         if (boolOptions[i].equalsIgnoreCase(args[1])) {
-                            Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
-                            config.setProperty(boolOptions[i], "enable".equalsIgnoreCase(args[0]));
+                            FileConfiguration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
+                            config.set(boolOptions[i], "enable".equalsIgnoreCase(args[0]));
                             sender.sendMessage(ChatColor.GREEN + boolOptions[i] + " has been altered");
                             sender.sendMessage(ChatColor.GREEN + "A restart maybe required to apply changes");
                             return true;
@@ -161,20 +161,20 @@ public class MonkeyCommand implements CommandExecutor {
                     Parm permission;
 
                     if ("user".equalsIgnoreCase(args[1])) {
-                        m_permissions.setProperty(playerName + ".canBuild", true);
-                        m_permissions.setProperty(playerName + ".canIgnite", false);
+                        m_permissions.set(playerName + ".canBuild", true);
+                        m_permissions.set(playerName + ".canIgnite", false);
                         permission = new Parm("add", "user");
                         sender.sendMessage("User player '" + playerName + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        m_permissions.setProperty(playerName + ".canBuild", true);
-                        m_permissions.setProperty(playerName + ".canIgnite", false);
-                        m_permissions.setProperty(playerName + ".isVip", true);
+                        m_permissions.set(playerName + ".canBuild", true);
+                        m_permissions.set(playerName + ".canIgnite", false);
+                        m_permissions.set(playerName + ".isVip", true);
                         permission = new Parm("add", "vip");
                         sender.sendMessage("Vip player '" + playerName + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        m_permissions.setProperty(playerName + ".canBuild", true);
-                        m_permissions.setProperty(playerName + ".canIgnite", true);
-                        m_permissions.setProperty(playerName + ".isAdmin", true);
+                        m_permissions.set(playerName + ".canBuild", true);
+                        m_permissions.set(playerName + ".canIgnite", true);
+                        m_permissions.set(playerName + ".isAdmin", true);
                         permission = new Parm("add", "admin");
                         sender.sendMessage("Admin player '" + playerName + "' added");
                     } else {
@@ -184,7 +184,6 @@ public class MonkeyCommand implements CommandExecutor {
                     Parm[] parms = {new Parm("action", "modify"), new Parm("player", playerName), permission};
 
                     HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms);
-                    m_permissions.save();
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                     return true;
@@ -195,16 +194,16 @@ public class MonkeyCommand implements CommandExecutor {
                     Parm permission;
                     
                     if ("user".equalsIgnoreCase(args[1])) {
-                    	m_permissions.removeProperty(playerName);
+                        m_permissions.set(playerName, null);
                         permission = new Parm("remove", "user");
                         sender.sendMessage("player '" + playerName + "' removed");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        m_permissions.setProperty(playerName + ".isVip", false);
+                        m_permissions.set(playerName + ".isVip", false);
                         permission = new Parm("remove", "vip");
                         sender.sendMessage("Vip player '" + playerName + "' removed");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        m_permissions.setProperty(playerName + ".canIgnite", false);
-                        m_permissions.setProperty(playerName + ".isAdmin", false);
+                        m_permissions.set(playerName + ".canIgnite", false);
+                        m_permissions.set(playerName + ".isAdmin", false);
                         permission = new Parm("remove", "admin");
                         sender.sendMessage("Admin player '" + playerName + "' removed");
                     } else {
@@ -224,7 +223,6 @@ public class MonkeyCommand implements CommandExecutor {
                              * player
                              * )
                              */);
-                        m_permissions.save();
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
 

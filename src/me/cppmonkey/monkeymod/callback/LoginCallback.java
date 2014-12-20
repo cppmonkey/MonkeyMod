@@ -38,7 +38,7 @@ public class LoginCallback implements IThreadCallback {
             	
                 for (int i = 0; i < booleanValues.length; i++) {
 					if (split[0].equalsIgnoreCase(booleanValues[i])) {
-                        m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).setProperty(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
+                        m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).set(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
 						return;
 					}
 				}
