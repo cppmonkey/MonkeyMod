@@ -53,7 +53,7 @@ public class InspectionCommand implements CommandExecutor {
                              }
                              if (playerNum != -1) {
                                  ItemStack item[] = onPlayers[playerNum].getInventory().getContents();
-                                 for (int i = 0; i < 40; i++) {
+                                for (int i = 0; i < 36; i++) {
                                      if (item[i] != null) {
                                          player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType().toString() + " X " + (item[i].getAmount()));
                                      }
@@ -75,16 +75,16 @@ public class InspectionCommand implements CommandExecutor {
                             }
                             if (playerNum == -1) {
                                 ItemStack item[] = onPlayers[playerNum].getInventory().getContents();
-                                for (int i = 0; i < 40; i++) {
-                                        if (item[i] != null) {
-                                            player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType().toString() + " X " + (item[i].getAmount()));
-                                        }
+                                for (int i = 0; i < 36; i++) {
+                                    if (item[i] != null) {
+                                        player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType().toString() + " X " + (item[i].getAmount()));
+                                    }
                                 }
                                 player.sendMessage(ChatColor.GOLD + "Player not found.");
                                 return true;
                             } else {
                                 ItemStack item[] = onPlayers[playerNum].getInventory().getContents();
-                                for (int i = 0; i < 40; i++) {
+                                for (int i = 0; i < 36; i++) {
                                     if (item[i] != null) {
                                         switch (item[i].getTypeId()) {
                                             case 7:

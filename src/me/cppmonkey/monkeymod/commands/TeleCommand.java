@@ -69,7 +69,11 @@ public class TeleCommand implements CommandExecutor {
                                     double Y = Double.parseDouble(Coords[1]);
                                     double Z = Double.parseDouble(Coords[2]);
                                     Location newLocation = new Location(player.getWorld(), X, Y, Z);
-                                    player.setCompassTarget(newLocation);
+                                    if((m_plugin.getPermition(player, ".isVip")) || (m_plugin.getPermition(player, ".isAdmin"))){
+                                        player.teleport(newLocation);
+                                    }else{
+                                        player.setCompassTarget(newLocation);
+                                    }
                                     return true;
                                 }
                             }
@@ -101,6 +105,7 @@ public class TeleCommand implements CommandExecutor {
     }
 
     private boolean back(CommandSender sender) {
+        //FIXME: This doesnt work any more :S
         if ((sender instanceof Player)) {
             Player player = (Player) sender;
              if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
@@ -147,7 +152,6 @@ public class TeleCommand implements CommandExecutor {
                     Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                     int playerNum = -1;
                     for (int i = 0; i < onPlayers.length; i++) {
-                        player.sendMessage(ChatColor.GREEN + "player: " + onPlayers[i]);
                         if (onPlayers[i].getName().contains(args[0])) {
                             playerNum = i;
                         }
