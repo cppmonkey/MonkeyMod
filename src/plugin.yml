@@ -28,7 +28,7 @@ commands:
            /<command> <Replace ID> <With ID> [Height] [Spacing]
            /<command>:e <CSV list of blocks>
   chest:
-    description: Adds chest protection to chests. Chests are locked by default
+    description: Adds chest protection to chests. Chests are locked by default. Use a bone you lock / unlock chests.
     usage: |
            /<command> lock
            /<command> unlock
@@ -43,6 +43,11 @@ commands:
     usage: |
            /<command> <playername>
            Example: /<command> notch
+  back:
+    description: Teleports you back to where you tele'd from
+    usage: |
+           /<command> <playername>
+           Example: /<command>
   spawn:
     description: Teleport to spawn
     usage: |
@@ -56,6 +61,11 @@ commands:
            Example: /<command> 1
   compass:
     description: Gives you a compass to find your way home
+    usage: |
+           /<command>
+           Example: /<command>
+  mode:
+    description: Alters your game mode
     usage: |
            /<command>
            Example: /<command>

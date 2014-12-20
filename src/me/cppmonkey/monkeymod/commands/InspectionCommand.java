@@ -60,7 +60,7 @@ public class InspectionCommand implements CommandExecutor {
                              } else {
                                  player.sendMessage(ChatColor.GOLD + "Player not found.");
                              }
-                             return true;   
+                             return true;
                          }
                      case 2:
                         if (args[1].toLowerCase(Locale.ENGLISH).equalsIgnoreCase("risk")) {

@@ -177,7 +177,9 @@ public class MonkeyMod extends JavaPlugin {
         getCommand("spawn").setExecutor(Telelistener);
         getCommand("home").setExecutor(Telelistener);
         getCommand("tele").setExecutor(Telelistener);
+        getCommand("back").setExecutor(Telelistener);
         getCommand("compass").setExecutor(Telelistener);
+        getCommand("mode").setExecutor(Telelistener);
         InspectionCommand Inspectionlistener = new InspectionCommand(this);
         getCommand("list").setExecutor(Inspectionlistener);
         getCommand("inventory").setExecutor(Inspectionlistener);

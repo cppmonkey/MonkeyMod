@@ -84,26 +84,24 @@ public class LoggingThread extends Thread {
 
             if (urlConn.getResponseCode() == HttpURLConnection.HTTP_NOT_IMPLEMENTED) /* Used as a unique code to say that it is the right location. Could do to be changed to check page content instead */ {
                 try {
+                    // XML FORMAT:
+                    /*<monkey>
+                         <event>
+                             <type>Tnt Placed</type>
+                             <player>
+                                <username>caboose89</username>
+                                <last_ip>127.0.6.1</last_ip>
+                             </player>
+                             <position>world1 56 293 35</position>
+                             <server>192.168.1.1</server>
+                         </event>
+                     </monkey>*/
+
                     
                 } catch (Exception e) {
                     MonkeyMod.log.severe("Http post failed (" + urlConn.getURL() + ")");
                     MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
                 }
-                
-                
-                /*
-
-                try {
-                    if (m_isPlugin) {
-                        m_plugin.getServer().reload();
-                    } else {
-                        m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
-                    }
-                    message(ChatColor.GREEN + "Update complete!");
-                } catch (CommandException e) {
-                    message(ChatColor.RED + "Something went wrong whilst updaing");
-                    message(ChatColor.RED + e.getMessage());
-                }*/
             } else {
                 MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
                 MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());

@@ -33,8 +33,7 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                 if (chestOwner.equalsIgnoreCase(player.getName())) {
                     String keySetting = m_chestPermissions.getString(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "NONE");
                     if (keySetting.matches("NONE")) {
-                    	// FIXME users aren't sure what you mean by key
-                        player.sendMessage(ChatColor.GOLD + "You have not set your key!");
+                        player.sendMessage(ChatColor.GOLD + "You have not set your chest lock settings!");
                         player.sendMessage(ChatColor.GOLD + "Use '/chest lock' or '/chest unlock'");
                     } else if (keySetting.matches("LOCK")) {
                         player.sendMessage(ChatColor.GOLD + "You have locked this chest");

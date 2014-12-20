@@ -17,6 +17,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.GameMode;
 
 /**
  *
@@ -99,6 +100,42 @@ public class TeleCommand implements CommandExecutor {
         return false;
     }
 
+    private boolean back(CommandSender sender) {
+        if ((sender instanceof Player)) {
+            Player player = (Player) sender;
+             if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+                player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
+                return true;
+            } else {
+                try {
+                    String Pos = m_settings.getString(player.getName().toLowerCase(Locale.ENGLISH) + "-LAST", "empty");
+                    if (Pos.equals("empty")) {
+                        player.sendMessage(ChatColor.RED + "Input error. Last tele location not found?");
+                        return false;
+                    } else {
+                        String Details[] = Pos.split(":");
+                        if (Details[0].equalsIgnoreCase(player.getWorld().getName())) {
+                            // csv xyz = [1]
+                            String Coords[] = Details[1].split(",");
+                            double X = Double.parseDouble(Coords[0]);
+                            double Y = Double.parseDouble(Coords[1]);
+                            double Z = Double.parseDouble(Coords[2]);
+                            Location newLocation = new Location(player.getWorld(), X, Y, Z);
+                            player.setCompassTarget(newLocation);
+                            return true;
+                        }
+                    }
+                } catch (Exception e) {
+                    player.sendMessage(ChatColor.RED + "error occoured: " + e.getMessage());
+                    return false;
+                }
+                player.sendMessage(ChatColor.RED + "You cannot teleport from world to world. Please go to the appropriate world first");
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean tele(CommandSender sender, String[] args) {
         if ((sender instanceof Player)) {
             Player player = (Player) sender;
@@ -118,6 +155,7 @@ public class TeleCommand implements CommandExecutor {
                     if (playerNum != -1) {
                         if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName())) {
                             player.teleport(onPlayers[playerNum].getLocation());
+                            m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + "-LAST", player.getWorld().getName() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ());
                         } else {
                             player.sendMessage(ChatColor.GOLD + "Target player is in another world. Please go to the right world first.");
                         }
@@ -141,6 +179,24 @@ public class TeleCommand implements CommandExecutor {
         }
         return false;
     }
+    private boolean mode(CommandSender sender) {
+        if ((sender instanceof Player)) {
+            Player player = (Player) sender;
+            if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+                player.sendMessage(ChatColor.RED + "You do not have permission to use mode commands");
+                return true;
+            }else{
+                if(player.getGameMode() == GameMode.CREATIVE){
+                    player.setGameMode(GameMode.SURVIVAL);
+                    return true;
+                }else{
+                    player.setGameMode(GameMode.CREATIVE);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equals("home")) {
@@ -149,8 +205,12 @@ public class TeleCommand implements CommandExecutor {
             return spawn(sender);
         } else if (command.getName().equals("tele")) {
             return tele(sender, args);
+        } else if (command.getName().equals("back")) {
+            return back(sender);
         } else if (command.getName().equals("compass")){
             return compass(sender);
+        } else if (command.getName().equals("mode")){
+            return mode(sender);
         }
         return false;
     }
