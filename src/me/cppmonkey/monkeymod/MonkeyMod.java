@@ -36,7 +36,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 134;
+    private Integer m_build = 135;
     private PluginDescriptionFile m_pluginDescFile;
     // Array Storage for Configs
     private Configuration[] m_configs;

@@ -35,7 +35,7 @@ public class MessageCommand implements CommandExecutor {
                     }
                     compacted = true;
                 }
-                if((args.length == 1)||(compacted)){
+                if(args.length == 1 || compacted){
                     if(Details.length == 2){
                         // this assumes we wont have a player called: ";-- DROP users;
                         String to = URLEncoder.encode(Details[0], "UTF-8");

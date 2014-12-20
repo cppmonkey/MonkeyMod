@@ -97,11 +97,11 @@ public class BoxyExecutor {
         m_plugin.getServer().broadcastMessage(ChatColor.RED + "[SERVER] WARNING! BOXY OPERATION IN PROGRES!");
         m_plugin.getServer().broadcastMessage(ChatColor.RED + "[SERVER] PLEASE STOP WHAT YOU ARE DOING, AND EXPECT LAG!");
         m_plugin.getServer().broadcastMessage(ChatColor.GOLD + "[SERVER] Processing...");
-        Material toMaterial;
-        Material fromMaterial;
-        toMaterial = Material.getMaterial(m_settings.getInt((player.getName().toLowerCase(Locale.ENGLISH) + ".toId"), 51));
-        fromMaterial = Material.getMaterial(m_settings.getInt((player.getName().toLowerCase(Locale.ENGLISH) + ".fromId"), 51));
-        if ((toMaterial == Material.FIRE) || (fromMaterial == Material.FIRE)) {
+        int toMaterial;
+        int fromMaterial;
+        toMaterial = m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".toId", 51);
+        fromMaterial = m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId", 51);
+        if (toMaterial == Material.FIRE.getId() || fromMaterial == Material.FIRE.getId()) {
             player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings!");
             m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] OPERATION COMPLETE!");
             return false;
@@ -139,7 +139,7 @@ public class BoxyExecutor {
         }
         String exclusions[] = m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude").toString().split(",");
 
-        // FIXME Very inflexable Look at EnumMap!
+        // FIXME Very inflexible Look at EnumMap!
         // HINT private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
         int exclusionsI[] = new int[512];
         exclusionsI[0] = 0;
@@ -183,8 +183,8 @@ public class BoxyExecutor {
                             }
                         }
                         if (!Excluded) {
-                            //player.sendMessage(ChatColor.BLUE + "not excluded: replaceing");
-                            world.getBlockAt(current).setType(toMaterial);
+                            //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
+                            world.getBlockAt(current).setTypeId(toMaterial);
                         }
                         Excluded = false;
                     }
@@ -200,14 +200,14 @@ public class BoxyExecutor {
                     for (position.setX((int) start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
-                            if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || (!solids(world.getBlockTypeIdAt(current)))) {
+                            if (world.getBlockTypeIdAt(current) == exclusionsI[e] || !solids(world.getBlockTypeIdAt(current))) {
                                 Excluded = true;
                                 //player.sendMessage(ChatColor.BLUE + "excluded");
                             }
                         }
                         if (!Excluded) {
-                            //player.sendMessage(ChatColor.BLUE + "not excluded: replaceing");
-                            world.getBlockAt(current).setType(toMaterial);
+                            //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
+                            world.getBlockAt(current).setTypeId(toMaterial);
                         }
                         Excluded = false;
                     }
@@ -223,14 +223,14 @@ public class BoxyExecutor {
                     for (position.setX((int) start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
-                            if ((world.getBlockTypeIdAt(current) == exclusionsI[e]) || ((world.getBlockTypeIdAt(current) != fromMaterial.getId()))) {
+                            if (world.getBlockTypeIdAt(current) == exclusionsI[e] || world.getBlockTypeIdAt(current) != fromMaterial) {
                                 Excluded = true;
                                 //player.sendMessage(ChatColor.BLUE + "excluded");
                             }
                         }
                         if (!Excluded) {
                             //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
-                            world.getBlockAt(current).setType(toMaterial);
+                            world.getBlockAt(current).setTypeId(toMaterial);
                         }
                         Excluded = false;
                     }

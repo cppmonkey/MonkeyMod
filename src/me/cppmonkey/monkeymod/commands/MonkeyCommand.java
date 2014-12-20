@@ -32,10 +32,10 @@ public class MonkeyCommand implements CommandExecutor {
         // Priority to /monkey update!
         if (args.length > 0) {
             if ("update".equalsIgnoreCase(args[0])) {
-                //Let the user know what's going on
+                // Let the user know what's going on
                 m_plugin.selfUpdate(sender);
                 return true;
-            } //END /monkey update
+            } // END /monkey update
 
             // force update check
             if ("uptodate".equalsIgnoreCase(args[0])) {
@@ -52,13 +52,13 @@ public class MonkeyCommand implements CommandExecutor {
                 updateQuery.start();
 
                 return true;
-            }  //END /monkey uptodate
+            } // END /monkey uptodate
 
             // process /monkey version
             if ("version".equalsIgnoreCase(args[0])) {
                 sender.sendMessage(ChatColor.RED + m_plugin.getName() + " " + m_plugin.getVersion() + "(" + m_plugin.getBuild() + ")");
                 return true;
-            } //END /monkey version
+            } // END /monkey version
 
             if ("status".equalsIgnoreCase(args[0])) {
                 // process status commands
@@ -69,7 +69,7 @@ public class MonkeyCommand implements CommandExecutor {
                 }
                 sender.sendMessage(ChatColor.RED + "Action still to do!");
                 return true;
-            } //END /monkey status
+            } // END /monkey status
 
             if ("setvar".equalsIgnoreCase(args[0])) {
                 // process setvar commands
@@ -98,9 +98,7 @@ public class MonkeyCommand implements CommandExecutor {
                         // Option found
                         if (intOptions[i].equalsIgnoreCase(args[1])) {
                             Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
-                            config.setProperty(
-                                    intOptions[i],
-                                    Integer.parseInt(args[2]));
+                            config.setProperty(intOptions[i], Integer.parseInt(args[2]));
                             sender.sendMessage(ChatColor.GREEN + intOptions[i] + " has been altered");
                             sender.sendMessage(ChatColor.GREEN + "A restart maybe required to apply changes");
                             return true;
@@ -109,8 +107,7 @@ public class MonkeyCommand implements CommandExecutor {
                 }
                 sender.sendMessage(ChatColor.RED + "Action still to do!");
                 return true;
-            } //END /monkey setvar
-
+            } // END /monkey setvar
 
             if ("enable".equalsIgnoreCase(args[0]) || "disable".equalsIgnoreCase(args[0])) {
                 // List all all the boolean options
@@ -135,10 +132,7 @@ public class MonkeyCommand implements CommandExecutor {
                         // Option found
                         if (boolOptions[i].equalsIgnoreCase(args[1])) {
                             Configuration config = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PLUGIN);
-                            config.setProperty(
-                                    boolOptions[i],
-                                    "enable".equalsIgnoreCase(args[0]));
-                            config.save();
+                            config.setProperty(boolOptions[i], "enable".equalsIgnoreCase(args[0]));
                             sender.sendMessage(ChatColor.GREEN + boolOptions[i] + " has been altered");
                             sender.sendMessage(ChatColor.GREEN + "A restart maybe required to apply changes");
                             return true;
@@ -146,11 +140,9 @@ public class MonkeyCommand implements CommandExecutor {
                     }
                 }
 
-
-
-                //return false, the command wasn't found
+                // return false, the command wasn't found
                 return false;
-            } //END /monkey [enable/disable]
+            } // END /monkey [enable/disable]
             if (args.length == 3) {
                 // Must be admin to add users
                 if (sender instanceof Player && !m_permissions.getBoolean(((Player) sender).getName().toLowerCase(Locale.ENGLISH) + ".isAdmin", false)) {
@@ -166,65 +158,89 @@ public class MonkeyCommand implements CommandExecutor {
                     // Username
                     String playerName = args[2].toLowerCase(Locale.ENGLISH);
 
+                    Parm permission;
+
                     if ("user".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canBuild", true);
                         m_permissions.setProperty(playerName + ".canIgnite", false);
-                        m_permissions.save();
-                        sender.sendMessage("New player '" + playerName + "' added");
+                        permission = new Parm("add", "user");
+                        sender.sendMessage("User player '" + playerName + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canBuild", true);
                         m_permissions.setProperty(playerName + ".canIgnite", false);
                         m_permissions.setProperty(playerName + ".isVip", true);
-                        m_permissions.save();
-                        
+                        permission = new Parm("add", "vip");
                         sender.sendMessage("Vip player '" + playerName + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canBuild", true);
                         m_permissions.setProperty(playerName + ".canIgnite", true);
                         m_permissions.setProperty(playerName + ".isAdmin", true);
-                        m_permissions.save();
+                        permission = new Parm("add", "admin");
                         sender.sendMessage("Admin player '" + playerName + "' added");
                     } else {
                     	return false;
                     }
+
+                    Parm[] parms = {new Parm("action", "modify"), new Parm("player", playerName), permission};
+
+                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms);
+                    m_permissions.save();
+                    notification.setPriority(Thread.MIN_PRIORITY);
+                    notification.start();
                     return true;
                     
-                }// END add
-                if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
+                }/* END add */ else if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
                 	// Username
                     String playerName = args[2].toLowerCase(Locale.ENGLISH);
+                    Parm permission;
                     
                     if ("user".equalsIgnoreCase(args[1])) {
                     	m_permissions.removeProperty(playerName);
-                        m_permissions.save();
+                        permission = new Parm("remove", "user");
                         sender.sendMessage("player '" + playerName + "' removed");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".isVip", false);
-                        m_permissions.save();
-                        
+                        permission = new Parm("remove", "vip");
                         sender.sendMessage("Vip player '" + playerName + "' removed");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
                         m_permissions.setProperty(playerName + ".canIgnite", false);
                         m_permissions.setProperty(playerName + ".isAdmin", false);
-                        m_permissions.save();
+                        permission = new Parm("remove", "admin");
                         sender.sendMessage("Admin player '" + playerName + "' removed");
                     } else {
                     	return false;
 	                }
-                    return true;
-	            }
-            } // END args == 4
 
-            if ("user".equalsIgnoreCase(args[0])) {
+                    Parm[] parms = {new Parm("action", "modify"), new Parm("player", playerName), permission};
+
+                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms/*
+                             * ,
+                             * null
+                             * new
+                             * LoginCallback
+                             * (
+                             * m_plugin
+                             * ,
+                             * player
+                             * )
+                             */);
+                        m_permissions.save();
+                    notification.setPriority(Thread.MIN_PRIORITY);
+                    notification.start();
+
+                    } else {
+                    // Command not found;
+                    	return false;
+                    }
+                    return true;
+            } /* END args == 4 */ else if ("user".equalsIgnoreCase(args[0])) {
                 sender.sendMessage(ChatColor.DARK_RED + "WARNING CASE SENSITIVE");
                 sender.sendMessage(args[1] + ".canBuild: " + m_permissions.getBoolean(args[1] + ".canBuild", false));
                 sender.sendMessage(args[1] + ".canIgnite: " + m_permissions.getBoolean(args[1] + ".canIgnite", false));
                 sender.sendMessage(args[1] + ".isAdmin: " + m_permissions.getBoolean(args[1] + ".isAdmin", false));
                 sender.sendMessage(args[1] + ".isVip: " + m_permissions.getBoolean(args[1] + ".isVip", false));
                 return true;
-            }
-
-            if ("world".equalsIgnoreCase(args[0])) {
+            } else if ("world".equalsIgnoreCase(args[0])) {
                 List<World> worlds = m_plugin.getServer().getWorlds();
 
                 Iterator<World> world_iterator = worlds.iterator();

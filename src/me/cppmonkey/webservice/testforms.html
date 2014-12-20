@@ -117,6 +117,25 @@ onerror=function handleErr( msg, url, l )
 </form>
 </fieldset>
 <fieldset>
+<legend>Simulate Modify</legend>
+<form id="usermodify">
+<input type="hidden" name="action" value="modify" />
+<label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
+<label for="playerconnect">Player</label><input type="text" id="playerconnect" name="player" value="cppmonkey" />
+<label for="type">Add or Remove</label><input type="radio" id="type" name="type" value="add" text="Add" /><input type="radio" id="type" name="type" value="remove" text="Remove" />
+<input type="submit" />
+</form>
+</fieldset>
+<legend>Simulate Server Start</legend>
+<form id="serverstart">
+<input type="hidden" name="action" value="update" />
+<label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
+<label for="playerconnect">Player</label><input type="text" id="playerconnect" name="player" value="cppmonkey" />
+<label for="type">Add or Remove</label><input type="radio" id="type" name="type" value="add" text="Add" /><input type="radio" id="type" name="type" value="remove" text="Remove" />
+<input type="submit" />
+</form>
+</fieldset>
+<fieldset>
 <legend>Add User</legend>
 <form id="adduser">
 <input type="hidden" name="action" value="" />

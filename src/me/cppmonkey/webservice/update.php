@@ -11,10 +11,16 @@ function Action( $strAction )
 	return 1;
 	if ($strAction == "disconnect")
 	return 2;
-	if ($strAction == "message")
+	if ($strAction == "ignite")
 	return 3;
-	if ($strAction == "chest")
+	if ($strAction == "chest" || $strAction == "chest-break-attempt")
 	return 4;
+	if ($strAction == "tower")
+	return 5;
+	if ($strAction == "modify")
+	return 6;
+	if ($strAction == "update")
+	return 7;
 }
 
 $minecraft = new Minecraft();
@@ -84,10 +90,11 @@ if( isset($_GET["action"]) && $server )
 			 */
 
 			$query = sprintf(
-					"INSERT INTO `` (``)",
+					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
 				$dblink->real_escape_string($_GET["player"]),
-				$dblink->real_escape_string($_GET["action"]),
-				$dblink->real_escape_string($_GET["type"])
+				Action( $_GET["action"] ),
+				/* $dblink->real_escape_string($_GET["type"]),*/
+				$server->GetId()
 				);
 
 			// AND
@@ -100,8 +107,26 @@ if( isset($_GET["action"]) && $server )
              * };
              */
 		}
+		else if ($_GET["action"] == "modify")
+		{
+			$query = sprintf(
+					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
+				$dblink->real_escape_string($_GET["player"]),
+				Action( $_GET["action"] ),
+				/* $dblink->real_escape_string($_GET["type"]),*/
+				$server->GetId()
+				);
+
+		}
 		else if ($_GET["action"] == "tower")
 		{
+			$query = sprintf(
+					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
+				$dblink->real_escape_string($_GET["player"]),
+				Action( $_GET["action"] ),
+				/* $dblink->real_escape_string($_GET["type"]),*/
+				$server->GetId()
+				);
 			/* TODO Process this information! DurpTower
 			 * Parm[] Parm = {
 			 * new Parm("action", "tower"),
@@ -112,6 +137,14 @@ if( isset($_GET["action"]) && $server )
 		}
 		else if ($_GET["action"] == "ignite")
 		{
+
+			$query = sprintf(
+					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
+				$dblink->real_escape_string($_GET["player"]),
+				Action( $_GET["action"] ),
+				/* $dblink->real_escape_string($_GET["type"]),*/
+				$server->GetId()
+				);
 			/* TODO Process this information! Ignite
 			 *
 			 * Parm[] Parm = {
@@ -122,8 +155,34 @@ if( isset($_GET["action"]) && $server )
              * };
              */
 		}
+	}
+	else if ($_GET["action"] == "update")
+	{
 
-		if( $dblink )
+			$query = sprintf(
+					"INSERT INTO `mc_serverPackageStart` (`server_id`, `package_version`, `package_build`, `time`) VALUES ('%d', '%s', '%s', UTC_TIMESTAMP())",
+						$server->GetId(),
+
+						$dblink->real_escape_string($_GET["version"]),
+						$dblink->real_escape_string($_GET["build"])
+/*				Action( $_GET["action"] ),*/
+				/* $dblink->real_escape_string($_GET["type"]),*/
+
+				);
+			/* TODO Process this information! Ignite
+			 *
+			 * Parm[] parms = {
+            new Parm("action", "update"),
+            new Parm("package", this.getName()),
+            new Parm("version", this.getVersion()),
+            new Parm("build", this.getBuild()),
+            new Parm("rcon-port", Integer.toString(getServer().getPort() + 10))
+        };
+
+             */
+		}
+
+		if( $dblink && $query != "" )
 		{
 			if( $dblink->query( $query ) )
 			{
@@ -228,8 +287,8 @@ if( isset($_GET["action"]) && $server )
 
 		//Tidyup
 
-		$dblink->close();
-	} //EndProcess Chat and Login
+		//$dblink->close();
+	//EndProcess Chat and Login
 
 	if( isset( $_GET["package"] ) && isset( $_GET["version"] ) && isset( $_GET["build"] ) )
 	{

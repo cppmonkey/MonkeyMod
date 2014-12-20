@@ -91,7 +91,7 @@ public class TeleCommand implements CommandExecutor {
     }
 
     private boolean spawn(CommandSender sender) {
-        if ((sender instanceof Player)) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
             if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
