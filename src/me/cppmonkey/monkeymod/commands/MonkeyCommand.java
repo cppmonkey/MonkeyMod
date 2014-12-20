@@ -144,7 +144,6 @@ public class MonkeyCommand implements CommandExecutor {
                     return true;
                 }
 
-
                 /*
                  * Was just a quick implementation to get it working
                  */

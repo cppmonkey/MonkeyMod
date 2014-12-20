@@ -3,38 +3,54 @@ error_reporting(E_ALL | E_STRICT);
 include "config.php";
 include "minecraft.class.php";
 
-define("IGNITE", 3);
 
 function ReportError( $strMsg = "" ){
 	$mailTo = "paul@cppmonkey.net";
-	$mailSubject = "update.php error";
+	$mailSubject = "update.php error ".$_GET["action"];
 
 	$bt = debug_backtrace();
      $caller = array_shift($bt);
 
-	$mailMessage = "\$_GET data: \n".print_r($_GET, TRUE)."\n\n\n\n\$_POST data:\n".print_r($_POST, TRUE)."\n\n\n\n".$strMsg."\n\n\n\n".$caller['file']." ".$caller['line'];
+	$mailMessage = "
+	\$_GET data: \n".print_r($_GET, TRUE)."\n\n".
+	"\$_POST data:\n".print_r($_POST, TRUE)."\n\n".
+	$strMsg."\n\n".
+	$caller['file']." ".$caller['line']."\n\n".
+	$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+
 
 	mail($mailTo, $mailSubject, $mailMessage);
 }
 
 $dblink = new mysqli( $dbserver, $dbuser, $dbpass, "killerabbit" );
 
+define("CONNECT", 1);
+define("DISCONNECT", 2);
+define("IGNITE", 3);
+define("CHEST", 4);
+define("TOWER", 5);
+define("MODIFY", 6);
+define("UPDATE", 7);
+define("BUILD", 8);
+
 function Action( $strAction )
 {
 	if ($strAction == "connect")
-	return 1;
+		return CONNECT;
 	if ($strAction == "disconnect")
-	return 2;
+		return DISCONNECT;
 	if ($strAction == "ignite" || $strAction == "ignite-attempt")
 	return IGNITE;
 	if ($strAction == "chest" || $strAction == "chest-break-attempt" || $strAction == "attempt_to_open_chest" || $strAction == "attempt_to_unlock_chest")
-	return 4;
+		return CHEST;
 	if ($strAction == "tower")
-	return 5;
+		return TOWER;
 	if ($strAction == "modify")
-	return 6;
+		return MODIFY;
 	if ($strAction == "update")
-	return 7;
+		return UPDATE;
+	if ($strAction == "build" || $strAction == "build-attempt" || $strAction == "block-break-attempt")
+		return BUILD;
 }
 
 $minecraft = new Minecraft();
@@ -43,9 +59,9 @@ $minecraft->BuildServerList();
 $server_ip = "";
 
 if( isset( $_GET['serverip'] ))
-$server_ip = $_GET['serverip'];
+	$server_ip = $_GET['serverip'];
 else
-$server_ip = $_SERVER['REMOTE_ADDR'];
+	$server_ip = $_SERVER['REMOTE_ADDR'];
 
 $server = $minecraft->ServerFromIp( $server_ip );
 
@@ -60,14 +76,12 @@ if( isset($_GET["action"]) && $server )
 			$player = new Player($_GET['player']);
 
 			$query = sprintf(
-				    "INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `isVip`, `isAdmin`, `timestamp` )
+					"INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `timestamp` )
 					VALUES
-					( '%s', '%d', '%d', '%s', '%s', UTC_TIMESTAMP() )",
+					( '%s', '%d', '%d', UTC_TIMESTAMP() )",
 					$dblink->real_escape_string( $player->GetName()),
 					$server->GetId(),
-					Action( $_GET["action"] ),
-					$player->IsVip(),
-					$player->IsAdmin()
+					Action( $_GET["action"] )
 				);
 		}
 		else if( isset($_GET["message"] ))
@@ -179,7 +193,7 @@ if( isset($_GET["action"]) && $server )
 
 						$dblink->real_escape_string($_GET["version"]),
 						$dblink->real_escape_string($_GET["build"])
-/*				Action( $_GET["action"] ),*/
+				/*				Action( $_GET["action"] ),*/
 				/* $dblink->real_escape_string($_GET["type"]),*/
 
 				);

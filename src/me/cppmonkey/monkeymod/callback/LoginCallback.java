@@ -32,7 +32,7 @@ public class LoginCallback implements IThreadCallback {
                  if (split.length == 2) {
 
                      if ("isOp".equalsIgnoreCase(split[0])) {
-                         // TODO make user Op
+                        m_owner.setOp(split[1].equalsIgnoreCase("true"));
                         return;
                     }
 
