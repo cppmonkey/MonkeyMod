@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>http request test forms</title>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
@@ -9,9 +10,9 @@
 onerror=function handleErr( msg, url, l )
 {
 	txt = "";
-	txt+="msg=" + msg + "&";
-	txt+="url=" + url + "&";
-	txt+="line=" + l + "&";
+	txt+="msg=" + msg + "&amp;";
+	txt+="url=" + url + "&amp;";
+	txt+="line=" + l + "&amp;";
 	alert( txt );
 	return true;
 }
@@ -22,20 +23,20 @@ onerror=function handleErr( msg, url, l )
 				"<div><a href=\"" + "update.php?"+$(this).serialize() + "\">simulate chat</a></div>" );
 			return false;
 		});
-		
+
 		$("#userconnect").submit(function() {
 				$("#results").prepend(
 					"<div><a href=\"" + "update.php?"+$(this).serialize()+"\">simulate connection</a></div>");
 				return false;
 			});
-			
+
 		$.getJSON("serverlist.php?"/*,{ owner_id : "1" }*/, function(data){
 				for ( var i = 0; i < data.length; i++ ) {
 					$('select[id][name^="serverip"]').append( new Option( data[i].title ,data[i].ip ));
 				}
-				
+
 			});
-			
+
 		$("#severipedituseraccess").change(function(){
 				$.getJSON("playerlist.php?", { serverip: this.value }, function(data){
 						$('select[id][name^="serverknown"]').empty();
@@ -45,9 +46,9 @@ onerror=function handleErr( msg, url, l )
 						}
 					});
 			});
-			
+
 		$("#serveriphistory").change(function(){
-				$.getJSON("history.php?", { serverip: this.value }, function(data){
+				$.getJSON("history.php?", { serverip: this.value, limit: $("#historylimit").val() }, function(data){
 						//Process data
 						$('#chat tbody').empty();
 						for (var i = 0; i < data.length; i++){
@@ -63,116 +64,135 @@ onerror=function handleErr( msg, url, l )
 		$("#serverknownusersedituseraccess").change(function(){
 				$.getJSON("playerlist.php?", {serverip: $("#severipedituseraccess").val(), userid: this.value},function(data){
 						$("form#edituseraccess input:checkbox").removeAttr("checked");
-						
+
 						for (var i = 0; i < data.length; i++) {
 							if (data[i].value == "true") {
 								$("#edituseraccess"+data[i].permission).attr("checked","checked");
-							}							
+							}
 						}
 					});
 			});
 	});
 </script>
 <style type="text/css">
-	#results{
-		border: 2px solid red;
-	}
+#results {
+	border: 2px solid red;
+}
 
-	tr.alt td{
-		background: #ecf6fc;
-	}
+fieldset, #results {
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+}
 
-	tr.alt td{
-		background: #bcd4ec;
-	}
+tr.alt td {
+	background: #ecf6fc;
+}
 
-	#chat thead td{
-		background: #0D5995;
-	}
+tr.alt td {
+	background: #bcd4ec;
+}
 
+#chat thead td {
+	background: #0D5995;
+}
 
+select, input.text {
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
 </style>
 </head>
 <body>
-<div>
-<fieldset>
-<legend>Simulate Chat</legend>
-<form id="usermessage">
-<input type="hidden" name="action" value="message" />
-<label for="serveripmessage">Server</label><select id="serveripmessage" name="serverip"></select>
-<label for="playermessage">Player</label><input type="text" id="playermessage" name="player" value="cppmonkey" />
-<label for="message">Message</label><input type="text" id="message" name="message" value="Ajax test" />
-<input type="submit" />
-</form>
-</fieldset>
-<fieldset>
-<legend>Simulate Connection</legend>
-<form id="userconnect">
-<input type="hidden" name="action" value="connect" />
-<label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
-<label for="playerconnect">Player</label><input type="text" id="playerconnect" name="player" value="cppmonkey" />
-<label for="isVip">isVip</label><input type="checkbox" id="isVip" name="vip" />
-<label for="isAdmin">isAdmin</label><input type="checkbox" id="isAdmin" name="admin" />
-<input type="submit" />
-</form>
-</fieldset>
-<fieldset>
-<legend>Simulate Modify</legend>
-<form id="usermodify">
-<input type="hidden" name="action" value="modify" />
-<label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
-<label for="playerconnect">Player</label><input type="text" id="playerconnect" name="player" value="cppmonkey" />
-<label for="type">Add or Remove</label><input type="radio" id="type" name="type" value="add" text="Add" /><input type="radio" id="type" name="type" value="remove" text="Remove" />
-<input type="submit" />
-</form>
-</fieldset>
-<legend>Simulate Server Start</legend>
-<form id="serverstart">
-<input type="hidden" name="action" value="update" />
-<label for="serveripconnect">Server</label><select id="serveripconnect" name="serverip"></select>
-<label for="playerconnect">Player</label><input type="text" id="playerconnect" name="player" value="cppmonkey" />
-<label for="type">Add or Remove</label><input type="radio" id="type" name="type" value="add" text="Add" /><input type="radio" id="type" name="type" value="remove" text="Remove" />
-<input type="submit" />
-</form>
-</fieldset>
-<fieldset>
-<legend>Add User</legend>
-<form id="adduser">
-<input type="hidden" name="action" value="" />
-<select id="severipadduser" name="serverip"></select>
-</form>
-</fieldset>
-<fieldset>
-<legend>Edit User Access</legend>
-<form id="edituseraccess">
-<input type="hidden" name="action" value="" />
-<select id="severipedituseraccess" name="serverip"></select>
-<select id="serverknownusersedituseraccess" name="serverknownusers" size="7" multiple="multiple"></select>
-<label for="">isVip</label><input id="edituseraccessisVip" name="isVip" type="checkbox" />
-<label for="">isAdmin</label><input id="edituseraccessisAdmin" name="isAdmin" type="checkbox" />
-<label for="">canBuild</label><input id="edituseraccesscanBuild" name="canBuild" type="checkbox" />
-<label for="">canIgnite</label><input id="edituseraccesscanIgnite" name="canIgnite" type="checkbox" />
-<input type="submit" />
-</form>
-</fieldset>
-</div>
-<div>
-<form id="serverhistory">
-<label for="serveriphistory">Server</label><select id="serveriphistory" name="serveriphistory"></select><input type="button" id="refreshserveriphistory" value="Refresh"></input>
-</form>
-</div>
-<div id="results" class="results">
-	<table id="chat">
-	<thead>
-	<tr>
-	<td>Date/Time</td><td>Name</td>
-	<td>Message</td>
-	</tr>
-	</thead>
-	<tbody>
-	</tbody>
-	</table>
-	<div id="users"></div>
-</div>
+    <div>
+        <fieldset>
+            <legend>Simulate Chat</legend>
+            <form id="usermessage">
+                <input type="hidden" name="action" value="message" />
+                <label for="serveripmessage">Server<select id="serveripmessage" name="serverip"></select></label>
+                <label for="playermessage">Player<input type="text" id="playermessage" name="player" value="cppmonkey" /></label>
+                <label for="message">Message<input type="text" id="message" name="message" value="Ajax test" /></label>
+                <input type="submit" />
+            </form>
+        </fieldset>
+        <fieldset>
+            <legend>Simulate Connection</legend>
+            <form id="userconnect">
+                <input type="hidden" name="action" value="connect" />
+                <label for="serveripconnect">Server<select id="serveripconnect" name="serverip"></select></label>
+                <label for="playerconnect">Player<input type="text" id="playerconnect" name="player" value="cppmonkey" /></label>
+                <label for="isVip">isVip<input type="checkbox" id="isVip" name="vip" /></label>
+                <label for="isAdmin">isAdmin<input type="checkbox" id="isAdmin" name="admin" /></label>
+                <input type="submit" />
+            </form>
+        </fieldset>
+        <fieldset>
+            <legend>Simulate Modify</legend>
+            <form id="usermodify">
+                <input type="hidden" name="action" value="modify" />
+                <label>Server<select id="serveripmodify" name="serverip"></select></label>
+                <label>Player<input type="text" id="playermodify" name="player" value="cppmonkey" /></label>
+                <label>Add<input type="radio" id="type_modifty" name="type" value="add" /></label>
+                <label>Remove<input type="radio" id="type" name="type_modifty" value="remove" /></label>
+                <input type="submit" />
+            </form>
+        </fieldset>
+        <fieldset>
+        <legend>Simulate Server Start</legend>
+        <form id="serverstart">
+                <input type="hidden" name="action" value="update" />
+	                <label>Server<select id="serveripstart" name="serverip"></select></label>
+	                <label>Package<input type="text" id="package" name="package" value="MonkeyMod" /></label>
+	                <label>Version<input type="text" id="version" name="version" value="0.1.1" /></label>
+	                <label>Build<input type="text" id="build" name="build" value="144" /></label>
+                <input type="submit" />
+        </form>
+        </fieldset>
+        <fieldset>
+            <legend>Add User</legend>
+            <form id="adduser">
+                <input type="hidden" name="action" value="" /> <select id="severipadduser" name="serverip"></select>
+            </form>
+        </fieldset>
+        <fieldset>
+            <legend>Edit User Access</legend>
+            <form id="edituseraccess">
+                <input type="hidden" name="action" value="" /> <select id="severipedituseraccess" name="serverip"></select>
+                <select id="serverknownusersedituseraccess" name="serverknownusers" size="7" multiple="multiple"></select>
+                <label for="edituseraccessisVip">isVip<input id="edituseraccessisVip" name="isVip" type="checkbox" /></label>
+                <label>isAdmin<input id="edituseraccessisAdmin" name="isAdmin" type="checkbox" /></label>
+                <label>canBuild<input id="edituseraccesscanBuild" name="canBuild" type="checkbox" /></label>
+                <label>canIgnite<input id="edituseraccesscanIgnite" name="canIgnite" type="checkbox" /></label>
+                <input type="submit" />
+            </form>
+        </fieldset>
+    </div>
+    <div>
+        <form id="serverhistory">
+            <label for="serveriphistory">Server<select id="serveriphistory" name="serveriphistory"></select></label>
+            <label><select id="historylimit" name="limit">
+            	<option value="30">30</option>
+            	<option value="50">50</option>
+            	<option value="75">75</option>
+            	<option value="100">100</option>
+            </select></label>
+            <input type="button" id="refreshserveriphistory" value="Refresh" />
+        </form>
+    </div>
+    <div id="results" class="results">
+        <table id="chat">
+            <thead>
+                <tr>
+                    <td>Date/Time</td>
+                    <td>Name</td>
+                    <td>Message</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="users"></div>
+    </div>
 </body>
 </html>
