@@ -26,9 +26,9 @@ import me.cppmonkey.monkeymod.threads.UpdateThread;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -99,7 +99,7 @@ public class MonkeyMod extends JavaPlugin {
                 m_configs[config.ordinal()] = getConfiguration();
             } else {
                 m_configs[config.ordinal()] = new Configuration(new File(
-                        getDataFolder(), config.name().toLowerCase(Locale.ENGLISH) + ".yml"));
+                getDataFolder(), config.name().toLowerCase(Locale.ENGLISH) + ".yml"));
                 m_configs[config.ordinal()].load();
             }
         }
@@ -129,44 +129,34 @@ public class MonkeyMod extends JavaPlugin {
 
        MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
-        // Enable various logger hooks
+        /* Enable various logger hooks
         if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.enabled", true)) {
             // Register hooks to process events
             if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.connect", true)) {
-                pm.registerEvent(Event.Type.PLAYER_JOIN, m_PlayerListener, Priority.Monitor, this);
+                pm.registerEvents(m_PlayerListener, this);
             }
             if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.disconnect", true)) {
-                pm.registerEvent(Event.Type.PLAYER_QUIT, m_PlayerListener, Priority.Monitor, this);
+                pm.registerEvents(m_PlayerListener, this);
             }
             if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("logger.chat", true)) {
-                pm.registerEvent(Event.Type.PLAYER_CHAT, m_PlayerListener, Priority.Monitor, this);
+                pm.registerEvents(m_PlayerListener, this);
             }
         } // END Logging
 
         if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true)) {
             // Stop the burning!!
-            pm.registerEvent(Event.Type.BLOCK_IGNITE, m_BlockListener, Priority.Normal, this);
-        }
+            pm.registerEvents(m_BlockListener, this);
+        }*/
 
         if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)) {
-            pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.EXPLOSION_PRIME, m_ExplosionListener, Priority.Lowest, this);
-            pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.BLOCK_PLACE, m_ChestBlockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_ChestBlockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.BLOCK_BREAK, m_ChestBlockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.PLAYER_INTERACT, m_ChestPlayerListener, Priority.Normal, this);
+            pm.registerEvents(m_ExplosionListener, this);
+            pm.registerEvents(m_BlockListener, this);
+            pm.registerEvents(m_ChestBlockListener, this);
+            pm.registerEvents(m_ChestPlayerListener, this);
         }
 
-        pm.registerEvent(Event.Type.ENDERMAN_PICKUP, m_EntityListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENDERMAN_PLACE, m_EntityListener, Priority.Normal, this);
-
-        pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Low, this);
-        pm.registerEvent(Event.Type.ENTITY_DAMAGE, m_EntityListener, Priority.Low, this);
-
-        pm.registerEvent(Event.Type.INVENTORY_OPEN, m_PlayerListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, m_PlayerListener, Priority.Normal, this);
+        pm.registerEvents(m_EntityListener, this);
+        pm.registerEvents(m_PlayerListener, this);
 
         // Process commands, these a partial commands!!
         getCommand("monkey").setExecutor(new MonkeyCommand(this));

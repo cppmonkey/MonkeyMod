@@ -9,13 +9,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.util.config.Configuration;
 //TODO: change to new configuration format as this is getting depricated next version: http://wiki.bukkit.org/Introduction_to_the_New_Configuration
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
-public class MonkeyModChestPlayerListener extends PlayerListener {
+public class MonkeyModChestPlayerListener implements Listener {
 
     private MonkeyMod m_plugin;
     private Configuration m_chestPermissions;
@@ -25,6 +26,7 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
         m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
     }
 
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
             Action click = event.getAction();

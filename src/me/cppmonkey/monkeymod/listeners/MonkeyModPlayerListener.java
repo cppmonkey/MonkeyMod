@@ -17,11 +17,12 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.config.Configuration;
 
-public class MonkeyModPlayerListener extends PlayerListener {
+public class MonkeyModPlayerListener implements Listener {
 
     private MonkeyMod m_plugin;
     private Configuration m_permissions;
@@ -33,6 +34,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         m_boxy = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
     }
 
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         try {
             // reporting to cppmonkey.net
@@ -79,6 +81,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
@@ -98,6 +101,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
     }
 
+    @EventHandler
     public void onPlayerChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
@@ -116,12 +120,12 @@ public class MonkeyModPlayerListener extends PlayerListener {
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         } catch (Exception e) {
-            //FIXME Do something with exception?
            MonkeyMod.log.info(e.getMessage());
         }
     }
 
     // Something not right here.... Removed to see if there is a warning generated
+    @EventHandler
     public void onInventoryOpen(PlayerInventoryEvent event) {
         Player player = event.getPlayer();
 
@@ -135,6 +139,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 

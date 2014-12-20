@@ -9,14 +9,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.Location;
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
-public class MonkeyModChestBlockListener extends BlockListener {
+public class MonkeyModChestBlockListener implements Listener {
 
     private final MonkeyMod m_plugin;
     private Configuration m_chestPermissions;
@@ -65,6 +66,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
         return Owner;
     }
 
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (player != null && m_plugin.getPermition(player, ".canBuild")) {
@@ -86,6 +88,7 @@ public class MonkeyModChestBlockListener extends BlockListener {
         }
     }
 
+    @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
         Player player = event.getPlayer();
         if (player != null && event.getBlock().getType() == Material.CHEST) {
@@ -116,10 +119,12 @@ public class MonkeyModChestBlockListener extends BlockListener {
         }
     }
 
+    @EventHandler
     public void onBlockCanBuild(BlockCanBuildEvent event) {
        MonkeyMod.log.info("onBlockCanBuild");
     }
 
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
         Player player = event.getPlayer();

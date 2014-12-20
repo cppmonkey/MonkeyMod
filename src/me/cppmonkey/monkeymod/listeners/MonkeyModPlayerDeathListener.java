@@ -15,13 +15,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.entity.EndermanPickupEvent;
-import org.bukkit.event.entity.EndermanPlaceEvent;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
 
 /**
  *
@@ -40,7 +39,7 @@ enum e_monsters {
     }
 };
 
-public class MonkeyModPlayerDeathListener extends EntityListener {
+public class MonkeyModPlayerDeathListener implements Listener {
 
     MonkeyMod m_plugin;
     HashMap<String, String> playerMap;
@@ -257,6 +256,7 @@ public class MonkeyModPlayerDeathListener extends EntityListener {
         return " died!";
     }
 
+    @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             // FIXME forgive me for asking by if its player related and not general entities, then why is it in EntityListener and not PlayerListener?
@@ -265,6 +265,7 @@ public class MonkeyModPlayerDeathListener extends EntityListener {
         }
     }
 
+    @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -272,14 +273,6 @@ public class MonkeyModPlayerDeathListener extends EntityListener {
         }
     }
     
-    public void onEndermanPickup(EndermanPickupEvent event) {
-	event.setCancelled(true);
-	}
-	
-    public void onEndermanPlace(EndermanPlaceEvent event) {
-		event.setCancelled(true);
-    }
-
     String lastDamage(Player player, EntityDamageEvent event) {
         String lastDamage = "";
 

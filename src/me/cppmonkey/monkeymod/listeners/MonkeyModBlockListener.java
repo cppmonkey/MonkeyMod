@@ -7,12 +7,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
-public class MonkeyModBlockListener extends BlockListener {
+public class MonkeyModBlockListener implements Listener {
 
     private final MonkeyMod m_plugin;
 
@@ -20,6 +21,7 @@ public class MonkeyModBlockListener extends BlockListener {
         m_plugin = instance;
     }
 
+    @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
         //TODO Add exceptions to burning. caboose89 -> such as?
 
@@ -49,12 +51,13 @@ public class MonkeyModBlockListener extends BlockListener {
                 notification.start();
             }
             /* Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all */
-        } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) {
+        } else if (m_plugin.getConfig().getBoolean("protection.fire", false)) {
             // cancel environment based fire
             event.setCancelled(true);
         }
     }
 
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
@@ -76,6 +79,7 @@ public class MonkeyModBlockListener extends BlockListener {
         }
     }
 
+    @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
         Player player = event.getPlayer();
 
@@ -99,10 +103,7 @@ public class MonkeyModBlockListener extends BlockListener {
         }
     }
 
-    public void onBlockCanBuild(BlockCanBuildEvent event) {
-       MonkeyMod.log.info("onBlockCanBuild");
-    }
-
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
         Player player = event.getPlayer();

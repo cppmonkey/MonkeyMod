@@ -19,7 +19,8 @@ import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,17 +30,19 @@ import org.bukkit.entity.Entity;
  *
  * @author alex
  */
-public class MonkeyModExplosionListener extends EntityListener{
+public class MonkeyModExplosionListener implements Listener{
     MonkeyMod m_plugin;
 
     public MonkeyModExplosionListener(MonkeyMod instance) {
         m_plugin = instance;
     }
+
+    @EventHandler
      public void onExplosionPrime(ExplosionPrimeEvent event) {
         if (event.getEntity().toString() == "CraftCreeper"){
             Creeper killer = (Creeper)event.getEntity();
             List<Entity> damageees = event.getEntity().getNearbyEntities(5, 5, 5);
-            ListIterator itr = damageees.listIterator();
+            ListIterator<Entity> itr = damageees.listIterator();
 
             while(itr.hasNext()) {
                 Entity entity = (Entity)itr.next();
@@ -67,7 +70,7 @@ public class MonkeyModExplosionListener extends EntityListener{
                 if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftMagmaCube"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
                 if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftMooshroom"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
                 if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftVillager"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}}}}}}}}}}}}}}}}}}}}}}}}
-                
+
             }
             event.getEntity().remove();
             event.setCancelled(true); //NO MORE EXPLOSIONS :D
