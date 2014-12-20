@@ -8,7 +8,7 @@ class CServerPackage
 
 	function CServerPackage( $data )
 	{
-		$this->name = $data["name"];
+		$this->name = $data["package"];
 		$this->version = $data["version"];
 		$this->build = $data["build"];
 	}

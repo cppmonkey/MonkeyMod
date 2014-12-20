@@ -9,30 +9,24 @@ class Minecraft
 	var $servers = array();
 
 
-	function Minecraft()
-	{
+    function Minecraft() {
 		// global variables required by this function
-		global $dbuser, $dbpass, $dblink;
+        global $dbserver, $dbuser, $dbpass, $dblink;
 
-		if( !$dblink )
-		{
-			$dblink = new mysqli( "mysql.cppmonkey.net", $dbuser, $dbpass, "killerabbit" );
+        if( !$dblink ) {
+            $dblink = new mysqli( $dbserver, $dbuser, $dbpass, "killerabbit" );
 		}
 	}
 
-	function BuildServerList()
-	{
+    function BuildServerList() {
 		global $dblink;
 
-		if (isset($_GET['server_id']))
-		{
+        if (isset($_GET['server_id'])) {
 			$query = sprintf( "SELECT *
 				FROM `mc_servers`
 				WHERE `id` = '%d'
 				", $dblink->real_escape_string( $_GET['server_id']));
-		}
-		else if (isset($_GET['owner_id']))
-		{
+        } else if (isset($_GET['owner_id'])) {
 			$query = sprintf( "SELECT *
 				FROM `mc_servers`
 				WHERE `owner_id` = '%d'
@@ -85,32 +79,30 @@ class Minecraft
 
 	}
 
-	function Dump()
-	{
-		foreach( $this->servers as &$server )
-		{
+    function Dump() {
+        foreach( $this->servers as &$server ) {
 			echo sprintf( "<div>%s</div>",
 			$server->GetTitle()
 			);
 		}
 	}
 
-	function DumpJSON()
-	{
+    function DumpJSON() {
 		echo "[";
+
+        if(count($this->servers) > 0) {
 		echo sprintf( "{\"title\":\"%s\",\"ip\":\"%s\"}",
 				$this->servers[0]->GetTitle(),
 				$this->servers[0]->GetIp()
 			);
-		for( $i = 1; $i < count($this->servers); $i++ )
-		{
+            for( $i = 1; $i < count($this->servers); $i++ ) {
 
 			echo sprintf( ",{\"title\":\"%s\",\"ip\":\"%s\"}",
 				$this->servers[$i]->GetTitle(),
 				$this->servers[$i]->GetIp()
 			);
 		}
-
+        }
 		echo "]";
 	}
 
@@ -123,8 +115,6 @@ class Minecraft
 			if( $server->GetIp() == $ip )
 			return $server;
 		}
-
-		echo "Unable to find server assosiated with the ip ".$ip."<br>\n";
 
 		return 0;
 	}

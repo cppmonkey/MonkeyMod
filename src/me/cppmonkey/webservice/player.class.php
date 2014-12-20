@@ -3,85 +3,67 @@
 class Player{
 
 	var $m_Name;
-	var $m_Group;
-	var $m_Admin = false;
-	var $m_id;
+    var $m_id = -1;
 
-	function Player( $name )
-	{
-		$this->m_Name = $name;
-		if( isset($_GET['vip']) )
-		{
-			if( $_GET['vip'] == "true" || $_GET['vip'] == "on" )
-			$this->m_Group = "vip";
-		}
+    function Player() {
+        Global $dblink;
 
-		if( isset( $_GET['admin'] ))
-		{
-			if( $_GET['admin'] == "true" || $_GET['vip'] == "on" )
-			{
-				$this->m_Admin = true;
+        if(isset($_GET['player'])){
+            $this->m_Name = $_GET['player'];
+
+            $query = sprintf( "
+                    SELECT `player_id`
+                    FROM `killerabbit`.`mc_players`
+                    WHERE `player_name` = '%s'
+                    ", $dblink->real_escape_string( $this->m_Name )
+            );
+
+            if($results = $dblink->query($query)) {
+                if( $results->num_rows > 0 ) {
+                    while($row = $results->fetch_assoc()) {
+                        $this->m_id = $row['player_id'];
+                    }
+                } else {
+                    $this->m_id = -1;
+                }
+            } else {
+                ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
 			}
 		}
 		
-		$this->GetPlayerId();
+        if(isset($_GET['player_id'])){
+            $this->m_id = $_GET['player_id'];
+        }
 		
-		if( $this->m_id == -1 )
-		{
+        if( $this->m_id == -1 ) {
 			// Create new Player
 			Global $dblink;
 		
 			$query = sprintf( "
 					INSERT INTO `killerabbit`.`mc_players` (
 						`player_name` ,
-						`player_email` ,
-						`player_seen`
+                    `player_email` 
 						)
 						VALUES (
-						'%s', '', '0'
+                    '%s', ''
 						);
 					
 					", $dblink->real_escape_string( $this->m_Name )
 			);
 
-			if( $results = $dblink->query( $query ) )
-			{
+            if( $results = $dblink->query( $query ) ){
 				$this->m_id = $dblink->insert_id;
+            } else {
+                ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
 			}
 		}
 		
 		
 	}
 	
-	function GetPlayerId()
-	{
-		Global $dblink;
-		
-		$query = sprintf( "
-				SELECT `player_id`
-				FROM `killerabbit`.`mc_players`
-				WHERE `player_name` = '%s'
-				", $dblink->real_escape_string( $this->m_Name )
-		);
-
-		if( $results = $dblink->query( $query ) )
-		{
-			if( $results->num_rows > 0 )
-			{
-				while( $row = $results->fetch_assoc() )
-				{
-					$this->m_id = $row['player_id'];
+    function GetId() {
+        return $this->m_id;
 				}
-			}
-			else
-			{
-				// Player is unknown
-				echo "unable to find player\n";
-				$this->m_id = -1;
-			}
-		}
-	}
-
 	function HasActiveSubscription()
 	{
 		Global $dblink;
@@ -120,16 +102,6 @@ class Player{
 		return false;
 	}
 
-	function GetGroup()
-	{
-		return $this->m_Group;
-	}
-
-	function SetGroup( $group )
-	{
-		$this->m_Group = $group;
-	}
-
 	function GetName()
 	{
 		return $this->m_Name;
@@ -158,38 +130,11 @@ class Player{
 					$output .= $row['permission'].":".$row['value']."\n";
 				}
 			}
+        } else {
+            ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
 		}
 		return $result;
 	
-	}
-
-	function IsAdmin()
-	{
-		return $this->m_Admin;
-	}
-	
-	function IsVip()
-	{
-		if ($this->m_Group == "vip")
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	function LogTransition( $server )
-	{
-		Global $dblink;
-		$query = sprintf(
-			    "INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `isVip`, `isAdmin`, `timestamp` )
-				VALUES
-				( '%s', '%d', '%d', '%s', '%s', UTC_TIMESTAMP() )",
-				$dblink->real_escape_string( GetName() ),
-				$server->GetId(),
-				Action( $_GET["action"] ),
-				IsVip(),
-				IsAdmin()
-			);
 	}
 }
 

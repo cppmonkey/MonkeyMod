@@ -4,18 +4,21 @@
  */
 package me.cppmonkey.monkeymod.commands;
 
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * 
- * @author Alex
+ * @author Alex & CppMonkey
  */
 public class InventoryCommand implements CommandExecutor {
 
@@ -27,22 +30,39 @@ public class InventoryCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Player player = null;
 
+        if (args.length == 1) {
+            // For console use and administrators
         if (sender instanceof Player && !m_plugin.getPermition((Player) sender, ".isAdmin")) {
-            sender.sendMessage(ChatColor.RED + "Admin access only!");
+                // Doesn't have access to do this
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use " + command + " commands");
+                return true;
+            }
+            player = m_plugin.getServer().getPlayer(args[0]);
         } else {
-            Player player = m_plugin.getServer().getOfflinePlayer(args[0]);
+            return false;
+        }
             
             if (player != null) {
-                int numOfItems = player.getInventory().getContents().length;
-                for (int itemIndex = 0; itemIndex < numOfItems; itemIndex++) {
-                    // TODO Does this getInventory().toString() even work?
-                    sender.sendMessage(ChatColor.GOLD + onPlayers[playerIndex].getInventory().toString());
+
+            HashMap<Material, Integer> playerItems = new HashMap<Material, Integer>();
+            for (ItemStack itemStack : player.getInventory().getContents()) {
+                if (itemStack != null) {
+                    if (playerItems.containsKey(itemStack.getType())) {
+                        playerItems.put(itemStack.getType(), itemStack.getAmount() + playerItems.get(itemStack.getType()));
+                    } else {
+                        playerItems.put(itemStack.getType(), itemStack.getAmount());
+                    }
+                }
+            }
+
+            for (Entry<Material, Integer> entry : playerItems.entrySet()) {
+                sender.sendMessage(ChatColor.GOLD + entry.getKey().name() + " " + entry.getValue());
                 }
             } else {
                 sender.sendMessage(ChatColor.GOLD + "Player not found.");
             }
-        }
 
         return true;
     }

@@ -37,7 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 143;
+    private Integer m_build = 145;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -56,6 +56,11 @@ public class MonkeyMod extends JavaPlugin {
     public final HashMap<Player, Boolean> isVip = new HashMap<Player, Boolean>();
     public final HashMap<Player, Boolean> isAdmin = new HashMap<Player, Boolean>();
 
+    // Server Details
+    public Integer serverUID = null;
+
+    public HashMap<Player, Integer> playerUIDs = new HashMap<Player, Integer>();
+
     public void onDisable() {
 
         this.saveConfig();
@@ -72,10 +77,10 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public void onEnable() {
-
+        try{
         getServer().broadcastMessage("Reloading MonkeyMod");
         getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-aquired");
-        
+
         for(Player player : getServer().getOnlinePlayers()){
             Parm[] parms = {
                     new Parm("action", "connect"),
@@ -157,6 +162,9 @@ public class MonkeyMod extends JavaPlugin {
             ConsoleCommandSender sender = getServer().getConsoleSender();
             getServer().dispatchCommand(sender, "monkey uptodate");
         }
+        }catch(Exception ex){
+            // TODO report error
+        }
         // getCommand("debug");
     }
 
@@ -205,7 +213,7 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public String getLoggerUrl() {
-        return this.getConfig().getString("logger.url", "http://cppmonkey.net/minecraft/update.php");
+        return this.getConfig().getString("logger.url");
     }
 
     public String getVersion() {
@@ -222,6 +230,7 @@ public class MonkeyMod extends JavaPlugin {
                 "logger.connect " + this.getConfig().getBoolean("logger.connect"),
                 "logger.disconnect " + this.getConfig().getBoolean("logger.disconnect"),
                 "logger.chat " + this.getConfig().getBoolean("logger.chat"),
+                "logger.url " + this.getConfig().getString("logger.url"),
                 "protection.grief " + this.getConfig().getBoolean("protection.grief"),
                 "plugin.update.auto " + this.getConfig().getBoolean("plugin.update.auto"),
                 "server.protection.enabled " + this.getConfig().getBoolean("server.protection.enabled")

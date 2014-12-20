@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -21,7 +22,8 @@ public class BoxyExecutor {
         m_plugin = instance;
     }
 
-    @Deprecated // user Material.isSolid()
+    @Deprecated
+    // user Material.isSolid()
     private boolean solids(int value) {
         switch (value) {
             case 0:
@@ -35,21 +37,22 @@ public class BoxyExecutor {
                 return true;
         }
     }
-    //private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
 
-    public boolean playerBoxyClickEvent(Player player, Block block, int X, int Y, int Z) {
+    // private EnumMap<Material, Boolean> m_exclusionList = new
+    // EnumMap<Material, Boolean>(Material.class);
+
+    public boolean playerBoxyClickEvent(Player player, Block block) {
         if (!m_plugin.getConfig().getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false)) {
-            //Start point selected
+            // Start point selected
             m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", true);
-            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".startLocation", (X + "," + Y + "," + Z));
+            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".startLocation", block.getLocation().toVector());
             m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".startWorld", block.getWorld().getName());
             player.sendMessage(ChatColor.GREEN + "Boxy start point confirmed");
             return true;
-        } else {
-            if (!m_plugin.getConfig().getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false)) {
-                //end point selected
+        } else if (!m_plugin.getConfig().getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false)) {
+            // end point selected
                 m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", true);
-                m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation", (X + "," + Y + "," + Z));
+            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation", block.getLocation().toVector());
                 m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".endWorld", block.getWorld().getName());
                 player.sendMessage(ChatColor.GREEN + "Boxy end point confirmed");
                 if (!m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + ".startWorld", "FAIL").matches(block.getWorld().getName())) {
@@ -62,22 +65,20 @@ public class BoxyExecutor {
                 player.sendMessage(ChatColor.GOLD + "Caution! You are about to commit a Boxy alteration!");
                 player.sendMessage(ChatColor.RED + "RIGHT CLICK TO COMMIT! right click elsewhere to cancel!");
                 return true;
-            } else {
-                if (m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation").toString().matches(X + "," + Y + "," + Z)) {
-                    //end point confirmed and boxy committed
+        } else if (m_plugin.getConfig().getVector(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation") == block.getLocation().toVector() /* TODO compare vectors */) {
+            // end point confirmed and boxy committed
                     m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false);
                     m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
                     boxyOperation(player, block);
                     return true;
                 } else {
-                    //boxy aborted
+                    // boxy aborted
                     m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false);
                     m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
                     player.sendMessage(ChatColor.GREEN + "Boxy alteration aborted");
                     return true;
                 }
-            }
-        }
+
     }
 
     private boolean boxyOperation(Player player, Block block) {
@@ -97,12 +98,11 @@ public class BoxyExecutor {
         World world = player.getWorld();
         Location end = block.getLocation();
         Location start = block.getLocation();
-        String startLoc = m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + ".startLocation");
-        String temp[] = startLoc.split(",");
-        start.setX(Double.parseDouble(temp[0]));
-        start.setY(Double.parseDouble(temp[1]));
+        Vector startLoc = m_plugin.getConfig().getVector(player.getName().toLowerCase(Locale.ENGLISH) + ".startLocation");
+
+        start = startLoc.toLocation(world);
         start.setY(start.getY() + 1);
-        start.setZ(Double.parseDouble(temp[2]));
+
         int step = m_plugin.getConfig().getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".step", 1);
         if (step <= 0) {
             player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings! (Step fault)");
@@ -127,27 +127,28 @@ public class BoxyExecutor {
         String exclusions[] = m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude").split(",");
 
         // FIXME Very inflexible Look at EnumMap!
-        // HINT private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
+        // HINT private EnumMap<Material, Boolean> m_exclusionList = new
+        // EnumMap<Material, Boolean>(Material.class);
         int exclusionsI[] = new int[512];
         exclusionsI[0] = 0;
         for (int i = 0; i < exclusions.length; i++) {
             exclusionsI[i] = Integer.parseInt(exclusions[i]);
         }
         if (start.getX() > end.getX()) {
-            //force transition from south to north
+            // force transition from south to north
             double tempDir = end.getX();
             end.setX(start.getX());
             start.setX(tempDir);
         }
         if (start.getZ() > end.getZ()) {
-            //force transition from west to east
+            // force transition from west to east
             double tempDir = end.getZ();
             end.setZ(start.getZ());
             start.setZ(tempDir);
         }
         start.setY(start.getY() + (m_plugin.getConfig().getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".height", 0)));
         if (start.getY() > end.getY()) {
-            //force transition from bottom to top
+            // force transition from bottom to top
             double tempDir = end.getY();
             end.setY(start.getY());
             start.setY(tempDir);
@@ -166,11 +167,13 @@ public class BoxyExecutor {
                         for (int e = 0; e < exclusions.length; e++) {
                             if (world.getBlockTypeIdAt(current) == exclusionsI[e]) {
                                 Excluded = true;
-                                //player.sendMessage(ChatColor.BLUE + "excluded");
+                                // player.sendMessage(ChatColor.BLUE +
+                                // "excluded");
                             }
                         }
                         if (!Excluded) {
-                            //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
+                            // player.sendMessage(ChatColor.BLUE +
+                            // "not excluded: replacing");
                             world.getBlockAt(current).setTypeId(toMaterial);
                         }
                         Excluded = false;
@@ -189,11 +192,13 @@ public class BoxyExecutor {
                         for (int e = 0; e < exclusions.length; e++) {
                             if (world.getBlockTypeIdAt(current) == exclusionsI[e] || !solids(world.getBlockTypeIdAt(current))) {
                                 Excluded = true;
-                                //player.sendMessage(ChatColor.BLUE + "excluded");
+                                // player.sendMessage(ChatColor.BLUE +
+                                // "excluded");
                             }
                         }
                         if (!Excluded) {
-                            //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
+                            // player.sendMessage(ChatColor.BLUE +
+                            // "not excluded: replacing");
                             world.getBlockAt(current).setTypeId(toMaterial);
                         }
                         Excluded = false;
@@ -212,11 +217,13 @@ public class BoxyExecutor {
                         for (int e = 0; e < exclusions.length; e++) {
                             if (world.getBlockTypeIdAt(current) == exclusionsI[e] || world.getBlockTypeIdAt(current) != fromMaterial) {
                                 Excluded = true;
-                                //player.sendMessage(ChatColor.BLUE + "excluded");
+                                // player.sendMessage(ChatColor.BLUE +
+                                // "excluded");
                             }
                         }
                         if (!Excluded) {
-                            //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
+                            // player.sendMessage(ChatColor.BLUE +
+                            // "not excluded: replacing");
                             world.getBlockAt(current).setTypeId(toMaterial);
                         }
                         Excluded = false;

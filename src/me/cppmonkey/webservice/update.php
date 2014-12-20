@@ -3,10 +3,13 @@ error_reporting(E_ALL | E_STRICT);
 include "config.php";
 include "minecraft.class.php";
 
-
 function ReportError( $strMsg = "" ){
 	$mailTo = "paul@cppmonkey.net";
-	$mailSubject = "update.php error ".$_GET["action"];
+    $mailSubject = "update.php error ";
+
+    if(isset($_GET["action"])){
+        $mailSubject .= $_GET["action"];
+    }
 
 	$bt = debug_backtrace();
      $caller = array_shift($bt);
@@ -19,7 +22,9 @@ function ReportError( $strMsg = "" ){
 	$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 
 
-	mail($mailTo, $mailSubject, $mailMessage);
+    // mail($mailTo, $mailSubject, $mailMessage);
+
+    print_r($mailMessage);
 }
 
 $dblink = new mysqli( $dbserver, $dbuser, $dbpass, "killerabbit" );
@@ -65,50 +70,33 @@ else
 
 $server = $minecraft->ServerFromIp( $server_ip );
 
-if( isset($_GET["action"]) && $server )
-{
+if( isset($_GET["action"]) && $server ) {
 	$query = "";
 
-	if( isset( $_GET["player"]) )
-	{
-		if ($_GET["action"] == "connect" || $_GET["action"] == "disconnect" )
-		{
-			$player = new Player($_GET['player']);
+    if(isset( $_GET["player"]) || isset($_GET["player_id"])) {
+        $player = new Player();
+
+        if (!isset($_GET["record"]) &&( $_GET["action"] == "connect" || $_GET["action"] == "disconnect" )) {
+
 
 			$query = sprintf(
-					"INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `timestamp` )
+                    "INSERT INTO `mc_transition` ( `player_id`, `server_id`, `action`, `timestamp` )
 					VALUES
-					( '%s', '%d', '%d', UTC_TIMESTAMP() )",
-					$dblink->real_escape_string( $player->GetName()),
+                    ( '%d', '%d', '%d', UTC_TIMESTAMP() )",
+                    $player->GetId(),
 					$server->GetId(),
 					Action( $_GET["action"] )
 				);
-		}
-		else if( isset($_GET["message"] ))
-		{
-			$split = explode( " ", $_GET["message"], 3 );
+        } else if( isset($_GET["message"])) {
 
-			if( $split[0] == "!offline" )
-			{
 				$query = sprintf(
-						"INSERT INTO `mc_offline` ( `from`, `to`, `message`) VALUES ( '%s', '%s', '%s' )",
-				$dblink->real_escape_string( $_GET["player"] ),
-				$dblink->real_escape_string( $split[1] )/* username */,
-				$dblink->real_escape_string( $split[2] )/* message */
-				);
-			}
-			else
-			{
-				$query = sprintf(
-					    "INSERT INTO `mc_chat` ( `chat_name`, `chat_message`, `server_id`, `chat_date`) VALUES ( '%s', '%s', '%d', UTC_TIMESTAMP());",
-						$dblink->real_escape_string( $_GET["player"]),
+                        "INSERT INTO `mc_chat` ( `player_id`, `chat_message`, `server_id`, `chat_date`) VALUES ( '%d', '%s', '%d', UTC_TIMESTAMP());",
+                        $player->GetId(),
 						$dblink->real_escape_string( $_GET["message"]),
 						$server->GetId()
 					);
-			}
-		}
-		else if( Action($_GET["action"]) == 4 )
-		{
+
+        } else if(Action($_GET["action"]) == 4) {
 			//Log user access to chest!
 
 			/* TODO Process this information! Chest Destroy
@@ -118,8 +106,8 @@ if( isset($_GET["action"]) && $server )
 			 */
 
 			$query = sprintf(
-					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
-				$dblink->real_escape_string($_GET["player"]),
+                    "INSERT INTO `mc_transition` (`player_id`, `action`, `server_id`, `timestamp`) VALUES ( '%d', '%d', '%d', UTC_TIMESTAMP())",
+                    $player->GetId(),
 				Action( $_GET["action"] ),
 				/* $dblink->real_escape_string($_GET["type"]),*/
 				$server->GetId()
@@ -134,23 +122,19 @@ if( isset($_GET["action"]) && $server )
              * new Parm("player",player.getName())
              * };
              */
-		}
-		else if ($_GET["action"] == "modify")
-		{
+        } else if ($_GET["action"] == "modify") {
 			$query = sprintf(
-					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
-				$dblink->real_escape_string($_GET["player"]),
+                    "INSERT INTO `mc_transition` (`player_id`, `action`, `server_id`, `timestamp`) VALUES ( '%d', '%d', '%d', UTC_TIMESTAMP())",
+                    $player->GetId(),
 				Action( $_GET["action"] ),
 				/* $dblink->real_escape_string($_GET["type"]),*/
 				$server->GetId()
 				);
 
-		}
-		else if ($_GET["action"] == "tower")
-		{
+        } else if ($_GET["action"] == "tower") {
 			$query = sprintf(
-					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
-				$dblink->real_escape_string($_GET["player"]),
+                    "INSERT INTO `mc_transition` (`player_id`, `action`, `server_id`, `timestamp`) VALUES ( '%d', '%d', '%d', UTC_TIMESTAMP())",
+                    $player->GetId(),
 				Action( $_GET["action"] ),
 				/* $dblink->real_escape_string($_GET["type"]),*/
 				$server->GetId()
@@ -162,13 +146,11 @@ if( isset($_GET["action"]) && $server )
              * new Parm("vip",Boolean.toString(player.isInGroup("vip"))),
              * new Parm("admin",Boolean.toString(player.isAdmin()))
              */
-		}
-		else if (Action($_GET["action"])== IGNITE)
-		{
+        } else if (Action($_GET["action"])== IGNITE) {
 
 			$query = sprintf(
-					"INSERT INTO `mc_transition` (`player`, `action`, `server_id`, `timestamp`) VALUES ( '%s', '%d', '%d', UTC_TIMESTAMP())",
-				$dblink->real_escape_string($_GET["player"]),
+                    "INSERT INTO `mc_transition` (`player_id`, `action`, `server_id`, `timestamp`) VALUES ( '%d', '%d', '%d', UTC_TIMESTAMP())",
+                   $player->GetId(),
 				Action( $_GET["action"] ),
 				/* $dblink->real_escape_string($_GET["type"]),*/
 				$server->GetId()
@@ -183,14 +165,14 @@ if( isset($_GET["action"]) && $server )
              * };
              */
 		}
-	}
-	else if ($_GET["action"] == "update")
-	{
+    } else if ($_GET["action"] == "update") {
+
+        $package = new CServerPackage($_GET);
 
 			$query = sprintf(
-					"INSERT INTO `mc_serverPackageStart` (`server_id`, `package_version`, `package_build`, `time`) VALUES ('%d', '%s', '%s', UTC_TIMESTAMP())",
+                "INSERT INTO `mc_serverPackageStart` (`server_id`, `package_id`, `package_version`, `package_build`, `time`) VALUES ('%d', '%d', '%s', '%s', UTC_TIMESTAMP())",
 						$server->GetId(),
-
+                2, // TODO Get Plugin ID
 						$dblink->real_escape_string($_GET["version"]),
 						$dblink->real_escape_string($_GET["build"])
 				/*				Action( $_GET["action"] ),*/
@@ -210,15 +192,21 @@ if( isset($_GET["action"]) && $server )
              */
 		}
 
-		if( $dblink && $query != "" )
-		{
-			if( $dblink->query( $query ) )
-			{
+    if($dblink && $query != "") {
+        if($dblink->query($query)) {
 				echo "insert complete!\n";
+        } else {
+            echo "unable to insert<br>".$query."<br>".print_r($dblink->error_list,true);
+            ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
+        }
+    } else if($query == "") {
+        // Nothing to do
+    } else {
+        echo "unable to connect to mysql";
+        ReportError("unable to connect to mysql");
+    }
 
-				// Check for offline messages
-				if( $_GET["action"] == "connect" )
-				{
+    if($_GET["action"] == "connect") {
 					$query = sprintf( "
 							SELECT *
 							FROM `killerabbit`.`mc_offline`
@@ -226,8 +214,7 @@ if( isset($_GET["action"]) && $server )
 							", $dblink->real_escape_string( $_GET['player'] )
 						);
 
-					if( $results = $dblink->query( $query ))
-					{
+        if($results = $dblink->query( $query )) {
 						$player = new Player( $_GET['player'] );
 						$permissions = $player->GetPermissions( $server->GetId() );
 
@@ -236,83 +223,22 @@ if( isset($_GET["action"]) && $server )
 							print( $key.":".$value."\n");
 						}
 
-						if ($server->ValidateVips())
-						{
-							print "processing offline messages\n";
-
-							$server->Connect();
-							if( $server->Auth() )
-							{
-
-							if( $player->HasActiveSubscription( $dblink ) )
-							{
-								print $server->ExecCommand( "tell ".$_GET['player']." Valid VIP Subscription found!" )."\n";
-								print $server->ExecCommand( "modify ".$_GET['player']." g:vip ir:true" )."\n";
-								//echo $server->ExecCommand( "monkey add vip ".$_GET['player'] );
+            if ($server->ValidateVips()) {
+                if( $player->HasActiveSubscription( $dblink )) {
 								print "\nisVip:true\n";
-							}
-							else if( $player->GetGroup() == "vip" )
-							{
-								if( !$player->IsAdmin())
-								{
-									print $server->ExecCommand( "tell ".$_GET['player']." Your VIP subscription is invalid" )."\n";
-									print $server->ExecCommand( "modify ".$_GET['player']." g:default ir:false" )."\n";
-									//echo $server->ExecCommand( "monkey remove vip ".$_GET['player'] );
+                } else if( $player->GetGroup() == "vip" ) {
+                    if( !$player->IsAdmin()) {
 									print "\nisVip:false\n";
 								}
-								else
-								{
-									$server->ExecCommand( "tell ".$_GET['player']." Welcome back!");
 								}
 							}
-							else
-							{
-								print "Player not vip"."\n";
-
-								if ( (isset($permissions["canBuild"]) && $permissions["canBuild"] == "true") && (isset($permissions["isAdmin"]) && $permissions["isAdmin"] != "true")) {
-									print $server->ExecCommand( "modify ".$_GET['player']." g:default ir:false" )."\n";
-								}else if (isset($permissions["isAdmin"]) && $permissions["isAdmin"] == "true") {
-									print $server->ExecCommand( "modify ".$_GET['player']." g:admins ir:true" )."\n";
-								}
-							}
-						if ($results->num_rows > 0 )
-						{
-							while ($row = $results->fetch_row())
-							{
-								print $server->ExecCommand(
-										sprintf( "say from: %s to: %s msg: %s", $row[1], $row[2], $row[3] )
-									);
-							}
-						}
-							} // Unable to auth server connection
-						}
-
 
 						$results->close();
+        } else {
+            echo "unable to execute<br>".$query."<br>".print_r($dblink->error_list,true);
+            ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
 					}
-					else
-					{
-						echo "unable to execute<br>".$query."<br>".$dblink->sqlstate;
-						ReportError("unable to insert<br>".$query."<br>".$dblink->sqlstate);
-					}
-
-
 					//Process Subscriptions
-
-
-				}
-			}
-			else
-			{
-				echo "unable to insert<br>".$query."<br>".$dblink->sqlstate;
-				ReportError("unable to insert<br>".$query."<br>".$dblink->sqlstate);
-			}
-
-		}
-		else
-		{
-			echo "unable to connect to mysql";
-			ReportError("unable to connect to mysql");
 		}
 
 
@@ -330,43 +256,24 @@ if( isset($_GET["action"]) && $server )
 		echo "update is needed<br/>\n";
 		$package = new CServerPackage( array( "name" => $_GET["package"], "version" => $_GET["version"], "build" => $_GET["build"]));
 
-		if( !$package->IsUptodate( "mc_packages"  ))
-		{
+        if( !$package->IsUptodate("mc_packages")) {
 			echo "Attempting to update server<br/>\n";
 			echo "false\n<br/>"; //for original build 16
 
-			$server->Connect();
-			if( $server->Auth() )
-			{
 				echo "excuting update<br/>\n";
-				echo $server->ExecCommand( "say <PHP> forcing update" );
-				echo $server->ExecCommand( $package->GetUpdateCmd() );
 
-				if ( $_GET["version"]  == "0.5" && $_GET["package"] == "CppMonkeyAdmin" )
-				{
-					sleep( 10 );
-					echo $server->ExecCommand( "reloadplugin ".$package->GetName() );
-				}
-			}
-			else
-			{
-				echo "Auth failed";
-				ReportError( "Auth failed<br/>\n" );
 			}
 		}
-	}
-}
-else
-{
-	if( !$server && isset( $_GET['rcon-port'] ) )
-	{
+} else {
+    if( !$server && isset($_GET['rcon-port'])) {
 		echo "Unable to load server<br/>No servers with the IP {$server_ip}<br>";
 		$server = $minecraft->CreateServer( $server_ip, $_GET['rcon-port']);
 	}
 
 
 	echo "invalid query";
-	ReportError("invalid query<br>\n".$server);
+    echo print_r($dblink->error_list,true);
+    ReportError("invalid query<br>\n".print_r($server,true));
 
 }
 ?>

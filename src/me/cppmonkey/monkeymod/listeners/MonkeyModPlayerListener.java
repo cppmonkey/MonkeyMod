@@ -60,7 +60,7 @@ public class MonkeyModPlayerListener implements Listener {
         // reporting to cppmonkey.net
         Parm[] parms = {
             new Parm("action", "disconnect"),
-            new Parm("player", player.getName())
+                new Parm("player_id", m_plugin.playerUIDs.get(player).toString())
         };
         HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, false);
         notification.setPriority(Thread.MIN_PRIORITY);
@@ -81,7 +81,7 @@ public class MonkeyModPlayerListener implements Listener {
         try {
             Parm parms[] = {
                 new Parm("action", "message"),
-                new Parm("player", URLEncoder.encode(player.getName(), "UTF-8")),
+                    new Parm("player_id", m_plugin.playerUIDs.get(player).toString()),
                 new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
             HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms);
@@ -106,13 +106,9 @@ public class MonkeyModPlayerListener implements Listener {
                 } else {
 
                             Block block = event.getClickedBlock();
-                            int X = 0;
-                            int Y = 0;
-                            int Z = 0;
+
                             try {
-                        X = block.getX();
-                        Y = block.getY();
-                        Z = block.getZ();
+
                         /*
                          * /* //the switch compensates coords for the side of
                          * the block clicked switch (event.getBlockFace()) {
@@ -122,7 +118,7 @@ public class MonkeyModPlayerListener implements Listener {
                         */
 
                                 BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
-                                BoxyRunner.playerBoxyClickEvent(player, block, X, Y, Z);
+                                BoxyRunner.playerBoxyClickEvent(player, block);
                             } catch (NullPointerException e) {
                                 player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
                                 m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION FAILED!");

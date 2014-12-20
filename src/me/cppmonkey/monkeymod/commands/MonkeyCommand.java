@@ -144,7 +144,7 @@ public class MonkeyCommand implements CommandExecutor {
             } // END /monkey [enable/disable]
             if (args.length == 3) {
                 // Must be admin to add users
-                if (sender instanceof Player && !m_plugin.getConfig().getBoolean(((Player) sender).getName().toLowerCase(Locale.ENGLISH) + ".isAdmin", false)) {
+                if (sender instanceof Player && !m_plugin.getPermition((Player) sender,".isAdmin")) {
                         sender.sendMessage("You do not have permission to do that");
                     return true;
                 }
@@ -243,10 +243,10 @@ public class MonkeyCommand implements CommandExecutor {
                 // FIXME Update to new variables
                 Player player = m_plugin.getServer().getPlayer(args[1]);
                 if (player != null) {
-                    sender.sendMessage(args[1] + ".canBuild: " + (m_plugin.canBuild.containsKey(player) && m_plugin.canBuild.get(player)));
-                    sender.sendMessage(args[1] + ".canIgnite: " + (m_plugin.canIgnite.containsKey(player) && m_plugin.canIgnite.get(player)));
-                    sender.sendMessage(args[1] + ".isAdmin: " + (m_plugin.isAdmin.containsKey(player) && m_plugin.isAdmin.get(player)));
-                    sender.sendMessage(args[1] + ".isVip: " + (m_plugin.isVip.containsKey(player) && m_plugin.isVip.get(player)));
+                    sender.sendMessage(args[1] + ".canBuild: " + m_plugin.getPermition(player,".canBuild"));
+                    sender.sendMessage(args[1] + ".canIgnite: " + m_plugin.getPermition(player,".canIgnite"));
+                    sender.sendMessage(args[1] + ".isAdmin: " + m_plugin.getPermition(player,".isAdmin"));
+                    sender.sendMessage(args[1] + ".isVip: " + m_plugin.getPermition(player,".isVip"));
                 } else {
                     sender.sendMessage("User maybe offline");
                 }

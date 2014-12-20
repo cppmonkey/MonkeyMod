@@ -58,6 +58,11 @@ public class LoginCallback implements IThreadCallback {
                         return;
                     }
 
+                    if (split[0].equalsIgnoreCase("playerUID")) {
+                        m_plugin.playerUIDs.put(player, Integer.parseInt(split[1]));
+                        return;
+                    }
+
                      for (int i = 0; i < booleanValues.length; i++) {
                         if (split[0].equalsIgnoreCase(booleanValues[i])) {
                             m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));

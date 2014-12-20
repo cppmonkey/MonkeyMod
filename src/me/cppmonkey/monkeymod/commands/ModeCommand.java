@@ -19,21 +19,31 @@ public class ModeCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
-                player.sendMessage(ChatColor.RED + "You do not have permission to use mode commands");
+        Player player = null;
+
+        if (args.length == 1) {
+            // For console use and administrators
+            if (sender instanceof Player && !m_plugin.getPermition((Player) sender, ".isAdmin")) {
+                // Doesn't have access to do this
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use " + command + " commands");
                 return true;
-            }else{
-                if(player.getGameMode() == GameMode.CREATIVE){
-                    player.setGameMode(GameMode.SURVIVAL);
-                    return true;
-                }else{
-                    player.setGameMode(GameMode.CREATIVE);
-                    return true;
-                }
             }
+            player = m_plugin.getServer().getPlayer(args[0]);
+        } else if (sender instanceof Player) {
+            player = (Player) sender;
         }
+
+        if (player != null) {
+            if (player.getGameMode() == GameMode.CREATIVE) {
+                    player.setGameMode(GameMode.SURVIVAL);
+            } else {
+                    player.setGameMode(GameMode.CREATIVE);
+                }
+            return true;
+        } else {
+            sender.sendMessage(ChatColor.RED + "Unable to find player");
+            }
+
         return false;
     }
 

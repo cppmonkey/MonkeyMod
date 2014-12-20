@@ -1,10 +1,8 @@
 <?php
 
-include "rcon.class.php";
 include "serverpackage.class.php";
 
-class MinecraftServer
-{
+class MinecraftServer {
 	var $id;
 	var $title;
 	var $address, $gamePort, $adminPort, $adminPass;
@@ -14,8 +12,7 @@ class MinecraftServer
 	var $rcon;
 
 
-	function MinecraftServer( $details )
-	{
+    function MinecraftServer( $details ) {
 		$this->id		= $details['id'];
 		$this->title		= $details['title'];
 		$this->address	= $details['address'];
@@ -26,40 +23,37 @@ class MinecraftServer
 		$this->owner	= $details['owner_id'];
 	}
 
-
-	function Connect()
-	{
-		$this->rcon = new RCon( $this->address, $this->adminPort, $this->adminPass);
+    function GetId() {
+        return $this->id;
 	}
-
-	function Auth()
-	{
-		return $this->rcon->Auth();
+    function GetTitle() {
+        return $this->title;
 	}
-
-	function ExecCommand( $cmd )
-	{
-		return $this->rcon->rconCommand( $cmd );
+    function GetAddress() {
+        return $this->address;
+    }
+    function GetIp() {
+        return $this->ip;
+    }
+    function GetGamePort() {
+        return $this->gamePort;
+    }
+    function GetAdminPort() {
+        return $this->adminPort;
+    }
+    function GetAdminPass() {
+        return $this->adminPass;
+    }
+    function GetOwnerId() {
+        return $this->owner;
 	}
 	
-	function GetId() { return $this->id; }
-	function GetTitle() { return $this->title; }
-	function GetAddress() { return $this->address; }
-	function GetIp() { return $this->ip; }
-	function GetGamePort() { return $this->gamePort; }
-	function GetAdminPort() { return $this->adminPort; }
-	function GetAdminPass() { return $this->adminPass; }
-	function GetOwnerId() { return $this->owner; }
-
-	function UpdateString()
-	{
+    function UpdateString() {
 
 	}
 
-	function ValidateVips()
-	{
-		if ($this->owner > 0)
-		{
+    function ValidateVips() {
+        if ($this->owner > 0) {
 			return true;
 		}
 		return false;
