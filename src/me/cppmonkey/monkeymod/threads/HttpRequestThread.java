@@ -153,7 +153,7 @@ public class HttpRequestThread extends Thread {
                 }
 
             } catch (IOException e) {
-                message(name + " Unable to get InputStream");
+                message(name + " Unable to get InputStream: " + e.getMessage());
             } finally {
                 if (in != null) {
                     in.close();

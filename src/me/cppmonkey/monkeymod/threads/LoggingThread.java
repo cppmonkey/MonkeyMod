@@ -1,24 +1,25 @@
 package me.cppmonkey.monkeymod.threads;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+/*
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.io.OutputStreamWriter;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.net.URLEncoder;
+import java.net.URLConnection;
+import java.security.MessageDigest;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
 /**
  *
  * @author caboose89
- */
+ ADD COMMENT CLOSE HERE
 public class LoggingThread extends Thread {
 
     public final static String name = "Logging Thread";
@@ -30,7 +31,7 @@ public class LoggingThread extends Thread {
     private Boolean m_isPlugin = true;
     private MonkeyMod m_plugin;
 
-    public LoggingThread(String id, CommandSender player, String packageName, String postUrl, Boolean isPlugin, MonkeyMod plugin) {
+    public LoggingThread( CommandSender event, MonkeyMod plugin) {
         super(id);
         m_plugin = plugin;
         m_ThreadOwner = player;
@@ -49,6 +50,23 @@ public class LoggingThread extends Thread {
 
     public void run() {
         String msg = "";
+        String postData = "";
+        String finalHash = "";
+
+        try{
+            // BEGIN HASHING
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest("ADDPOSTFIELDSHERE".getBytes());
+            StringBuffer sb = new StringBuffer();
+            for(byte b : hash) {
+                sb.append(String.format("%02x", b));
+            }
+            finalHash = sb.toString();
+            //END HASHING
+        }
+        catch(Exception e){
+            MonkeyMod.log.severe("Http post failed: Generating hash");
+        }
 
         try {
 
@@ -57,6 +75,7 @@ public class LoggingThread extends Thread {
             message(ChatColor.GREEN + msg);
 
             URL url = new URL(m_PostUrl);
+            //URL url = new URL("http://hostname:80/cgi");
             if (m_debug) {
                 String hostAddr = InetAddress.getByName(url.getHost()).getHostAddress();
                 message(hostAddr);
@@ -82,10 +101,9 @@ public class LoggingThread extends Thread {
                 }
             }
 
-            if (urlConn.getResponseCode() == HttpURLConnection.HTTP_NOT_IMPLEMENTED) /* Used as a unique code to say that it is the right location. Could do to be changed to check page content instead */ {
-                try {
-                    // XML FORMAT:
-                    /*<monkey>
+            if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) Used as a unique code to say that it is the right location. Could do to be changed to check page content instead  {
+                 XML FORMAT:
+                <monkey>
                          <event>
                              <type>Tnt Placed</type>
                              <player>
@@ -95,8 +113,27 @@ public class LoggingThread extends Thread {
                              <position>world1 56 293 35</position>
                              <server>192.168.1.1</server>
                          </event>
-                     </monkey>*/
+                </monkey>
+                try {
+                    // Construct data
+                    String data = URLEncoder.encode("XML", "UTF-8") + "=" + URLEncoder.encode(postData, "UTF-8");
+                    data += "&" + URLEncoder.encode("hash", "UTF-8") + "=" + URLEncoder.encode(finalHash, "UTF-8");
 
+                    // Send data
+                    URLConnection conn = url.openConnection();
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                    wr.write(data);
+                    wr.flush();
+
+                    // Get the response
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String line;
+                    while ((line = rd.readLine()) != null) {
+                        // Process line...
+                    }
+                    wr.close();
+                    rd.close();
                     
                 } catch (Exception e) {
                     MonkeyMod.log.severe("Http post failed (" + urlConn.getURL() + ")");
@@ -116,3 +153,4 @@ public class LoggingThread extends Thread {
         }
     }
 }
+*/
