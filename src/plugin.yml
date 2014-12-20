@@ -74,6 +74,12 @@ commands:
     usage: |
            /<command>
            Example: /<command>
+
+  message:
+    description: Send a message to offline players
+    usage: |
+           /<command> <username:message>
+           Example: /<command> admin:Help! My house has been greifed!
   inventory:
     description: Outputs a players inventory, and / or any risk items ( admins only )
     usage: |

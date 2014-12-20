@@ -9,6 +9,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+
 
 public class ItemCommand implements CommandExecutor {
 
@@ -49,6 +52,20 @@ public class ItemCommand implements CommandExecutor {
                             return false;
                         }
                         player.sendMessage(ChatColor.RED + "This item is restricted");
+                        Parm[] parms = {
+                            new Parm("action", "restricted-item-attempt"),
+                            new Parm("player", player.getName()),
+                            new Parm("data",itemMaterial.name())
+                            //TODO: add location + owner
+                        };
+                        HttpRequestThread notification = new HttpRequestThread(
+                                "Connection Notification Thread:" + player.getName(),
+                                player,
+                                m_plugin.getLoggerUrl(),
+                                parms,
+                                false);
+                        notification.setPriority(Thread.MIN_PRIORITY);
+                        notification.start();
                         return true;
                     }
 

@@ -12,6 +12,7 @@ import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.PluginCommand;
 import me.cppmonkey.monkeymod.commands.TeleCommand;
 import me.cppmonkey.monkeymod.commands.InspectionCommand;
+import me.cppmonkey.monkeymod.commands.MessageCommand;
 import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
@@ -183,6 +184,7 @@ public class MonkeyMod extends JavaPlugin {
         InspectionCommand Inspectionlistener = new InspectionCommand(this);
         getCommand("list").setExecutor(Inspectionlistener);
         getCommand("inventory").setExecutor(Inspectionlistener);
+        getCommand("message").setExecutor(new MessageCommand(this));
 
 
         // Notify CppMonkey.NET of the new server
