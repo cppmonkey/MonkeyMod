@@ -17,7 +17,7 @@ import java.net.URLEncoder;
  * @author caboose89
  */
 public class MessageCommand implements CommandExecutor {
-    public final static String command = "messages";
+    public final static String command = "message";
     private final MonkeyMod m_plugin;
     
     public MessageCommand(MonkeyMod instance) {

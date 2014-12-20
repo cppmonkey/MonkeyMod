@@ -32,9 +32,11 @@ public class MonkeyModPlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         try {
+
+            // Welcome player
+            event.getPlayer().sendMessage(m_plugin.getConfig().getString("welcome"));
+
             // reporting to cppmonkey.net
-
-
             // setting up parms for http request
             Parm[] parms = {
                 new Parm("action", "connect"),
@@ -42,12 +44,7 @@ public class MonkeyModPlayerListener implements Listener {
                 new Parm("ip", player.getAddress().getAddress().toString())
             };
 
-            HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    player,
-                    m_plugin.getLoggerUrl(),
-                    parms,
-                        new LoginCallback(m_plugin, player));
+            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new LoginCallback(m_plugin, player));
 
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
@@ -60,17 +57,12 @@ public class MonkeyModPlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
-        //reporting to cppmonkey.net
+        // reporting to cppmonkey.net
         Parm[] parms = {
             new Parm("action", "disconnect"),
             new Parm("player", player.getName())
         };
-        HttpRequestThread notification = new HttpRequestThread(
-                "Connection Notification Thread:" + player.getName(),
-                player,
-                m_plugin.getLoggerUrl(),
-                parms,
-                false);
+        HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, false);
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
 
@@ -92,11 +84,7 @@ public class MonkeyModPlayerListener implements Listener {
                 new Parm("player", URLEncoder.encode(player.getName(), "UTF-8")),
                 new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
-            HttpRequestThread notification = new HttpRequestThread(
-                    "Disconnection Notification Thread:" + player.getName(),
-                    player,
-                    m_plugin.getLoggerUrl(),
-                    parms);
+            HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms);
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         } catch (Exception e) {
@@ -111,9 +99,7 @@ public class MonkeyModPlayerListener implements Listener {
         if (player != null) {
             // player interaction sent from player
             Action click = event.getAction();
-            if (click.equals(Action.RIGHT_CLICK_BLOCK)
-                    && m_plugin.getConfig().getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false)
-                    && m_plugin.getConfig().getInt("boxy.tool") == player.getItemInHand().getTypeId()) {
+            if (click.equals(Action.RIGHT_CLICK_BLOCK) && m_plugin.getConfig().getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false) && m_plugin.getConfig().getInt("boxy.tool") == player.getItemInHand().getTypeId()) {
 
                 if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
@@ -128,31 +114,11 @@ public class MonkeyModPlayerListener implements Listener {
                         Y = block.getY();
                         Z = block.getZ();
                         /*
-
-                        /*
-                                //the switch compensates coords for the side of the block clicked
-                                switch (event.getBlockFace()) {
-                                    case UP:
-                                        Y++;
-                                        break;
-                                    case DOWN:
-                                        Y--;
-                                        break;
-                                    case NORTH:
-                                        X++;
-                                        break;
-                                    case SOUTH:
-                                        X--;
-                                        break;
-                                    case EAST:
-                                        Z++;
-                                        break;
-                                    case WEST:
-                                        Z--;
-                                        break;
-                                    default:
-                                        break;
-                                }
+                         * /* //the switch compensates coords for the side of
+                         * the block clicked switch (event.getBlockFace()) {
+                         * case UP: Y++; break; case DOWN: Y--; break; case
+                         * NORTH: X++; break; case SOUTH: X--; break; case EAST:
+                         * Z++; break; case WEST: Z--; break; default: break; }
                         */
 
                                 BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);

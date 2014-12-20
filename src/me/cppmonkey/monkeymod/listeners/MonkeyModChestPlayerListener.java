@@ -25,7 +25,14 @@ public class MonkeyModChestPlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-            Action click = event.getAction();
+
+        // if player cannot build disallow access to chests!
+        if(!m_plugin.canBuild.containsKey(player) || !m_plugin.canBuild.get(player)){
+            event.setCancelled(true);
+            return;
+        }
+
+        Action click = event.getAction();
         if (player != null && click.equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().getType() == Material.CHEST) {
             String chestLocation = event.getClickedBlock().getWorld().getName() + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ();
             String chestOwner = m_plugin.getConfig().getString(chestLocation + ".owner", "PUBLIC");

@@ -69,12 +69,6 @@ commands:
     usage: |
            /<command>
            Example: /<command>
-  list:
-    description: Displays list of online players
-    usage: |
-           /<command>
-           Example: /<command>
-
   message:
     description: Send a message to offline players
     usage: |
@@ -87,8 +81,3 @@ commands:
            /<command> <playername> risk
            Example: /<command> notch
            Example: /<command> notch risk
-  plugin:
-    description: Reload plugins
-    usage: |
-           /<command> [reload] [plugin]
-           Example: /<command> reload MonkeyMod

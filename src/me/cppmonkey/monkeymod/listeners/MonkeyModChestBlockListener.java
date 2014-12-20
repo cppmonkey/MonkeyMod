@@ -39,7 +39,7 @@ public class MonkeyModChestBlockListener implements Listener {
             Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
         }
         X -= 2;
-        if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
+		if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
             Location = World + ":" + X + "," + Y + "," + Z;
             if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
                 Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
@@ -47,14 +47,14 @@ public class MonkeyModChestBlockListener implements Listener {
         }
         X++;
         Z--;
-        if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
+		if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
             Location = World + ":" + X + "," + Y + "," + Z;
             if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
                 Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
             }
         }
         Z += 2;
-        if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
+		if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
             Location = World + ":" + X + "," + Y + "," + Z;
             if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
                 Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");

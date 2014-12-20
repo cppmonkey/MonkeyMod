@@ -20,11 +20,13 @@ public class LoginCallback implements IThreadCallback {
     }
 
     public void processLine(String result) {
-        try{
+        try {
              if (m_owner instanceof Player && result != null && !result.isEmpty()) {
                  Player player = (Player) m_owner;
 
-                 String booleanValues[] = {"canBuild", "isVip", "canIgnite", "isAdmin"};
+                String booleanValues[] = {
+                        "canBuild", "isVip", "canIgnite", "isAdmin"
+                };
 
                 result = result.trim();
                 String split[] = result.split(":");
@@ -37,22 +39,22 @@ public class LoginCallback implements IThreadCallback {
                     }
 
                     if (split[0].equalsIgnoreCase("canBuild")) {
-                        m_plugin.canBuild.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        m_plugin.canBuild.put((Player) m_owner, split[1].equalsIgnoreCase("true"));
                         return;
                     }
 
                     if (split[0].equalsIgnoreCase("canIgnite")) {
-                        m_plugin.canIgnite.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        m_plugin.canIgnite.put((Player) m_owner, split[1].equalsIgnoreCase("true"));
                         return;
                     }
 
                     if (split[0].equalsIgnoreCase("isVip")) {
-                        m_plugin.isVip.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        m_plugin.isVip.put((Player) m_owner, split[1].equalsIgnoreCase("true"));
                         return;
                     }
 
                     if (split[0].equalsIgnoreCase("isAdmin")) {
-                        m_plugin.isAdmin.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        m_plugin.isAdmin.put((Player) m_owner, split[1].equalsIgnoreCase("true"));
                         return;
                     }
 
@@ -66,8 +68,8 @@ public class LoginCallback implements IThreadCallback {
 
                  message(result);
             }
-        }catch(Exception e){
-            message("Exception within LoginCallback.java");
+        } catch (Exception e) {
+            message("Excetion within LoginCallback.java");
         }
     }
 

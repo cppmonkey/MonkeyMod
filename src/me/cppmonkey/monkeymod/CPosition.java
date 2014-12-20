@@ -2,6 +2,7 @@ package me.cppmonkey.monkeymod;
 
 import org.bukkit.block.Block;
 
+@Deprecated
 public class CPosition {
 
 	private Integer x;

@@ -71,8 +71,7 @@ public class MonkeyCommand implements CommandExecutor {
             if ("setvar".equalsIgnoreCase(args[0])) {
                 // process setvar commands
                 String[] stringOptions = {
-                    "plugin.update.url",
-                    "logger.url"
+                        "plugin.update.url", "logger.url"
                 };
 
                 if (args.length == 3) {
@@ -87,7 +86,9 @@ public class MonkeyCommand implements CommandExecutor {
                     }
                 }
 
-                String[] intOptions = {"protection.tower.threshold"};
+                String[] intOptions = {
+                    "protection.tower.threshold"
+                };
 
                 if (args.length == 3) {
                     for (int i = 0; i < intOptions.length; i++) {
@@ -109,7 +110,8 @@ public class MonkeyCommand implements CommandExecutor {
                 String[] boolOptions = {
                   "server.protection.enabled",
                   "plugin.update.auto",
-                  "plugin.silent", // TODO Make plugin silent by default ;-)
+                        "plugin.silent", // TODO Make plugin silent by default
+                                         // ;-)
                   "protection.grief",
                   "protection.fire",
                   "protection.tower.strict",
@@ -118,6 +120,9 @@ public class MonkeyCommand implements CommandExecutor {
                   "logger.connect",
                   "logger.disconnect",
                   "logger.chat",
+                        "override.nag",
+                        "boxy.enabled",
+                        "boxy.verbose",
                   "override.nag"
                 };
 
@@ -153,69 +158,78 @@ public class MonkeyCommand implements CommandExecutor {
 
                     Parm permission;
 
+                    Player player = m_plugin.getServer().getPlayer(playerName);
+
                     if ("user".equalsIgnoreCase(args[1])) {
-                        m_plugin.getConfig().set(playerName + ".canBuild", true);
-                        m_plugin.getConfig().set(playerName + ".canIgnite", false);
+                        if (player != null && !m_plugin.canBuild.containsKey(player)) {
+                            m_plugin.canBuild.put(player, true);
+                        }
                         permission = new Parm("add", "user");
                         sender.sendMessage("User player '" + playerName + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        m_plugin.getConfig().set(playerName + ".canBuild", true);
-                        m_plugin.getConfig().set(playerName + ".canIgnite", false);
-                        m_plugin.getConfig().set(playerName + ".isVip", true);
+                        if (player != null && !m_plugin.isVip.containsKey(player)) {
+                            m_plugin.isVip.put(player, true);
+                        }
                         permission = new Parm("add", "vip");
                         sender.sendMessage("Vip player '" + playerName + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        m_plugin.getConfig().set(playerName + ".canBuild", true);
-                        m_plugin.getConfig().set(playerName + ".canIgnite", true);
-                        m_plugin.getConfig().set(playerName + ".isAdmin", true);
+                        if (player != null && !m_plugin.isAdmin.containsKey(player)) {
+                            m_plugin.isAdmin.put(player, true);
+                        }
                         permission = new Parm("add", "admin");
                         sender.sendMessage("Admin player '" + playerName + "' added");
                     } else {
                         return false;
                     }
 
-                    Parm[] parms = {new Parm("action", "modify"), new Parm("player", playerName), permission};
+                    Parm[] parms = {
+                            new Parm("action", "modify"),
+                            new Parm("player", playerName),
+                            permission
+                    };
 
                     HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                     return true;
                     
-                }/* END add */ else if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
+                }/* END add */else if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
                     // Username
                     String playerName = args[2].toLowerCase(Locale.ENGLISH);
                     Parm permission;
                     
+                    Player player = m_plugin.getServer().getPlayer(playerName);
+
                     if ("user".equalsIgnoreCase(args[1])) {
-                        m_plugin.getConfig().set(playerName, null);
+                        if (player != null && m_plugin.canBuild.containsKey(player)) {
+                            m_plugin.canBuild.remove(player);
+                        }
                         permission = new Parm("remove", "user");
                         sender.sendMessage("player '" + playerName + "' removed");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        m_plugin.getConfig().set(playerName + ".isVip", false);
+                        if (player != null && m_plugin.isVip.containsKey(player)) {
+                            m_plugin.isVip.remove(player);
+                        }
                         permission = new Parm("remove", "vip");
                         sender.sendMessage("Vip player '" + playerName + "' removed");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        m_plugin.getConfig().set(playerName + ".canIgnite", false);
-                        m_plugin.getConfig().set(playerName + ".isAdmin", false);
+                        if (player != null && m_plugin.isAdmin.containsKey(player)) {
+                            m_plugin.isAdmin.remove(player);
+                        }
                         permission = new Parm("remove", "admin");
                         sender.sendMessage("Admin player '" + playerName + "' removed");
                     } else {
                         return false;
                     }
 
-                    Parm[] parms = {new Parm("action", "modify"), new Parm("player", playerName), permission};
+                    Parm[] parms = {
+                            new Parm("action", "modify"),
+                            new Parm("player", playerName),
+                            permission
+                    };
 
-                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms/*
-                             * ,
-                             * null
-                             * new
-                             * LoginCallback
-                             * (
-                             * m_plugin
-                             * ,
-                             * player
-                             * )
-                             */);
+                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms
+                    /* , new LoginCallback(m_plugin,player) */);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
 
@@ -224,12 +238,18 @@ public class MonkeyCommand implements CommandExecutor {
                         return false;
                     }
                     return true;
-            } /* END args == 4 */ else if ("user".equalsIgnoreCase(args[0])) {
+            } /* END args == 4 */else if ("user".equalsIgnoreCase(args[0])) {
                 sender.sendMessage(ChatColor.DARK_RED + "WARNING CASE SENSITIVE");
-                sender.sendMessage(args[1] + ".canBuild: " + m_plugin.getConfig().getBoolean(args[1] + ".canBuild", false));
-                sender.sendMessage(args[1] + ".canIgnite: " + m_plugin.getConfig().getBoolean(args[1] + ".canIgnite", false));
-                sender.sendMessage(args[1] + ".isAdmin: " + m_plugin.getConfig().getBoolean(args[1] + ".isAdmin", false));
-                sender.sendMessage(args[1] + ".isVip: " + m_plugin.getConfig().getBoolean(args[1] + ".isVip", false));
+                // FIXME Update to new variables
+                Player player = m_plugin.getServer().getPlayer(args[1]);
+                if (player != null) {
+                    sender.sendMessage(args[1] + ".canBuild: " + (m_plugin.canBuild.containsKey(player) && m_plugin.canBuild.get(player)));
+                    sender.sendMessage(args[1] + ".canIgnite: " + (m_plugin.canIgnite.containsKey(player) && m_plugin.canIgnite.get(player)));
+                    sender.sendMessage(args[1] + ".isAdmin: " + (m_plugin.isAdmin.containsKey(player) && m_plugin.isAdmin.get(player)));
+                    sender.sendMessage(args[1] + ".isVip: " + (m_plugin.isVip.containsKey(player) && m_plugin.isVip.get(player)));
+                } else {
+                    sender.sendMessage("User maybe offline");
+                }
                 return true;
             } else if ("world".equalsIgnoreCase(args[0])) {
                 List<World> worlds = m_plugin.getServer().getWorlds();

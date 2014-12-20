@@ -259,8 +259,6 @@ public class MonkeyModPlayerDeathListener implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
-            // FIXME forgive me for asking by if its player related and not general entities, then why is it in EntityListener and not PlayerListener?
-            // because there isnt a function for player deaths.
             m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + deathDescription(event));
         }
     }
