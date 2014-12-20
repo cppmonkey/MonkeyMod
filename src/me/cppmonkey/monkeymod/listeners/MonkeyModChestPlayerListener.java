@@ -3,27 +3,23 @@ package me.cppmonkey.monkeymod.listeners;
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.configuration.file.FileConfiguration;
-//TODO: change to new configuration format as this is getting depricated next version: http://wiki.bukkit.org/Introduction_to_the_New_Configuration
-import me.cppmonkey.monkeymod.Parm;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class MonkeyModChestPlayerListener implements Listener {
 
     private MonkeyMod m_plugin;
-    private FileConfiguration m_chestPermissions;
 
     public MonkeyModChestPlayerListener(MonkeyMod instance) {
         m_plugin = instance;
-        m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
     }
 
     @EventHandler
@@ -32,21 +28,21 @@ public class MonkeyModChestPlayerListener implements Listener {
             Action click = event.getAction();
         if (player != null && click.equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().getType() == Material.CHEST) {
             String chestLocation = event.getClickedBlock().getWorld().getName() + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ();
-            String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC");
-            String chestLock = m_chestPermissions.getString(chestLocation + ".lock", "OPEN");
+            String chestOwner = m_plugin.getConfig().getString(chestLocation + ".owner", "PUBLIC");
+            String chestLock = m_plugin.getConfig().getString(chestLocation + ".lock", "OPEN");
             if (player.getItemInHand().getType() == Material.BONE) {
                 if (chestOwner.equalsIgnoreCase(player.getName())) {
-                    String keySetting = m_chestPermissions.getString(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "NONE");
+                    String keySetting = m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "NONE");
                     if (keySetting.matches("NONE")) {
                         player.sendMessage(ChatColor.GOLD + "You have not set your chest lock settings!");
                         player.sendMessage(ChatColor.GOLD + "Use '/chest lock' or '/chest unlock'");
                     } else if (keySetting.matches("LOCK")) {
                         player.sendMessage(ChatColor.GOLD + "You have locked this chest");
-                        m_chestPermissions.set(chestLocation + ".lock", "CLOSED");
+                        m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
                     } else if (keySetting.matches("UNLOCK")) {
                         player.sendMessage(ChatColor.GOLD + "You have un-locked this chest");
                         player.sendMessage(ChatColor.GOLD + "Anybody can now access its contents!");
-                        m_chestPermissions.set(chestLocation + ".lock", "OPEN");
+                        m_plugin.getConfig().set(chestLocation + ".lock", "OPEN");
                     }
                     // Cancel the appearance of the inventory
                     event.setCancelled(true);

@@ -9,7 +9,6 @@ import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,11 +19,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class MonkeyModChestBlockListener implements Listener {
 
     private final MonkeyMod m_plugin;
-    private FileConfiguration m_chestPermissions;
 
     public MonkeyModChestBlockListener(MonkeyMod instance) {
         m_plugin = instance;
-        m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
     }
 
     private String nextToChest(BlockPlaceEvent event) {
@@ -39,28 +36,28 @@ public class MonkeyModChestBlockListener implements Listener {
         X++;
         if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST ) {
             Location = World + ":" + X + "," + Y + "," + Z;
-            Owner = m_chestPermissions.getString(Location + ".owner", "NONE");
+            Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
         }
         X -= 2;
         if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
             Location = World + ":" + X + "," + Y + "," + Z;
-            if (!Owner.matches(m_chestPermissions.getString(Location + ".owner", "NONE"))) {
-                Owner = m_chestPermissions.getString(Location + ".owner", "NONE");
+            if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
+                Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
             }
         }
         X++;
         Z--;
         if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
             Location = World + ":" + X + "," + Y + "," + Z;
-            if (!Owner.matches(m_chestPermissions.getString(Location + ".owner", "NONE"))) {
-                Owner = m_chestPermissions.getString(Location + ".owner", "NONE");
+            if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
+                Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
             }
         }
         Z += 2;
         if (event.getPlayer().getWorld().getBlockTypeIdAt(X, Y, Z) == 54) {
             Location = World + ":" + X + "," + Y + "," + Z;
-            if (!Owner.matches(m_chestPermissions.getString(Location + ".owner", "NONE"))) {
-                Owner = m_chestPermissions.getString(Location + ".owner", "NONE");
+            if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
+                Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
             }
         }
         return Owner;
@@ -77,8 +74,8 @@ public class MonkeyModChestBlockListener implements Listener {
                 if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
                         player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
                     String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," +event.getBlock().getY() + "," + event.getBlock().getZ();
-                    m_chestPermissions.set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
-                    m_chestPermissions.set(chestLocation + ".lock", "CLOSED");
+                    m_plugin.getConfig().set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
+                    m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
                     } else {
                         player.sendMessage(ChatColor.RED + "You cannot place a chest here.");
                         player.sendMessage(ChatColor.RED + "The adjacent chest does not belong to you");
@@ -94,7 +91,7 @@ public class MonkeyModChestBlockListener implements Listener {
         if (player != null && event.getBlock().getType() == Material.CHEST) {
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
             String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ();
-            String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC").toLowerCase(Locale.ENGLISH);
+            String chestOwner = m_plugin.getConfig().getString(chestLocation + ".owner", "PUBLIC").toLowerCase(Locale.ENGLISH);
             
             if (!chestOwner.equalsIgnoreCase(player.getName().toLowerCase(Locale.ENGLISH)) && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
@@ -126,11 +123,11 @@ public class MonkeyModChestBlockListener implements Listener {
 
         if (player != null && event.getBlock().getType() == Material.CHEST) {
             String chestLocation = event.getBlock().getWorld().getName() + ":" + (int)(event.getBlock().getX()) + "," + (int)(event.getBlock().getY()) + "," + (int)(event.getBlock().getZ());
-                String chestOwner = m_chestPermissions.getString(chestLocation + ".owner", "PUBLIC");
+            String chestOwner = m_plugin.getConfig().getString(chestLocation + ".owner", "PUBLIC");
             if (chestOwner.equalsIgnoreCase(player.getName()) || m_plugin.getPermition(player, ".isAdmin")) {
-                m_chestPermissions.set(chestLocation + ".owner", null);
-                m_chestPermissions.set(chestLocation + ".lock", null);
-                m_chestPermissions.set(chestLocation, null);
+                m_plugin.getConfig().set(chestLocation + ".owner", null);
+                m_plugin.getConfig().set(chestLocation + ".lock", null);
+                m_plugin.getConfig().set(chestLocation, null);
             } else {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
                 player.sendMessage(ChatColor.RED + "contact " + chestOwner + " if you require assistance.");

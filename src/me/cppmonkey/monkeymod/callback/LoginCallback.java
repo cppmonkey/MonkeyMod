@@ -46,9 +46,19 @@ public class LoginCallback implements IThreadCallback {
                         return;
                     }
 
+                    if (split[0].equalsIgnoreCase("isVip")) {
+                        m_plugin.isVip.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        return;
+                    }
+
+                    if (split[0].equalsIgnoreCase("isAdmin")) {
+                        m_plugin.isAdmin.put((Player)m_owner, split[1].equalsIgnoreCase("true"));
+                        return;
+                    }
+
                      for (int i = 0; i < booleanValues.length; i++) {
                         if (split[0].equalsIgnoreCase(booleanValues[i])) {
-                             m_plugin.getPluginConfiguration(MonkeyMod.EConfig.PERMISSIONS).set(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
+                            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + "." + booleanValues[i], split[1].equalsIgnoreCase("true"));
                             return;
                         }
                     }

@@ -7,7 +7,6 @@ import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 // @author Alex
@@ -15,11 +14,9 @@ public class ChestCommand implements CommandExecutor {
 
     public final static String command = "chest";
     private MonkeyMod m_plugin;
-    private FileConfiguration m_chestPermissions;
 
     public ChestCommand(MonkeyMod instance) {
         m_plugin = instance;
-        m_chestPermissions = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.CHESTS);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,11 +29,11 @@ public class ChestCommand implements CommandExecutor {
                 if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
                     if (args.length == 1) {
                         if ("UNLOCK".equalsIgnoreCase(args[0])) {
-                            m_chestPermissions.set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "UNLOCK");
+                            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "UNLOCK");
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to UNLOCK");
                             return true;
                         } else if ("LOCK".equalsIgnoreCase(args[0])) {
-                            m_chestPermissions.set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "LOCK");
+                            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "LOCK");
                             player.sendMessage(ChatColor.GREEN + "Your skellington key is set to LOCK");
                             return true;
                         }

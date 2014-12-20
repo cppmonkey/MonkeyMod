@@ -35,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 136;
+	private Integer m_build = 138;
     private PluginDescriptionFile m_pluginDescFile;
     // Array Storage for Configs
     //  private Config[] m_configs;
@@ -54,6 +54,10 @@ public class MonkeyMod extends JavaPlugin {
     // Temp
     public final HashMap<Player,Boolean> canBuild = new HashMap<Player,Boolean>();
     public final HashMap<Player,Boolean> canIgnite = new HashMap<Player,Boolean>();
+	public final HashMap<Player,Boolean> isVip = new HashMap<Player,Boolean>();
+	public final HashMap<Player,Boolean> isAdmin = new HashMap<Player,Boolean>();
+
+
     public void onDisable() {
 
         this.saveConfig();
@@ -271,34 +275,23 @@ public class MonkeyMod extends JavaPlugin {
     /*
      *
      */
-    @Deprecated
     public Boolean getPermition(Player player, String path) {
         // query permissions file
         // player.sendMessage(player.getName().toLowerCase(Locale.ENGLISH) +
         // path);
 
-        if( path.matches("isVip") || path.matches("isAdmin")) {
-            return this.getConfig().getBoolean(
-                    player.getName().toLowerCase(Locale.ENGLISH) + path, false);
-        }
-
-        if( path.matches("canBuild")) {
-            if( this.canBuild.containsKey(player) ) {
+		if( path.matches(".isVip") && this.isVip.containsKey(player) ) {
+			return this.isVip.get(player);
+		}else if( path.matches(".isAdmin") && this.isAdmin.containsKey(player) ) {
+			return this.isAdmin.get(player);
+		}else if( path.matches(".canBuild") && this.canBuild.containsKey(player) ) {
                 return this.canBuild.get(player);
-            } else {
-                return false;
-            }
-        }
-
-        if( path.matches("canIgnite")) {
-            if( this.canIgnite.containsKey(player)) {
+		}else if( path.matches(".canIgnite") && this.canIgnite.containsKey(player)) {
                 return this.canIgnite.get(player);
             }
-            return false;
-        }
 
-        return this.getConfig().getBoolean(
-                player.getName().toLowerCase(Locale.ENGLISH) + path, true);
+		// if not found return false
+		return false;
     }
 
     @Deprecated

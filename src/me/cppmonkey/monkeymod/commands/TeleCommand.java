@@ -8,16 +8,15 @@ import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.GameMode;
 
 /**
  *
@@ -27,11 +26,9 @@ public class TeleCommand implements CommandExecutor {
 
     public final static String command = "tele";
     private MonkeyMod m_plugin;
-    private final FileConfiguration m_settings;
 
     public TeleCommand(MonkeyMod instance) {
         m_plugin = instance;
-        m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.TELE);
     }
 
     private boolean home(CommandSender sender, String[] args) {
@@ -48,7 +45,7 @@ public class TeleCommand implements CommandExecutor {
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("set")) {
                         if (args[1].matches("[1-5]")) {
-                            m_settings.set(player.getName().toLowerCase(Locale.ENGLISH) + "-" + args[1], player.getWorld().getName() + ":" + (int)player.getLocation().getX() + "," + (int)player.getLocation().getY() + "," + (int)player.getLocation().getZ());
+                            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + "-" + args[1], player.getWorld().getName() + ":" + (int)player.getLocation().getX() + "," + (int)player.getLocation().getY() + "," + (int)player.getLocation().getZ());
                             player.sendMessage(ChatColor.GREEN + "Saved");
                             return true;
                         }
@@ -56,7 +53,7 @@ public class TeleCommand implements CommandExecutor {
                 } else if (args.length == 1) {
                     if (args[0].matches("[1-5]")) {
                         try {
-                            String Pos = m_settings.getString(player.getName().toLowerCase(Locale.ENGLISH) + "-" + args[0], "empty");
+                            String Pos = m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + "-" + args[0], "empty");
                             if (Pos.equals("empty")) {
                                 player.sendMessage(ChatColor.RED + "Input error. Are you sure you have saved a home warp here?");
                                 return false;
@@ -113,7 +110,7 @@ public class TeleCommand implements CommandExecutor {
                 return true;
             } else {
                 try {
-                    String Pos = m_settings.getString(player.getName().toLowerCase(Locale.ENGLISH) + "-LAST", "empty");
+                    String Pos = m_plugin.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + "-LAST", "empty");
                     if (Pos.equals("empty")) {
                         player.sendMessage(ChatColor.RED + "Input error. Last tele location not found?");
                         return false;
@@ -159,7 +156,7 @@ public class TeleCommand implements CommandExecutor {
                     if (playerNum != -1) {
                         if (player.getWorld().getName().equals(onPlayers[playerNum].getWorld().getName())) {
                             player.teleport(onPlayers[playerNum].getLocation());
-                            m_settings.set(player.getName().toLowerCase(Locale.ENGLISH) + "-LAST", player.getWorld().getName() + ":" + (int)player.getLocation().getX() + "," + (int)player.getLocation().getY() + "," + (int)player.getLocation().getZ());
+                            m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + "-LAST", player.getWorld().getName() + ":" + (int)player.getLocation().getX() + "," + (int)player.getLocation().getY() + "," + (int)player.getLocation().getZ());
                         } else {
                             player.sendMessage(ChatColor.GOLD + "Target player is in another world. Please go to the right world first.");
                         }
