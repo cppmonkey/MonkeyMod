@@ -39,7 +39,7 @@ public class MonkeyModExplosionListener implements Listener{
 
     @EventHandler
      public void onExplosionPrime(ExplosionPrimeEvent event) {
-        if (event.getEntity().toString() == "CraftCreeper"){
+        if (event.getEntity().toString().equalsIgnoreCase("CraftCreeper")){
             Creeper killer = (Creeper)event.getEntity();
             List<Entity> damageees = event.getEntity().getNearbyEntities(5, 5, 5);
             ListIterator<Entity> itr = damageees.listIterator();
