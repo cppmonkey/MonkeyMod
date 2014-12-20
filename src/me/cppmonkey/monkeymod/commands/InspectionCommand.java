@@ -30,6 +30,7 @@ public class InspectionCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if ("list".equalsIgnoreCase(command.getName())) {
+                //TODO: Remove /list as it is now pointless.
                 Player onPlayers[] = m_plugin.getServer().getOnlinePlayers();
                 player.sendMessage(ChatColor.GREEN + "players: ");
                 for (int i = 0; i < onPlayers.length; i++) {

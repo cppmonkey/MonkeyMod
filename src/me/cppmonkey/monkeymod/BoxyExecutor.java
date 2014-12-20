@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
+//TODO: change to new configuration format as this is getting depricated next version: http://wiki.bukkit.org/Introduction_to_the_New_Configuration
 import org.bukkit.block.Block;
 import org.bukkit.World;
 import org.bukkit.Location;
