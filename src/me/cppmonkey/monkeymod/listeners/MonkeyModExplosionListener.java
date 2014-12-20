@@ -43,25 +43,31 @@ public class MonkeyModExplosionListener extends EntityListener{
 
             while(itr.hasNext()) {
                 Entity entity = (Entity)itr.next();
-                if(entity.getClass().getSimpleName().equalsIgnoreCase("CraftChicken")){Chicken newEntity = (Chicken)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCow"))){Cow newEntity = (Cow)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCreeper"))){Creeper newEntity = (Creeper)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftGhast"))){Ghast newEntity = (Ghast)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftGiant"))){Giant newEntity = (Giant)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftPig"))){Pig newEntity = (Pig)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftPigZombie"))){PigZombie newEntity = (PigZombie)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSheep"))){Sheep newEntity = (Sheep)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSkeleton"))){Skeleton newEntity = (Skeleton)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSlime"))){Slime newEntity = (Slime)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSpider"))){Spider newEntity = (Spider)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSquid"))){Squid newEntity = (Squid)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftZombie"))){Zombie newEntity = (Zombie)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftWolf"))){Wolf newEntity = (Wolf)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftPlayer"))){Player newEntity = (Player)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCaveSpider"))){CaveSpider newEntity = (CaveSpider)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftEnderman"))){Enderman newEntity = (Enderman)entity;newEntity.damage(5, killer);}
-                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSilverfish"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}
-                //TODO: Add new mobs to list!!!
+                if(entity.getClass().getSimpleName().equalsIgnoreCase("CraftChicken")){Chicken newEntity = (Chicken)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCow"))){Cow newEntity = (Cow)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCreeper"))){Creeper newEntity = (Creeper)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftGhast"))){Ghast newEntity = (Ghast)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftGiant"))){Giant newEntity = (Giant)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftPig"))){Pig newEntity = (Pig)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftPigZombie"))){PigZombie newEntity = (PigZombie)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSheep"))){Sheep newEntity = (Sheep)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSkeleton"))){Skeleton newEntity = (Skeleton)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSlime"))){Slime newEntity = (Slime)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSpider"))){Spider newEntity = (Spider)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSquid"))){Squid newEntity = (Squid)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftZombie"))){Zombie newEntity = (Zombie)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftWolf"))){Wolf newEntity = (Wolf)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftPlayer"))){Player newEntity = (Player)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCaveSpider"))){CaveSpider newEntity = (CaveSpider)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftEnderman"))){Enderman newEntity = (Enderman)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSilverfish"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftBlaze"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftEnderDragon"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftFish"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftMagmaCube"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftMooshroom"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}else{
+                if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftVillager"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}}}}}}}}}}}}}}}}}}}}}}}}
+                
             }
             event.getEntity().remove();
             event.setCancelled(true); //NO MORE EXPLOSIONS :D

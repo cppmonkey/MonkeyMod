@@ -26,18 +26,18 @@ import org.bukkit.command.CommandSender;
  */
 public class UpdateThread extends Thread {
 
-	public final static String name = "Update Thread";
-	public final static String version = "1.3.1";
+    public final static String name = "Update Thread";
+    public final static String version = "1.3.1";
     private CommandSender m_ThreadOwner = null;
     private String m_PackageName;
     private String m_ReposUrl;
     private Boolean m_debug = false;
-	private Boolean m_isPlugin = true;
+    private Boolean m_isPlugin = true;
     private MonkeyMod m_plugin;
 
     /**
-	 * @param args
-	 *            the command line arguments
+     * @param args
+     *            the command line arguments
      */
     public UpdateThread(String id, CommandSender player, String packageName, String respoUrl, MonkeyMod plugin) {
         super(id);
@@ -47,14 +47,14 @@ public class UpdateThread extends Thread {
         m_ReposUrl = respoUrl;
     }
 
-	public UpdateThread(String id, CommandSender player, String packageName, String respoUrl, Boolean isPlugin, MonkeyMod plugin) {
-		super(id);
-		m_plugin = plugin;
-		m_ThreadOwner = player;
-		m_PackageName = packageName;
-		m_ReposUrl = respoUrl;
-		m_isPlugin = isPlugin;
-	}
+    public UpdateThread(String id, CommandSender player, String packageName, String respoUrl, Boolean isPlugin, MonkeyMod plugin) {
+        super(id);
+        m_plugin = plugin;
+        m_ThreadOwner = player;
+        m_PackageName = packageName;
+        m_ReposUrl = respoUrl;
+        m_isPlugin = isPlugin;
+    }
 
     @Deprecated
     public UpdateThread(String id, String packageName, String respoUrl) {
@@ -64,11 +64,11 @@ public class UpdateThread extends Thread {
         m_ReposUrl = respoUrl;
     }
     
-	private void message(String msg) {
+    private void message(String msg) {
         if (m_ThreadOwner != null) {
             m_ThreadOwner.sendMessage(msg);
         } else {
-			MonkeyMod.log.info(msg);
+            MonkeyMod.log.info(msg);
         }
     }
 
@@ -79,43 +79,43 @@ public class UpdateThread extends Thread {
 
             msg = "Attempting to download " + m_ReposUrl + m_PackageName + ".jar";
 
-			message(ChatColor.GREEN + msg);
+            message(ChatColor.GREEN + msg);
                 
             URL url = new URL(m_ReposUrl + m_PackageName + ".jar");
             if (m_debug) {
                 String hostAddr = InetAddress.getByName(url.getHost()).getHostAddress();
-				message(hostAddr);
+                message(hostAddr);
             }
             
-			if (!HttpURLConnection.getFollowRedirects()) {
-				MonkeyMod.log.warning("HTTP Redirections are not allowed");
+            if (!HttpURLConnection.getFollowRedirects()) {
+                MonkeyMod.log.warning("HTTP Redirections are not allowed");
             }
 
-			HttpURLConnection urlConn = null;
+            HttpURLConnection urlConn = null;
 
-			while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+            while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
 
-				urlConn = (HttpURLConnection) url.openConnection();
+                urlConn = (HttpURLConnection) url.openConnection();
 
-				urlConn.setRequestMethod("GET");
+                urlConn.setRequestMethod("GET");
 
-				urlConn.connect();
+                urlConn.connect();
 
-				if (urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
-					url = new URL(urlConn.getHeaderField("Location"));
-					urlConn.disconnect();
-				}
-			}
+                if (urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+                    url = new URL(urlConn.getHeaderField("Location"));
+                    urlConn.disconnect();
+                }
+            }
 
-			if (urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED || urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            if (urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED || urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-				InputStream is = urlConn.getInputStream();
-				OutputStream os = null;
-				try {
+                InputStream is = urlConn.getInputStream();
+                OutputStream os = null;
+                try {
                     if (m_isPlugin) {
-                    	os = new FileOutputStream("plugins//" + m_PackageName + ".jar");
+                        os = new FileOutputStream("plugins//" + m_PackageName + ".jar");
                     } else {
-                    	os = new FileOutputStream(m_PackageName + ".jar");
+                        os = new FileOutputStream(m_PackageName + ".jar");
                     }
                     
                     int data = is.read();
@@ -124,37 +124,36 @@ public class UpdateThread extends Thread {
                        os.write(data);
                        data = is.read();
                     }
-				}catch(FileNotFoundException e){
-					
-				}finally{
-					if (os != null) {
+                } catch (FileNotFoundException e) {
+                } finally {
+                    if (os != null) {
                         os.close();
-        			}
-        		}
+                    }
+                }
                 is.close();
                 
                 try {
-    				if (m_isPlugin) {
-                	   m_plugin.getServer().reload();
-    				} else {
-    				    m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
-    				}
-    				message(ChatColor.GREEN + "Update complete!");
+                    if (m_isPlugin) {
+                       m_plugin.getServer().reload();
+                    } else {
+                        m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
+                    }
+                    message(ChatColor.GREEN + "Update complete!");
                 } catch (CommandException e) {
-    				message(ChatColor.RED + "Something went wrong whilst updaing");
-    				message(ChatColor.RED + e.getMessage());
-    			}
-			} else {
-				MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
-				MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
+                    message(ChatColor.RED + "Something went wrong whilst updaing");
+                    message(ChatColor.RED + e.getMessage());
+                }
+            } else {
+                MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
+                MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
             }
 
-		} catch (IOException e) {
-            msg = "Sorry master something went wrong!";
-			message(ChatColor.RED + msg);
+        } catch (IOException e) {
+            msg = "Sorry master, something went wrong!";
+            message(ChatColor.RED + msg);
 
             msg = e.getMessage();
-			message(ChatColor.RED + msg);
+            message(ChatColor.RED + msg);
         }
     }
 }

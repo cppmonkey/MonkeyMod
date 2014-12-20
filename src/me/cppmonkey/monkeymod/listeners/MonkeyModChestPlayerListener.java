@@ -55,8 +55,8 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                     //reporting to cppmonkey.net
                     Parm[] parms = {
                         new Parm("action", "attempt_to_unlock_chest"),
-                        new Parm("player", player.getName())
-                        //TODO: Post location of chest and owner
+                        new Parm("player", player.getName()),
+                        new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                     };
                     HttpRequestThread notification = new HttpRequestThread(
                             "Connection Notification Thread:" + player.getName(),
@@ -77,8 +77,8 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                 //reporting to cppmonkey.net
                 Parm[] parms = {
                     new Parm("action", "attempt_to_open_chest"),
-                    new Parm("player", player.getName())
-                    //TODO: Post location of chest and owner
+                    new Parm("player", player.getName()),
+                    new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                 };
                 HttpRequestThread notification = new HttpRequestThread(
                         "Connection Notification Thread:" + player.getName(),

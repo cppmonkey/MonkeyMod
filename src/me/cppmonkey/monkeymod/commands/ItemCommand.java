@@ -56,7 +56,6 @@ public class ItemCommand implements CommandExecutor {
                             new Parm("action", "restricted-item-attempt"),
                             new Parm("player", player.getName()),
                             new Parm("data",itemMaterial.name())
-                            //TODO: add location + owner
                         };
                         HttpRequestThread notification = new HttpRequestThread(
                                 "Connection Notification Thread:" + player.getName(),

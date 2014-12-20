@@ -21,7 +21,7 @@ public class MonkeyModBlockListener extends BlockListener {
     }
 
     public void onBlockIgnite(BlockIgniteEvent event) {
-        //TODO Add exceptions to burning
+        //TODO Add exceptions to burning. caboose89 -> such as?
 
         Player player = event.getPlayer();
 
@@ -36,8 +36,8 @@ public class MonkeyModBlockListener extends BlockListener {
                 event.setCancelled(true);
                 Parm[] parms = {
                     new Parm("action", "ignite-attempt"),
-                    new Parm("player", player.getName())
-                    //TODO: add location + owner
+                    new Parm("player", player.getName()),
+                    new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
                 HttpRequestThread notification = new HttpRequestThread(
                         "Connection Notification Thread:" + player.getName(),
@@ -62,8 +62,8 @@ public class MonkeyModBlockListener extends BlockListener {
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "build-attempt"),
-                new Parm("player", player.getName())
-                //TODO: add location + owner
+                    new Parm("player", player.getName()),
+                    new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };
             HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),
@@ -85,8 +85,8 @@ public class MonkeyModBlockListener extends BlockListener {
             event.setCancelled(true);
                     Parm[] parms = {
                     new Parm("action", "block-break-attempt"),
-                    new Parm("player", player.getName())
-                    //TODO: add location + owner
+                    new Parm("player", player.getName()),
+                    new Parm("data",event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
             HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),
@@ -112,8 +112,8 @@ public class MonkeyModBlockListener extends BlockListener {
             event.setCancelled(true);
             Parm[] parms = {
                     new Parm("action", "block-break-attempt"),
-                    new Parm("player", player.getName())
-                    //TODO: add location + owner
+                    new Parm("player", player.getName()),
+                    new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
             HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),

@@ -1,6 +1,7 @@
 package me.cppmonkey.monkeymod;
 
 import java.util.Locale;
+import java.util.EnumMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,6 +29,7 @@ public class BoxyExecutor {
     @Deprecated // user Material.isSolid()
     private boolean solids(int value) {
         switch (value) {
+            case 0:
             case 8:
             case 9:
             case 10:
@@ -38,6 +40,7 @@ public class BoxyExecutor {
                 return true;
         }
     }
+    //private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
 
     public boolean playerBoxyClickEvent(Player player, Block block, int X, int Y, int Z) {
         if (!(m_settings.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false))) {
@@ -140,7 +143,6 @@ public class BoxyExecutor {
 
         // FIXME Very inflexable Look at EnumMap!
         // HINT private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
-        //private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
         int exclusionsI[] = new int[512];
         exclusionsI[0] = 0;
         for (int i = 0; i < exclusions.length; i++) {

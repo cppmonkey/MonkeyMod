@@ -29,7 +29,7 @@ import org.bukkit.event.entity.EntityListener;
  */
 enum e_monsters {
 
-    CraftZombie, CraftCreeper, CraftSpider, CraftPigZombie, CraftSlime, CraftGiant, CraftGhast, CraftSkeleton, CraftFireball, novalue;
+    CraftZombie, CraftCreeper, CraftSpider, CraftPigZombie, CraftSlime, CraftGiant, CraftGhast, CraftSkeleton, CraftFireball, CraftCaveSpider, CraftEnderman, CraftSilverfish, CraftBlaze, CraftEnderDragon, CraftMagmaCube, novalue;
 
     public static e_monsters fromString(String Str) {
         try {
@@ -49,19 +49,6 @@ public class MonkeyModPlayerDeathListener extends EntityListener {
         m_plugin = instance;
         playerMap = new HashMap<String, String>();
     }
-    /*
-    CraftZombie
-    CraftCreeper
-    CraftSpider
-    CraftPigZombie
-    CraftSlime
-    "WOLF:" + thisWolf.getOwner().toString();
-    CraftGiant
-    CraftGhast
-    CraftSkeleton
-    "SHOT:" + usingitem + ":" + murderer.getName()
-    "PVP:" + usingItem + ":" + murderer.getName();
-     */
 
     private String deathDescription(EntityDeathEvent event) {
         DamageCause cause = event.getEntity().getLastDamageCause().getCause();
@@ -120,6 +107,24 @@ public class MonkeyModPlayerDeathListener extends EntityListener {
                         break;
                     case CraftFireball:
                         output = " should have called ghastbusters.";
+                        break;
+                    case CraftCaveSpider:
+                        output = " thought the little blue spiders were passive.";
+                        break;
+                    case CraftEnderman:
+                        output = " got picked up, and taken to the End for supper.";
+                        break;
+                    case CraftSilverfish:
+                        output = " had a silver-fish burrow into them.";
+                        break;
+                    case CraftBlaze:
+                        output = " got blazed.";
+                        break;
+                    case CraftEnderDragon:
+                        output = " should have trained their dragon better.";
+                        break;
+                    case CraftMagmaCube:
+                        output = " was jumped on by animated lava.";
                         break;
                     default:
                         output = " was killed by an angry mob.";
@@ -255,9 +260,8 @@ public class MonkeyModPlayerDeathListener extends EntityListener {
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             // FIXME forgive me for asking by if its player related and not general entities, then why is it in EntityListener and not PlayerListener?
+            // because there isnt a function for player deaths.
             m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + deathDescription(event));
-        } else {
-            //Animal death
         }
     }
 

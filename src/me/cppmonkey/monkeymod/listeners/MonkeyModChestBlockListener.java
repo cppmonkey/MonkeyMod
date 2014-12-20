@@ -99,8 +99,8 @@ public class MonkeyModChestBlockListener extends BlockListener {
                 event.setCancelled(true);
                 Parm[] parms = {
                     new Parm("action", "chest-break-attempt"),
-                    new Parm("player", player.getName())
-                    //TODO: add location + owner
+                    new Parm("player", player.getName()),
+                    new Parm("data", chestOwner + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
                 HttpRequestThread notification = new HttpRequestThread(
                         "Connection Notification Thread:" + player.getName(),

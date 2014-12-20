@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import java.net.URLEncoder;
-import java.util.Locale;
 
 /**
  *
@@ -46,7 +45,6 @@ public class MessageCommand implements CommandExecutor {
                             new Parm("player", URLEncoder.encode(player.getName(), "UTF-8")),
                             new Parm("recipient",to),
                             new Parm("message", message)
-                            //TODO: add location + owner
                         };
                         HttpRequestThread notification = new HttpRequestThread(
                                 "Connection Notification Thread:" + player.getName(),
