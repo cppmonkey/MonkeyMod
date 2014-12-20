@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod.commands;
 import java.util.Locale;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,7 @@ public class ChestCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                player.setGameMode(GameMode.CREATIVE);
                 if (args.length > 0) {
                 // Must be a player to use these commands
 

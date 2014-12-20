@@ -35,43 +35,43 @@ public class MonkeyModPlayerListener extends PlayerListener {
 
     public void onPlayerJoin(PlayerJoinEvent event) {
         try {
-        // reporting to cppmonkey.net
-        Player player = event.getPlayer();
+            // reporting to cppmonkey.net
+            Player player = event.getPlayer();
 
-        // setting up parms for http request
+            // setting up parms for http request
             Parm[] parms = {
                 new Parm("action", "connect"),
                 new Parm("player", player.getName()),
                 new Parm("vip", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".isVip", false))),
                 new Parm("admin", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".isAdmin", false)))};
-        HttpRequestThread notification = new HttpRequestThread(
-                "Connection Notification Thread:" + player.getName(),
-                player,
-                m_plugin.getLoggerUrl(),
-                parms,
-                    new LoginCallback(m_plugin, player));
+            HttpRequestThread notification = new HttpRequestThread(
+                    "Connection Notification Thread:" + player.getName(),
+                    player,
+                    m_plugin.getLoggerUrl(),
+                    parms,
+                        new LoginCallback(m_plugin, player));
 
-        // FIXME - improve method of checking to see if the player is known
-            if (m_plugin.isKnownUser(player) == null) {
-                player.sendMessage(ChatColor.GREEN + "Welcome " + player.getName() + ", you apear to be new around here");
-                player.sendMessage(ChatColor.GREEN + "Please wait one moment. Checking permissions with CppMonkey.NET");
-            } else {
-                player.sendMessage(ChatColor.GREEN + "Welcome back " + player.getName() + ", lovely to see you again =).");
+                // FIXME - improve method of checking to see if the player is known
+                if (m_plugin.isKnownUser(player) == null) {
+                    player.sendMessage(ChatColor.GREEN + "Welcome " + player.getName() + ", you apear to be new around here");
+                    player.sendMessage(ChatColor.GREEN + "Please wait one moment. Checking permissions with CppMonkey.NET");
+                } else {
+                    player.sendMessage(ChatColor.GREEN + "Welcome back " + player.getName() + ", lovely to see you again =).");
 
-                try {
+                    try {
 
-                    if (m_plugin.getPermition(player, ".isAdmin")) {
-                        player.setDisplayName(ChatColor.RED + player.getName() + ChatColor.WHITE);
-                    } else if (m_plugin.getPermition(player, ".isVip")) {
-                        player.setDisplayName(ChatColor.GREEN + player.getName() + ChatColor.WHITE);
-            }
-                } catch (Throwable ex) {
-                    player.sendMessage(ChatColor.RED + "EXCEPTION");
+                        if (m_plugin.getPermition(player, ".isAdmin")) {
+                            player.setDisplayName(ChatColor.RED + player.getName() + ChatColor.WHITE);
+                        } else if (m_plugin.getPermition(player, ".isVip")) {
+                            player.setDisplayName(ChatColor.GREEN + player.getName() + ChatColor.WHITE);
+                        }
+                    } catch (Throwable ex) {
+                        player.sendMessage(ChatColor.RED + "EXCEPTION");
+                    }
                 }
-        }
 
-        notification.setPriority(Thread.MIN_PRIORITY);
-        notification.start();
+            notification.setPriority(Thread.MIN_PRIORITY);
+            notification.start();
         } catch (Throwable ex) {
            MonkeyMod.log.info("Excption within onPlayerJoin()");
         }

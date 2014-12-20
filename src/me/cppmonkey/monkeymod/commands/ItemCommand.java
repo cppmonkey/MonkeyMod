@@ -31,11 +31,10 @@ public class ItemCommand implements CommandExecutor {
                 // Permission check.
                 if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to spawn items");
-                   MonkeyMod.log.info(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
-                   MonkeyMod.log.info(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
-                    return true;
+                    MonkeyMod.log.info(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
+					MonkeyMod.log.info(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
+					return true;
                 }
-
 
                 try {
 

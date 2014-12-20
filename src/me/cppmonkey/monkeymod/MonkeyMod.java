@@ -16,8 +16,9 @@ import me.cppmonkey.monkeymod.interfaces.IThread;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestPlayerListener;
-import me.cppmonkey.monkeymod.listeners.PlayerDeathListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerDeathListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
+import me.cppmonkey.monkeymod.listeners.MonkeyModExplosionListener;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
 
@@ -47,7 +48,8 @@ public class MonkeyMod extends JavaPlugin {
     private MonkeyModBlockListener m_BlockListener;
     private MonkeyModChestBlockListener m_ChestBlockListener;
     private MonkeyModChestPlayerListener m_ChestPlayerListener;
-    private PlayerDeathListener m_EntityListener;
+    private MonkeyModPlayerDeathListener m_EntityListener;
+    private MonkeyModExplosionListener m_ExplosionListener;
 
     public static final Logger log = Logger.getLogger("Minecraft");
 
@@ -78,6 +80,7 @@ public class MonkeyMod extends JavaPlugin {
         m_ChestBlockListener = null;
         m_ChestPlayerListener = null;
         m_EntityListener = null;
+        m_ExplosionListener = null;
     }
 
     public void onEnable() {
@@ -104,7 +107,8 @@ public class MonkeyMod extends JavaPlugin {
         m_BlockListener = new MonkeyModBlockListener(this);
         m_ChestBlockListener = new MonkeyModChestBlockListener(this);
         m_ChestPlayerListener = new MonkeyModChestPlayerListener(this);
-        m_EntityListener = new PlayerDeathListener(this);
+        m_EntityListener = new MonkeyModPlayerDeathListener(this);
+        m_ExplosionListener = new MonkeyModExplosionListener(this);
 
 
         // TODO Server verification before setting up hooks
@@ -145,6 +149,7 @@ public class MonkeyMod extends JavaPlugin {
 
         if (m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)) {
             pm.registerEvent(Event.Type.BLOCK_PLACE, m_BlockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.EXPLOSION_PRIME, m_ExplosionListener, Priority.Lowest, this);
             pm.registerEvent(Event.Type.BLOCK_DAMAGE, m_BlockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.BLOCK_BREAK, m_BlockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.BLOCK_PLACE, m_ChestBlockListener, Priority.Normal, this);
