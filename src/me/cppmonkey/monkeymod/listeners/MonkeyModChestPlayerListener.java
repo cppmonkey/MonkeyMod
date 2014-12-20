@@ -11,6 +11,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.Configuration;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 public class MonkeyModChestPlayerListener extends PlayerListener {
 
@@ -49,6 +51,20 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                     player.sendMessage(ChatColor.RED + "This is not your chest!");
                     player.sendMessage(ChatColor.RED + "You cannot lock / unlock it");
                     event.setCancelled(true);
+                    //reporting to cppmonkey.net
+                    Parm[] parms = {
+                        new Parm("action", "attempt_to_unlock_chest"),
+                        new Parm("player", player.getName())
+                        //TODO: Post location of chest and owner
+                    };
+                    HttpRequestThread notification = new HttpRequestThread(
+                            "Connection Notification Thread:" + player.getName(),
+                            player,
+                            m_plugin.getLoggerUrl(),
+                            parms,
+                            false);
+                    notification.setPriority(Thread.MIN_PRIORITY);
+                    notification.start();
                 }
             } else if (!chestOwner.equalsIgnoreCase(player.getName())
                     && !chestOwner.matches("PUBLIC")
@@ -57,6 +73,20 @@ public class MonkeyModChestPlayerListener extends PlayerListener {
                 player.sendMessage(ChatColor.RED + "You cannot access this chest.");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner + ", and is locked.");
                 event.setCancelled(true);
+                //reporting to cppmonkey.net
+                Parm[] parms = {
+                    new Parm("action", "attempt_to_open_chest"),
+                    new Parm("player", player.getName())
+                    //TODO: Post location of chest and owner
+                };
+                HttpRequestThread notification = new HttpRequestThread(
+                        "Connection Notification Thread:" + player.getName(),
+                        player,
+                        m_plugin.getLoggerUrl(),
+                        parms,
+                        false);
+                notification.setPriority(Thread.MIN_PRIORITY);
+                notification.start();
             }
         }
     }

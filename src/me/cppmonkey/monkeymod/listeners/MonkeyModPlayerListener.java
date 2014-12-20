@@ -44,7 +44,7 @@ public class MonkeyModPlayerListener extends PlayerListener {
                 new Parm("player", player.getName()),
                 new Parm("vip", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".isVip", false))),
                 new Parm("admin", Boolean.toString(m_permissions.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".isAdmin", false))),
-                new Parm("ip", player.getAddress().getAddress().getHostAddress().toString())
+                new Parm("ip", player.getAddress().getAddress().toString())
             };
             HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),

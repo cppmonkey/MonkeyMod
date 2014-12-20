@@ -10,24 +10,26 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 public class BoxyCommand implements CommandExecutor {
-	public final static String command = "boxy";
+    public final static String command = "boxy";
 
-	private final MonkeyMod m_plugin;
+    private final MonkeyMod m_plugin;
     private final Configuration m_settings;
-	
+
     public BoxyCommand(MonkeyMod instance) {
-		m_plugin = instance;
+        m_plugin = instance;
         m_settings = m_plugin.getPluginConfiguration(MonkeyMod.EConfig.BOXY);
-	}
+    }
 
     private void setDefaultSettings(String PlayerName) {
         //set default settings on error occurring
-		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".fromId", 0);
-		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".toId", 0);
-		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".step", 1);
-		m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".height", 1);
+        m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".fromId", 0);
+        m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".toId", 0);
+        m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".step", 1);
+        m_settings.setProperty(PlayerName.toLowerCase(Locale.ENGLISH) + ".height", 1);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -121,14 +123,27 @@ public class BoxyCommand implements CommandExecutor {
 
                 } else {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
+                    Parm[] parms = {
+                        new Parm("action", "boxy-attempt"),
+                        new Parm("player", player.getName())
+                        //TODO: add location + owner
+                    };
+                    HttpRequestThread notification = new HttpRequestThread(
+                            "Connection Notification Thread:" + player.getName(),
+                            player,
+                            m_plugin.getLoggerUrl(),
+                            parms,
+                            false);
+                    notification.setPriority(Thread.MIN_PRIORITY);
+                    notification.start();
                     return true;
                 }
             } else {
-        //TODO Undo capabilities for Console?
-		sender.sendMessage(ChatColor.RED + "Not implimented yet");
+                //TODO Undo capabilities for Console?
+                sender.sendMessage(ChatColor.RED + "Not implimented yet");
                 return false;
             }
         }
-		return false;
-	}
+        return false;
+    }
 }

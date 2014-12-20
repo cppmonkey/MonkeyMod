@@ -61,6 +61,7 @@ public class MonkeyModExplosionListener extends EntityListener{
                 if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftCaveSpider"))){CaveSpider newEntity = (CaveSpider)entity;newEntity.damage(5, killer);}
                 if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftEnderman"))){Enderman newEntity = (Enderman)entity;newEntity.damage(5, killer);}
                 if((entity.getClass().getSimpleName().equalsIgnoreCase("CraftSilverfish"))){Silverfish newEntity = (Silverfish)entity;newEntity.damage(5, killer);}
+                //TODO: Add new mobs to list!!!
             }
             event.getEntity().remove();
             event.setCancelled(true); //NO MORE EXPLOSIONS :D

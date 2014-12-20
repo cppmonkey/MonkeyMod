@@ -13,6 +13,8 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.Location;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 public class MonkeyModChestBlockListener extends BlockListener {
 
@@ -95,6 +97,19 @@ public class MonkeyModChestBlockListener extends BlockListener {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner);
                 event.setCancelled(true);
+                Parm[] parms = {
+                    new Parm("action", "chest-break-attempt"),
+                    new Parm("player", player.getName())
+                    //TODO: add location + owner
+                };
+                HttpRequestThread notification = new HttpRequestThread(
+                        "Connection Notification Thread:" + player.getName(),
+                        player,
+                        m_plugin.getLoggerUrl(),
+                        parms,
+                        false);
+                notification.setPriority(Thread.MIN_PRIORITY);
+                notification.start();
             }
         } else if (event.getBlock().getType() == Material.CHEST) {
             event.setCancelled(true);

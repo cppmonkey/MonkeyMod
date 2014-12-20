@@ -9,6 +9,8 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 public class MonkeyModBlockListener extends BlockListener {
 
@@ -32,6 +34,19 @@ public class MonkeyModBlockListener extends BlockListener {
                 player.sendMessage(ChatColor.RED + "You dont have permission to ignite");
 
                 event.setCancelled(true);
+                Parm[] parms = {
+                    new Parm("action", "ignite-attempt"),
+                    new Parm("player", player.getName())
+                    //TODO: add location + owner
+                };
+                HttpRequestThread notification = new HttpRequestThread(
+                        "Connection Notification Thread:" + player.getName(),
+                        player,
+                        m_plugin.getLoggerUrl(),
+                        parms,
+                        false);
+                notification.setPriority(Thread.MIN_PRIORITY);
+                notification.start();
             }
             /* Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all */
         } else if (m_plugin.getConfiguration().getBoolean("protection.fire", false)) {
@@ -43,8 +58,21 @@ public class MonkeyModBlockListener extends BlockListener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
-                player.sendMessage(ChatColor.RED + "You don't have pemission to build");
-                event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You don't have pemission to build");
+            event.setCancelled(true);
+            Parm[] parms = {
+                new Parm("action", "build-attempt"),
+                new Parm("player", player.getName())
+                //TODO: add location + owner
+            };
+            HttpRequestThread notification = new HttpRequestThread(
+                    "Connection Notification Thread:" + player.getName(),
+                    player,
+                    m_plugin.getLoggerUrl(),
+                    parms,
+                    false);
+            notification.setPriority(Thread.MIN_PRIORITY);
+            notification.start();
         }
     }
 
@@ -55,6 +83,19 @@ public class MonkeyModBlockListener extends BlockListener {
         if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
             player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
+                    Parm[] parms = {
+                    new Parm("action", "block-break-attempt"),
+                    new Parm("player", player.getName())
+                    //TODO: add location + owner
+                };
+            HttpRequestThread notification = new HttpRequestThread(
+                    "Connection Notification Thread:" + player.getName(),
+                    player,
+                    m_plugin.getLoggerUrl(),
+                    parms,
+                    false);
+            notification.setPriority(Thread.MIN_PRIORITY);
+            notification.start();
         }
     }
 
@@ -69,6 +110,19 @@ public class MonkeyModBlockListener extends BlockListener {
         if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
             player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
+            Parm[] parms = {
+                    new Parm("action", "block-break-attempt"),
+                    new Parm("player", player.getName())
+                    //TODO: add location + owner
+                };
+            HttpRequestThread notification = new HttpRequestThread(
+                    "Connection Notification Thread:" + player.getName(),
+                    player,
+                    m_plugin.getLoggerUrl(),
+                    parms,
+                    false);
+            notification.setPriority(Thread.MIN_PRIORITY);
+            notification.start();
         }
     }
 }
