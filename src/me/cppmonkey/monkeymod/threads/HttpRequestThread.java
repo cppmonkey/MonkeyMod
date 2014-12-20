@@ -23,8 +23,7 @@ public class HttpRequestThread extends Thread {
     public final static String version = "1.4.1";
     private CommandSender m_ThreadOwner;
     private URL m_url;
-    private Boolean m_debug;
-
+    private boolean m_debug;
     // New for Bukkit
     private IThreadCallback m_callback = null;
 
@@ -75,7 +74,7 @@ public class HttpRequestThread extends Thread {
 
     }
 
-    public HttpRequestThread(String id, String url, Parm parms[], Boolean debug) {
+    public HttpRequestThread(String id, String url, Parm parms[], boolean debug) {
         super(id);
 
         m_ThreadOwner = null;

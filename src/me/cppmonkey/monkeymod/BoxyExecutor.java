@@ -229,7 +229,7 @@ public class BoxyExecutor {
                             }
                         }
                         if (!Excluded) {
-                            //player.sendMessage(ChatColor.BLUE + "not excluded: replaceing");
+                            //player.sendMessage(ChatColor.BLUE + "not excluded: replacing");
                             world.getBlockAt(current).setType(toMaterial);
                         }
                         Excluded = false;

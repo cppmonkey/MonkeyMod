@@ -2,7 +2,8 @@
 <html>
 <head>
 <title>http request test forms</title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
 onerror=function handleErr( msg, url, l )
@@ -48,10 +49,12 @@ onerror=function handleErr( msg, url, l )
 		$("#serveriphistory").change(function(){
 				$.getJSON("history.php?", { serverip: this.value }, function(data){
 						//Process data
-						$('#chat').empty();
+						$('#chat tbody').empty();
 						for (var i = 0; i < data.length; i++){
-							$('#chat').append( "<div>"+data[i].name + " :- "+ data[i].msg +"</div>");
+							$('#chat tbody').append( "<tr><td>" + data[i].timestamp + "</td><td>"+data[i].name + "</td><td>" + data[i].msg +"</td></tr>");
 						}
+
+						$("#chat tbody tr:even").addClass("alt");
 					});
 			});
 		$("#refreshserveriphistory").click(function(){
@@ -74,6 +77,20 @@ onerror=function handleErr( msg, url, l )
 	#results{
 		border: 2px solid red;
 	}
+
+	tr.alt td{
+		background: #ecf6fc;
+	}
+
+	tr.alt td{
+		background: #bcd4ec;
+	}
+
+	#chat thead td{
+		background: #0D5995;
+	}
+
+
 </style>
 </head>
 <body>
@@ -126,7 +143,16 @@ onerror=function handleErr( msg, url, l )
 </form>
 </div>
 <div id="results" class="results">
-	<div id="chat"></div>
+	<table id="chat">
+	<thead>
+	<tr>
+	<td>Date/Time</td><td>Name</td>
+	<td>Message</td>
+	</tr>
+	</thead>
+	<tbody>
+	</tbody>
+	</table>
 	<div id="users"></div>
 </div>
 </body>

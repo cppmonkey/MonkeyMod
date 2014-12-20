@@ -163,6 +163,8 @@ public class MonkeyModPlayerListener implements Listener {
                                 X = block.getLocation().getBlockX();
                                 Y = block.getLocation().getBlockY();
                                 Z = block.getLocation().getBlockZ();
+
+                        /*
                                 //the switch compensates coords for the side of the block clicked
                                 switch (event.getBlockFace()) {
                                     case UP:
@@ -186,6 +188,7 @@ public class MonkeyModPlayerListener implements Listener {
                                     default:
                                         break;
                                 }
+                        */
 
                                 BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
                                 BoxyRunner.playerBoxyClickEvent(player, block, X, Y, Z);
