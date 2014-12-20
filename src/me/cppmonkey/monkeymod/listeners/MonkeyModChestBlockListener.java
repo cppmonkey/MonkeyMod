@@ -121,7 +121,8 @@ public class MonkeyModChestBlockListener implements Listener {
 
     @EventHandler
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-       MonkeyMod.log.info("onBlockCanBuild");
+       //MonkeyMod.log.info("onBlockCanBuild");
+       // FIXME: Is this needed? Commented out for now
     }
 
     @EventHandler

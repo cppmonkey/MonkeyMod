@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.entity.EndermanPickupEvent;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -103,8 +104,12 @@ public class MonkeyModBlockListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onEndermanPickup(EndermanPickupEvent event) {
+        event.setCancelled(true);
+    }
 
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
             // THIS MUST BE HERE!!! Otherwise people can wipe the text from signs
         if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
