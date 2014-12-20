@@ -10,11 +10,14 @@ import java.util.Locale;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.entity.EndermanPickupEvent;
+import org.bukkit.event.entity.EndermanPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -75,7 +78,7 @@ public class PlayerDeathListener extends EntityListener {
             return m_cactusDeath[randomNum];
         } else if (cause == DamageCause.ENTITY_ATTACK) {
             Player player = (Player) event.getEntity();
-            
+
             //Entity killer = player.getLastDamageCause().getEntity();
             String killer = playerMap.get(player.getName());
             String killerDetails[] = killer.split(":");
@@ -266,17 +269,31 @@ public class PlayerDeathListener extends EntityListener {
         }
     }
 
+    public void onEndermanPickup(EndermanPickupEvent event) {
+        event.setCancelled(true);
+        m_plugin.getServer().broadcastMessage("EndermanPickup Disallowed");
+
+        Location loc = event.getEntity().getLocation();
+        m_plugin.getServer().broadcastMessage(loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+
+    }
+
+    public void onEndermanPlace(EndermanPlaceEvent event) {
+        event.setCancelled(true);
+        m_plugin.getServer().broadcastMessage("EndermanPlace Disallowed");
+    }
+
     String lastDamage(Player player, EntityDamageEvent event) {
         String lastDamage = "";
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent mobEvent = (EntityDamageByEntityEvent) event;
-            
+
             if (mobEvent.getDamager() instanceof Arrow) {
-            	Arrow projectile = (Arrow) mobEvent.getDamager();
-            	
-            	LivingEntity attacker = projectile.getShooter();
-            	
+                Arrow projectile = (Arrow) mobEvent.getDamager();
+
+                LivingEntity attacker = projectile.getShooter();
+
                if (attacker instanceof Player) {
                    Player murderer = (Player) attacker;
                    String usingitem = murderer.getItemInHand().getType().name();
@@ -300,7 +317,7 @@ public class PlayerDeathListener extends EntityListener {
                 usingItem = usingItem.toLowerCase(Locale.ENGLISH);
                 usingItem = usingItem.replace("_", " ");
                 lastDamage = "PVP:" + usingItem + ":" + murderer.getName();
-	            }
+                }
             }
         }
         if (playerMap.containsKey(player.getName())) {

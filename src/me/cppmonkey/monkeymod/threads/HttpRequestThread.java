@@ -24,7 +24,7 @@ public class HttpRequestThread extends Thread {
     private CommandSender m_ThreadOwner;
     private URL m_url;
     private Boolean m_debug;
-    
+
     // New for Bukkit
     private IThreadCallback m_callback = null;
 
@@ -40,10 +40,10 @@ public class HttpRequestThread extends Thread {
             message(e.getMessage());
         }
     }
-    
+
     public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, IThreadCallback callback) {
-    	m_callback = callback;
-    	
+        m_callback = callback;
+
         m_ThreadOwner = player;
         m_debug = false;
 
@@ -127,31 +127,31 @@ public class HttpRequestThread extends Thread {
             BufferedReader in = null;
 
             try {
-            	
-            	if (m_callback != null) {
+
+                if (m_callback != null) {
                     in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
 
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK || urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED) {
-	            	String inputLine;
-	            	
+                    String inputLine;
+
                     while ((inputLine = in.readLine()) != null) {
-	            		// debug output
+                        // debug output
                         MonkeyMod.log.finest(inputLine);
-	            		
+
                         m_callback.processLine(inputLine);
-	            	}
-	            	in.close();
-	            	m_callback.complete();
+                    }
+                    in.close();
+                    m_callback.complete();
                     } else {
                         MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
                         MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
                     }
-	            	
+
                 } else {
                     // Basic call
-                	urlConn.getInputStream();
+                    urlConn.getInputStream();
                 }
-                	
+
             } catch (IOException e) {
                 message(name + " Unable to get InputStream");
             } finally {
@@ -165,7 +165,9 @@ public class HttpRequestThread extends Thread {
                 message(e.getMessage().substring(i * 50, (i + 1) * 50));
             }
         } finally {
-            urlConn.disconnect();
+            if (urlConn != null) {
+                urlConn.disconnect();
+            }
             m_ThreadOwner = null;
             m_url = null;
         }

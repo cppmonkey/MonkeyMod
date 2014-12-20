@@ -153,6 +153,9 @@ public class MonkeyMod extends JavaPlugin {
             pm.registerEvent(Event.Type.PLAYER_INTERACT, m_ChestPlayerListener, Priority.Normal, this);
         }
 
+        pm.registerEvent(Event.Type.ENDERMAN_PICKUP, m_EntityListener, Priority.Normal, this);
+        pm.registerEvent(Event.Type.ENDERMAN_PLACE, m_EntityListener, Priority.Normal, this);
+
         pm.registerEvent(Event.Type.ENTITY_DEATH, m_EntityListener, Priority.Low, this);
         pm.registerEvent(Event.Type.ENTITY_DAMAGE, m_EntityListener, Priority.Low, this);
 
@@ -185,8 +188,10 @@ public class MonkeyMod extends JavaPlugin {
             new Parm("build", this.getBuild()),
             new Parm("rcon-port", Integer.toString(getServer().getPort() + 10))
         };
+
         HttpRequestThread notification = new HttpRequestThread(
-                "Notification thread: Plugin initialized", new ConsoleCommandSender(getServer()),
+
+                "Notification thread: Plugin initialized", getServer().getConsoleSender(),
                 getLoggerUrl(),
                 parms);
         notification.setPriority(Thread.MIN_PRIORITY);
@@ -196,7 +201,7 @@ public class MonkeyMod extends JavaPlugin {
             /*
              * Check for updates from server
              */
-            ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
+            ConsoleCommandSender sender = getServer().getConsoleSender();
             getServer().dispatchCommand(sender, "monkey uptodate");
         }
         // getCommand("debug");
@@ -277,7 +282,7 @@ public class MonkeyMod extends JavaPlugin {
             "protection.grief " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("protection.grief", true),
             "plugin.update.auto " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("plugin.update.auto", false),
             "server.protection.enabled " + m_configs[EConfig.PLUGIN.ordinal()].getBoolean("server.protection.enabled", false)
-        }; // TODO global list required to ensure ALL properties are listed 
+        }; // TODO global list required to ensure ALL properties are listed
     }
 
     public void registerVariable(Object variable) {
@@ -287,7 +292,7 @@ public class MonkeyMod extends JavaPlugin {
     	Player players[] = this.getServer().getOnlinePlayers();
 
     	String names[] = new String[players.length];
-    	
+
         for (int i = 0; i < names.length; i++) {
     		names[i] = players[i].getName();
     	}
