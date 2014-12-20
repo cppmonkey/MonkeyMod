@@ -41,7 +41,7 @@ public class BoxyExecutor {
     //private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
 
     public boolean playerBoxyClickEvent(Player player, Block block, int X, int Y, int Z) {
-        if (!(m_settings.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false))) {
+        if (!m_settings.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false)) {
             //Start point selected
             m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", true);
             m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".startLocation", (X + "," + Y + "," + Z));
@@ -50,14 +50,14 @@ public class BoxyExecutor {
             m_settings.save();
             return true;
         } else {
-            if (!(m_settings.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false))) {
+            if (!m_settings.getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false)) {
                 //end point selected
                 m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", true);
                 m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation", (X + "," + Y + "," + Z));
                 m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".endWorld", block.getWorld().getName());
                 m_settings.save();
                 player.sendMessage(ChatColor.GREEN + "Boxy end point confirmed");
-                if (!((m_settings.getString(player.getName().toLowerCase(Locale.ENGLISH) + ".startWorld", "FAIL")).matches(block.getWorld().getName()))) {
+                if (!m_settings.getString(player.getName().toLowerCase(Locale.ENGLISH) + ".startWorld", "FAIL").matches(block.getWorld().getName())) {
                     player.sendMessage(ChatColor.RED + "Cannot perform boxy across worlds! Aborted operation.");
                     m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false);
                     m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
@@ -66,7 +66,7 @@ public class BoxyExecutor {
                 }
 
                 player.sendMessage(ChatColor.GOLD + "Caution! You are about to commit a Boxy alteration!");
-                player.sendMessage(ChatColor.GOLD + "Converting block type " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId") + " to " + (m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".toId")));
+                player.sendMessage(ChatColor.GOLD + "Converting block type " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId") + " to " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".toId"));
                 player.sendMessage(ChatColor.GOLD + "Excludeing block types: " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude"));
                 player.sendMessage(ChatColor.GOLD + "With a height of " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".height") + " and a step of " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".step"));
                 player.sendMessage(ChatColor.GOLD + "Start point (X,Y,Z): " + m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".startLocation"));
@@ -74,7 +74,7 @@ public class BoxyExecutor {
                 player.sendMessage(ChatColor.RED + "RIGHT CLICK TO COMMIT! right click elsewhere to cancel!");
                 return true;
             } else {
-                if (m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation").toString().matches((X + "," + Y + "," + Z))) {
+                if (m_settings.getProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".endLocation").toString().matches(X + "," + Y + "," + Z)) {
                     //end point confirmed and boxy committed
                     m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasStart", false);
                     m_settings.setProperty(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
@@ -124,7 +124,7 @@ public class BoxyExecutor {
         }
         boolean everything = false;
         boolean solids = false;
-        if (((m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".toId", -5)) < 0)) {
+        if (m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".toId", -5) < 0) {
             player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings! (Type fault)");
             m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] OPERATION COMPLETE!");
             return false;
@@ -132,7 +132,7 @@ public class BoxyExecutor {
             everything = true;
         } else if (m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId", -5) == -2) {
             solids = true;
-        } else if (((m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId", -5)) < 0)) {
+        } else if (m_settings.getInt(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId", -5) < 0) {
             player.sendMessage(ChatColor.RED + "Boxy settings fault. Please review your settings! (Type fault)");
             m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] OPERATION COMPLETE!");
             return false;

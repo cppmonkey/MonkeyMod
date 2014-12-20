@@ -38,7 +38,7 @@ if( isset($_GET["action"]) && $server )
 		if ($_GET["action"] == "connect" || $_GET["action"] == "disconnect" )
 		{
 			$player = new Player($_GET['player']);
-			
+
 			$query = sprintf(
 				    "INSERT INTO `mc_transition` ( `player`, `server_id`, `action`, `isVip`, `isAdmin`, `timestamp` )
 					VALUES
@@ -53,7 +53,7 @@ if( isset($_GET["action"]) && $server )
 		else if( isset($_GET["message"] ))
 		{
 			$split = explode( " ", $_GET["message"], 3 );
-				
+
 			if( $split[0] == "!offline" )
 			{
 				$query = sprintf(
@@ -76,22 +76,22 @@ if( isset($_GET["action"]) && $server )
 		else if( $_GET["action"] == "chest" && isset($_GET['type']))
 		{
 			//Log user access to chest!
-			
+
 			/* TODO Process this information! Chest Destroy
 			 * new Parm("action", "chest"),
              * new Parm("type", "destroy"),
              * new Parm("player",player.getName())
 			 */
-			
+
 			$query = sprintf(
 					"INSERT INTO `` (``)",
 				$dblink->real_escape_string($_GET["player"]),
 				$dblink->real_escape_string($_GET["action"]),
 				$dblink->real_escape_string($_GET["type"])
 				);
-			
+
 			// AND
-			
+
 			/* TODO Process this information! Chest Access
 			 * Parm[] Parm = {
              * new Parm("action", "chest"),
@@ -113,7 +113,7 @@ if( isset($_GET["action"]) && $server )
 		else if ($_GET["action"] == "ignite")
 		{
 			/* TODO Process this information! Ignite
-			 * 
+			 *
 			 * Parm[] Parm = {
              * new Parm("action", "ignite"),
              * new Parm("source", Integer.toString(block.getStatus())),
@@ -121,7 +121,7 @@ if( isset($_GET["action"]) && $server )
              * new Parm("vip", Boolean.toString(player.isInGroup("vip")))
              * };
              */
-		}	
+		}
 
 		if( $dblink )
 		{
@@ -138,24 +138,25 @@ if( isset($_GET["action"]) && $server )
 							WHERE `sent` = 0 AND `to` LIKE '%s'
 							", $dblink->real_escape_string( $_GET['player'] )
 						);
-						
+
 					if( $results = $dblink->query( $query ))
 					{
 						$player = new Player( $_GET['player'] );
 						$permissions = $player->GetPermissions( $server->GetId() );
-						
+
 						// Print out permisions
 						foreach ($permissions as $key => $value) {
 							print( $key.":".$value."\n");
 						}
-						
+
 						if ($server->ValidateVips())
 						{
 							print "processing offline messages\n";
-								
+
 							$server->Connect();
-							$server->Auth();
-								
+							if( $server->Auth() )
+							{
+
 							if( $player->HasActiveSubscription( $dblink ) )
 							{
 								print $server->ExecCommand( "tell ".$_GET['player']." Valid VIP Subscription found!" )."\n";
@@ -180,15 +181,13 @@ if( isset($_GET["action"]) && $server )
 							else
 							{
 								print "Player not vip"."\n";
-								
+
 								if ( (isset($permissions["canBuild"]) && $permissions["canBuild"] == "true") && (isset($permissions["isAdmin"]) && $permissions["isAdmin"] != "true")) {
 									print $server->ExecCommand( "modify ".$_GET['player']." g:default ir:false" )."\n";
 								}else if (isset($permissions["isAdmin"]) && $permissions["isAdmin"] == "true") {
 									print $server->ExecCommand( "modify ".$_GET['player']." g:admins ir:true" )."\n";
 								}
 							}
-						}
-							
 						if ($results->num_rows > 0 )
 						{
 							while ($row = $results->fetch_row())
@@ -198,24 +197,28 @@ if( isset($_GET["action"]) && $server )
 									);
 							}
 						}
+							} // Unable to auth server connection
+						}
+
+
 						$results->close();
 					}
 					else
 					{
 						echo "unable to execute<br>".$query."<br>".$dblink->sqlstate;
 					}
-						
-						
+
+
 					//Process Subscriptions
-						
-						
+
+
 				}
 			}
 			else
 			{
 				echo "unable to insert<br>".$query."<br>".$dblink->sqlstate;
 			}
-				
+
 		}
 		else
 		{

@@ -63,7 +63,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
             return m_cactusDeath[randomNum];
         }else if (cause == DamageCause.ENTITY_ATTACK) {
             Player player = (Player) event.getEntity();
-            
+
             //Entity killer = player.getLastDamageCause().getEntity();
             String killer = playerMap.get(player.getName());
             String killerDetails[] = killer.split(":");
@@ -272,43 +272,45 @@ public class MonkeyModPlayerDeathListener implements Listener {
             lastDamage(player, event);
         }
     }
-    
+
     String lastDamage(Player player, EntityDamageEvent event) {
         String lastDamage = "";
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent mobEvent = (EntityDamageByEntityEvent) event;
-            
+
             if (mobEvent.getDamager() instanceof Arrow) {
-            	Arrow projectile = (Arrow) mobEvent.getDamager();
-            	
-            	LivingEntity attacker = projectile.getShooter();
-            	
-            	if (attacker instanceof Player) {
-            		Player murderer = (Player) attacker;
+                Arrow projectile = (Arrow) mobEvent.getDamager();
+
+                LivingEntity attacker = projectile.getShooter();
+
+                if (attacker instanceof Player) {
+                    Player murderer = (Player) attacker;
                     String usingitem = murderer.getItemInHand().getType().name();
                     if (usingitem.equalsIgnoreCase("AIR")) {
                         usingitem = "bare hands";
                     }
                     lastDamage = "SHOT:" + usingitem + ":" + murderer.getName();
-            	}
-            	
+                }
+
             } else {
-	            Entity attacker = mobEvent.getDamager();
-	            lastDamage = attacker.getClass().getSimpleName();
-	            if (attacker.getClass().getSimpleName().equalsIgnoreCase("CraftWolf")) {
-	                Wolf thisWolf = (Wolf) attacker;
-	                lastDamage = "WOLF:" + thisWolf.getOwner();
-	            } else if (attacker instanceof Player) {
-	                Player murderer = (Player) attacker;
-	                String usingItem = murderer.getItemInHand().getType().name();
-	                if (usingItem.equalsIgnoreCase("AIR")) {
-	                    usingItem = "bare hands";
-	                }
-	                usingItem = usingItem.toLowerCase(Locale.ENGLISH);
-	                usingItem = usingItem.replace("_", " ");
-	                lastDamage = "PVP:" + usingItem + ":" + murderer.getName();
-	            }
+                Entity attacker = mobEvent.getDamager();
+                if (attacker instanceof Wolf) {
+                    Wolf thisWolf = (Wolf) attacker;
+                    lastDamage = "WOLF:" + thisWolf.getOwner();
+                } else if (attacker instanceof Player) {
+                    Player murderer = (Player) attacker;
+                    String usingItem = murderer.getItemInHand().getType().name();
+                    if (usingItem.equalsIgnoreCase("AIR")) {
+                        usingItem = "bare hands";
+                    }
+                    usingItem = usingItem.toLowerCase(Locale.ENGLISH);
+                    usingItem = usingItem.replace("_", " ");
+                    lastDamage = "PVP:" + usingItem + ":" + murderer.getName();
+                } else {
+                    // Last resort
+                    lastDamage = attacker.getClass().getSimpleName();
+                }
             }
         }
         if (playerMap.containsKey(player.getName())) {

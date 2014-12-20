@@ -27,7 +27,7 @@ public class ItemCommand implements CommandExecutor {
         if (args.length > 0) {
 
             // is the sender a player?
-            if ((sender instanceof Player)) {
+            if (sender instanceof Player) {
 
                 Player player = (Player) sender;
 

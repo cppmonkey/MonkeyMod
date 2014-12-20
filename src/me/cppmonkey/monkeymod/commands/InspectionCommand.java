@@ -55,7 +55,7 @@ public class InspectionCommand implements CommandExecutor {
                                  ItemStack item[] = onPlayers[playerNum].getInventory().getContents();
                                 for (int i = 0; i < 36; i++) {
                                      if (item[i] != null) {
-                                         player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType().toString() + " X " + (item[i].getAmount()));
+                                        player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType() + " X " + (item[i].getAmount()));
                                      }
                                  }
                              } else {
@@ -77,7 +77,7 @@ public class InspectionCommand implements CommandExecutor {
                                 ItemStack item[] = onPlayers[playerNum].getInventory().getContents();
                                 for (int i = 0; i < 36; i++) {
                                     if (item[i] != null) {
-                                        player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType().toString() + " X " + (item[i].getAmount()));
+                                        player.sendMessage(ChatColor.GOLD + "item slot " + (i + 1) + ": " + item[i].getType() + " X " + (item[i].getAmount()));
                                     }
                                 }
                                 player.sendMessage(ChatColor.GOLD + "Player not found.");

@@ -69,7 +69,7 @@ public class TeleCommand implements CommandExecutor {
                                     double Y = Double.parseDouble(Coords[1]);
                                     double Z = Double.parseDouble(Coords[2]);
                                     Location newLocation = new Location(player.getWorld(), X, Y, Z);
-                                    if((m_plugin.getPermition(player, ".isVip")) || (m_plugin.getPermition(player, ".isAdmin"))){
+                                    if(m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")){
                                         player.teleport(newLocation);
                                     }else{
                                         player.setCompassTarget(newLocation);
@@ -106,7 +106,7 @@ public class TeleCommand implements CommandExecutor {
 
     private boolean back(CommandSender sender) {
         //FIXME: This doesnt work any more :S
-        if ((sender instanceof Player)) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
              if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
@@ -142,7 +142,7 @@ public class TeleCommand implements CommandExecutor {
     }
 
     private boolean tele(CommandSender sender, String[] args) {
-        if ((sender instanceof Player)) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
             if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
@@ -173,7 +173,7 @@ public class TeleCommand implements CommandExecutor {
         return false;
     }
     private boolean compass(CommandSender sender) {
-        if ((sender instanceof Player)) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
             Material itemMaterial = Material.matchMaterial("345");
             short durability = (short) 0;
@@ -184,7 +184,7 @@ public class TeleCommand implements CommandExecutor {
         return false;
     }
     private boolean mode(CommandSender sender) {
-        if ((sender instanceof Player)) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
             if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use mode commands");
