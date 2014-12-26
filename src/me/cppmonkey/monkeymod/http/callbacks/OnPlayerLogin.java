@@ -1,4 +1,4 @@
-package me.cppmonkey.monkeymod.callback;
+package me.cppmonkey.monkeymod.http.callbacks;
 
 import java.util.Locale;
 
@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
-public class Login implements IThreadCallback {
+public class OnPlayerLogin implements IThreadCallback {
 
     private MonkeyMod m_plugin;
     CommandSender m_owner;
 
-    public Login(MonkeyMod instance, CommandSender owner) {
+    public OnPlayerLogin(MonkeyMod instance, CommandSender owner) {
         m_plugin = instance;
         m_owner = owner;
     }
@@ -73,8 +73,10 @@ public class Login implements IThreadCallback {
 
                 message(result);
             }
-        } catch (Exception e) {
-            MonkeyMod.reportException("Excetion within LoginCallback.java", e);
+        }catch (RuntimeException rex){
+			MonkeyMod.reportException("RuntimeExcption within LoginCallback.processLine()", rex);
+		} catch (Exception ex) {
+            MonkeyMod.reportException("Excetion within LoginCallback.processLine()", ex);
         }
     }
 

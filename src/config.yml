@@ -24,3 +24,4 @@ plugin:
 
 boxy:
   tool: 279
+  experimental: false

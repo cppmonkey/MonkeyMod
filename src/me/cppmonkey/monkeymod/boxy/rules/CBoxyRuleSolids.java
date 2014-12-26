@@ -2,29 +2,30 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.cppmonkey.monkeymod.boxyrules;
+package me.cppmonkey.monkeymod.boxy.rules;
 
 import java.util.EnumMap;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.interfaces.IBoxyReplacer;
+import me.cppmonkey.monkeymod.boxy.interfaces.IBoxyReplacer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
- *
+ * 
  * @author CppMonkey
  */
 public class CBoxyRuleSolids implements IBoxyReplacer {
     private Material m_toMaterial;
     private boolean m_exclusionsEnabled = false;
     private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
-
+    
     public CBoxyRuleSolids( Material toMaterial) {
         m_toMaterial = toMaterial;
     }
-
+    
     public boolean exclude(Block block) {
         if (m_exclusionsEnabled) {
             return m_exclusionList.containsKey(block.getType()) || !isSolid(block);

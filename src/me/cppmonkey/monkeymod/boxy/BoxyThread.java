@@ -1,4 +1,4 @@
-package me.cppmonkey.monkeymod.threads;
+package me.cppmonkey.monkeymod.boxy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

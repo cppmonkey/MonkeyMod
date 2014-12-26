@@ -1,4 +1,4 @@
-package me.cppmonkey.monkeymod.boxyrules;
+package me.cppmonkey.monkeymod.boxy.rules;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

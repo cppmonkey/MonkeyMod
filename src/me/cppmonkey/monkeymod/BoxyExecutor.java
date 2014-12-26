@@ -2,6 +2,8 @@ package me.cppmonkey.monkeymod;
 
 import java.util.Locale;
 
+import me.cppmonkey.monkeymod.utils.CPosition;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -158,11 +160,11 @@ public class BoxyExecutor {
         if (everything) {
             player.sendMessage(ChatColor.BLUE + "everything");
             CPosition position = new CPosition(0, 0, 0);
-            for (position.setY( start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
+            for (position.setY( start.getBlockY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
                 current.setY(position.getY());
-                for (position.setZ( start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
+                for (position.setZ( start.getBlockZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
                     current.setZ(position.getZ());
-                    for (position.setX( start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
+                    for (position.setX( start.getBlockX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
                             if (world.getBlockTypeIdAt(current) == exclusionsI[e]) {
@@ -183,11 +185,11 @@ public class BoxyExecutor {
         } else if (solids) {
             player.sendMessage(ChatColor.BLUE + "solids");
             CPosition position = new CPosition(0, 0, 0);
-            for (position.setY( start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
+            for (position.setY( start.getBlockY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
                 current.setY(position.getY());
-                for (position.setZ( start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
+                for (position.setZ( start.getBlockZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
                     current.setZ(position.getZ());
-                    for (position.setX( start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
+                    for (position.setX( start.getBlockX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
                             if (world.getBlockTypeIdAt(current) == exclusionsI[e] || !solids(world.getBlockTypeIdAt(current))) {
@@ -208,11 +210,11 @@ public class BoxyExecutor {
         } else {
             player.sendMessage(ChatColor.BLUE + "select group");
             CPosition position = new CPosition(0, 0, 0);
-            for (position.setY( start.getY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
+            for (position.setY( start.getBlockY()); position.getY() <= end.getY(); position.setY(position.getY() + step)) {
                 current.setY(position.getY());
-                for (position.setZ( start.getZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
+                for (position.setZ( start.getBlockZ()); position.getZ() <= end.getZ(); position.setZ(position.getZ() + step)) {
                     current.setZ(position.getZ());
-                    for (position.setX( start.getX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
+                    for (position.setX( start.getBlockX()); position.getX() <= end.getX(); position.setX(position.getX() + step)) {
                         current.setX(position.getX());
                         for (int e = 0; e < exclusions.length; e++) {
                             if (world.getBlockTypeIdAt(current) == exclusionsI[e] || world.getBlockTypeIdAt(current) != fromMaterial) {

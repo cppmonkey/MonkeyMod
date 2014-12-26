@@ -6,8 +6,9 @@ package me.cppmonkey.monkeymod.commands;
 import java.net.URLEncoder;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

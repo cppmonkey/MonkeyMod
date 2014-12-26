@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.cppmonkey.monkeymod.boxyrules;
+package me.cppmonkey.monkeymod.boxy.rules;
 
 import java.util.EnumMap;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.interfaces.IBoxyReplacer;
+import me.cppmonkey.monkeymod.boxy.interfaces.IBoxyReplacer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

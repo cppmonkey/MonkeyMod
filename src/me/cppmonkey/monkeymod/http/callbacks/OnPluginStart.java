@@ -1,12 +1,12 @@
-package me.cppmonkey.monkeymod.callback;
+package me.cppmonkey.monkeymod.http.callbacks;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
-public class PluginStart implements IThreadCallback {
+public class OnPluginStart implements IThreadCallback {
     private MonkeyMod m_plugin;
     
-    public PluginStart(MonkeyMod plugin) {
+    public OnPluginStart(MonkeyMod plugin) {
         m_plugin = plugin;
     }
 

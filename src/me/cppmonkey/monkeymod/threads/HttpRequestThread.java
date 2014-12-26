@@ -9,8 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.command.CommandSender;
 

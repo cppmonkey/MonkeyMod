@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import me.cppmonkey.monkeymod.callback.Login;
 import me.cppmonkey.monkeymod.commands.BackCommand;
 import me.cppmonkey.monkeymod.commands.BoxyCommand;
 import me.cppmonkey.monkeymod.commands.ChestCommand;
@@ -18,6 +17,7 @@ import me.cppmonkey.monkeymod.commands.ModeCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.SpawnCommand;
 import me.cppmonkey.monkeymod.commands.TeleCommand;
+import me.cppmonkey.monkeymod.http.callbacks.OnPlayerLogin;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestPlayerListener;
@@ -26,6 +26,7 @@ import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerDeathListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -83,7 +84,7 @@ public class MonkeyMod extends JavaPlugin {
     public void onEnable() {
         try{
             getServer().broadcastMessage("Reloading MonkeyMod");
-            getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-aquired");
+            getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-acquired");
 
             for(Player player : getServer().getOnlinePlayers()){
                 Parm[] parms = {
@@ -98,7 +99,7 @@ public class MonkeyMod extends JavaPlugin {
                     player,
                     this.getLoggerUrl(),
                     parms,
-                    new Login(this, player));
+                    new OnPlayerLogin(this, player));
                 notification.start();
             }
 
@@ -126,8 +127,10 @@ public class MonkeyMod extends JavaPlugin {
 
                 pm.registerEvents(m_EntityListener, this);
                 pm.registerEvents(m_PlayerListener, this);
+            } catch (RuntimeException rex) {
+                MonkeyMod.reportException("RuntimeExcption within MonkeyMod.onEnable()", rex);
             } catch (Exception ex) {
-                reportException("Error: Registering events", ex);
+                reportException("Exception within MonkeyMod.onEnable()", ex);
             }
             try {
                 // Process commands, these a partial commands!!
@@ -143,8 +146,10 @@ public class MonkeyMod extends JavaPlugin {
                 getCommand(ModeCommand.command).setExecutor(new ModeCommand(this));
                 getCommand(InventoryCommand.command).setExecutor(new InventoryCommand(this));
                 getCommand(MessageCommand.command).setExecutor(new MessageCommand(this));
+            } catch (RuntimeException rex) {
+                MonkeyMod.reportException("RuntimeExcption within MonkeyMod.onEnable()", rex);
             } catch (Exception ex) {
-                reportException("Error: Registering commands", ex);
+                reportException("Exception within MonkeyMod.onEnable()", ex);
             }
 
             // Notify CppMonkey.NET of the new server
@@ -169,9 +174,9 @@ public class MonkeyMod extends JavaPlugin {
                 ConsoleCommandSender sender = getServer().getConsoleSender();
                 getServer().dispatchCommand(sender, "monkey uptodate");
             }
-        }catch(RuntimeException rex){
+        } catch(RuntimeException rex) {
             reportException("RuntimeException",rex);
-        }catch(Exception ex){
+        } catch(Exception ex) {
             reportException("Error: Unknown error within MonkeyMod.java",ex);
         }
         // getCommand("debug");
@@ -186,7 +191,7 @@ public class MonkeyMod extends JavaPlugin {
             updateThread.setPriority(Thread.MIN_PRIORITY);
             updateThread.start();
         } else {
-            sender.sendMessage(ChatColor.RED + "You dont have permission to update");
+            sender.sendMessage(ChatColor.RED + "You don't have permission to update");
             sender.sendMessage(ChatColor.RED + "You have to be Op!");
         }
     }
@@ -255,7 +260,7 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public static void reportException(String description, Exception ex) {
-        MonkeyMod.log.log(Level.SEVERE, description, ex);
+        MonkeyMod.log.log(Level.WARNING, description, ex);
 
        // Add report to server via HTTP request
 

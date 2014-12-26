@@ -1,4 +1,4 @@
-package me.cppmonkey.monkeymod.boxyrules;
+package me.cppmonkey.monkeymod.boxy.rules;
 
 import java.util.EnumMap;
 
@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.interfaces.IBoxyReplacer;
+import me.cppmonkey.monkeymod.boxy.interfaces.IBoxyReplacer;
 
 public class CBoxyRuleNormal implements IBoxyReplacer {
 
@@ -41,10 +41,10 @@ public class CBoxyRuleNormal implements IBoxyReplacer {
                 try {
                     m_exclusionList.put(Material.matchMaterial(excl), true);
                     System.out.println("put: exclude " + excl + " " + Material.matchMaterial(excl).name());
-                } catch (Exception e) {
-                    MonkeyMod.log.info("[EXCEPTION] " + this.getClass().getName());
-                    MonkeyMod.log.info(e.getMessage());
-                    MonkeyMod.log.info("EXCEPTION: CBoxyRuleNormal.setExclusions()");
+                }catch (RuntimeException rex){
+                    MonkeyMod.reportException("RuntimeExcption within BoxyRuleNormal.setExclusions()", rex);
+                }catch (Exception ex) {
+                    MonkeyMod.reportException("Exception within BoxyRuleNormal.setExclusions()", ex);
                 }
             }
         }

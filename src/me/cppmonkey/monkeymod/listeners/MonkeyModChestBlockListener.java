@@ -3,8 +3,8 @@ package me.cppmonkey.monkeymod.listeners;
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

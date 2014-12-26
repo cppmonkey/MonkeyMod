@@ -9,8 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 
 public class ItemCommand implements CommandExecutor {
@@ -103,8 +103,10 @@ public class ItemCommand implements CommandExecutor {
                     return false;
                 } catch (NullPointerException e) {
                     MonkeyMod.reportException(e.getMessage(),e);
-                } catch (Exception e) {
-                    MonkeyMod.reportException(e.getMessage(),e);
+                }catch (RuntimeException rex){
+                    MonkeyMod.reportException("RuntimeExcption within ItemCommand.onCommand()", rex);
+                } catch (Exception ex) {
+                    MonkeyMod.reportException("Excption within ItemCommand.onCommand()", ex);
                 }
             } /*END /item (player) */ else {
                 //TODO Process Console /item Commands. Will require player name!

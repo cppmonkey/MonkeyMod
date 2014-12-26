@@ -27,6 +27,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
  *
  * @author CppMonkey
  */
+@Deprecated // Please use inbuilt enum for this purpose, even though I have added more error reporting
 enum e_monsters {
 
     CraftZombie, CraftCreeper, CraftSpider, CraftPigZombie, CraftSlime, CraftGiant, CraftGhast, CraftSkeleton, CraftFireball, CraftCaveSpider, CraftEnderman, CraftSilverfish, CraftBlaze, CraftEnderDragon, CraftMagmaCube, novalue;
@@ -34,9 +35,12 @@ enum e_monsters {
     public static e_monsters fromString(String Str) {
         try {
             return valueOf(Str);
+        } catch (RuntimeException rex){
+            MonkeyMod.reportException("RuntimeExcption within e_monsters.fromString()", rex);
         } catch (Exception ex) {
-            return novalue;
+            MonkeyMod.reportException("Exception within e_monsters.fromString()", ex);
         }
+        return novalue;
     }
 };
 
@@ -82,10 +86,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                         output = " got their brain eaten.";
                         break;
                     case CraftCreeper:
-                        output = " saw a sad, green face... Breifly.";
+                        output = " saw a sad, green face... Briefly.";
                         break;
                     case CraftSpider:
-                        output = " wasnt carrying spider repellent.";
+                        output = " wasn't carrying spider repellent.";
                         break;
                     case CraftPigZombie:
                         output = " upset a Pig Zombie.";
@@ -100,7 +104,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                         output = " was spotted by a ghast.";
                         break;
                     case CraftSkeleton:
-                        output = " was assaninated by a skelital archer.";
+                        output = " was assassinated by a skeletal archer.";
                         break;
                     case CraftFireball:
                         output = " should have called ghastbusters.";
@@ -131,7 +135,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
             }
         }else if (cause == DamageCause.FALL) {
             String m_fallDeath[] = {
-                " went bungie jumping... without the bungie.",
+                " went bungee jumping... without the bungee.",
                 " has poor depth perception.",
                 " wasn't wearing spring shoes.",
                 " believed they could fly... but they couldn't",
@@ -154,7 +158,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " smells like cooked pork.",
                 " cooked themselves.",
                 " stood in a fire.",
-                " thought they were a marshmellow.",
+                " thought they were a marshmallow.",
                 " is medium-rare.",
                 " thought they were the Human Torch.",
                 " died in a fire"
@@ -165,7 +169,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
             String m_fireTickDeath[] = {
                 " should have had a water-bucket.",
                 " didn't find water fast enough.",
-                " should have worn less-flamable clothing.",
+                " should have worn less-flammable clothing.",
                 " could have used some rain.",
                 " played with matches.",
                 " cooked themselves... slowly.",

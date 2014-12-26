@@ -3,10 +3,11 @@ package me.cppmonkey.monkeymod.listeners;
 import java.net.URLEncoder;
 import java.util.Locale;
 
+import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.Parm;
-import me.cppmonkey.monkeymod.callback.Login;
+import me.cppmonkey.monkeymod.http.callbacks.OnPlayerLogin;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -43,12 +44,15 @@ public class MonkeyModPlayerListener implements Listener {
                 new Parm("server_uid", m_plugin.serverUID)
             };
 
-            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new Login(m_plugin, player));
+            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new OnPlayerLogin(m_plugin, player));
 
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
 
-        } catch (Exception ex) {
+        } catch (RuntimeException rex){
+            // Shouldn't really cause any exceptions
+            MonkeyMod.reportException("RuntimeExcption within onPlayerJoin()", rex);
+        }catch (Exception ex) {
             // Shouldn't really cause any exceptions
             MonkeyMod.reportException("Exception within onPlayerJoin()", ex);
         }
@@ -90,8 +94,10 @@ public class MonkeyModPlayerListener implements Listener {
             HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms);
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
-        } catch (Exception e) {
-            MonkeyMod.reportException("",e); // TODO provide description
+        } catch (RuntimeException rex){
+            MonkeyMod.reportException("RuntimeExcption within onPlayerChat()", rex);
+        } catch (Exception ex) {
+            MonkeyMod.reportException("Exception within onPlayerChat()",ex);
         }
     }
 
@@ -119,6 +125,13 @@ public class MonkeyModPlayerListener implements Listener {
                          * NORTH: X++; break; case SOUTH: X--; break; case EAST:
                          * Z++; break; case WEST: Z--; break; default: break; }
                         */
+                        if( !m_plugin.getConfig().getBoolean("boxy.experimental")){
+                            BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
+                            BoxyRunner.playerBoxyClickEvent(player, block);
+                        }else{
+
+                        }
+
 
                     } catch (NullPointerException e) {
                         player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");

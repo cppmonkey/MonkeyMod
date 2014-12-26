@@ -3,9 +3,9 @@ package me.cppmonkey.monkeymod.commands;
 import java.util.Iterator;
 import java.util.List;
 import me.cppmonkey.monkeymod.MonkeyMod;
-import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.callback.CSelfUpdateCallback;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
