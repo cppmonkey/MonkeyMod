@@ -49,12 +49,12 @@ public class BoxyThread implements Runnable {
                 break;
             }
 
-            if(m_current.getZ() != m_end.getZ()){
+            if(m_current.getBlockZ() != m_end.getBlockZ()){
                 m_current.setZ(m_current.getZ()+1);
-            }else if(m_current.getY() != m_end.getY()) {
+            }else if(m_current.getBlockY() != m_end.getBlockY()) {
                 m_current.setY(m_current.getY()+1);
                 m_current.setZ(m_end.getZ());
-            }else if(m_current.getX() != m_end.getX()) {
+            }else if(m_current.getBlockX() != m_end.getBlockX()) {
                 m_current.setX(m_current.getX()+1);
                 m_current.setY(m_end.getY());
                 m_current.setZ(m_end.getZ());

@@ -3,7 +3,6 @@ package me.cppmonkey.monkeymod.listeners;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.callback.Login;
@@ -51,7 +50,7 @@ public class MonkeyModPlayerListener implements Listener {
 
         } catch (Exception ex) {
             // Shouldn't really cause any exceptions
-            MonkeyMod.reportException("Excption within onPlayerJoin()", ex);
+            MonkeyMod.reportException("Exception within onPlayerJoin()", ex);
         }
     }
 
@@ -109,9 +108,9 @@ public class MonkeyModPlayerListener implements Listener {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
                 } else {
 
-                            Block block = event.getClickedBlock();
+                    Block block = event.getClickedBlock();
 
-                            try {
+                    try {
 
                         /*
                          * /* //the switch compensates coords for the side of
@@ -121,11 +120,9 @@ public class MonkeyModPlayerListener implements Listener {
                          * Z++; break; case WEST: Z--; break; default: break; }
                         */
 
-                                BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
-                                BoxyRunner.playerBoxyClickEvent(player, block);
-                            } catch (NullPointerException e) {
-                                player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
-                                m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION FAILED!");
+                    } catch (NullPointerException e) {
+                        player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
+                        m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION FAILED!");
                     }
                 }
             }

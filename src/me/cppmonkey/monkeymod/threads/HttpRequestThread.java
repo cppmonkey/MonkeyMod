@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
  *
  * @author CppMonkey
  */
+@Deprecated
 public class HttpRequestThread extends Thread {
 
     public final static String name = "Http Request Thread";
@@ -112,7 +113,7 @@ public class HttpRequestThread extends Thread {
             urlConn.setDoOutput(true);
 
                 // Output to stream must occur before establishing connection
-                OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream());
+                OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream()); // TODO close stream properly try, catch, finally
                 wr.write("this=test");
                 wr.flush();
 

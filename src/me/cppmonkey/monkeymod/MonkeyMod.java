@@ -169,6 +169,8 @@ public class MonkeyMod extends JavaPlugin {
                 ConsoleCommandSender sender = getServer().getConsoleSender();
                 getServer().dispatchCommand(sender, "monkey uptodate");
             }
+        }catch(RuntimeException rex){
+            reportException("RuntimeException",rex);
         }catch(Exception ex){
             reportException("Error: Unknown error within MonkeyMod.java",ex);
         }

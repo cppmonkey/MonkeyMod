@@ -57,7 +57,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " shoved a cactus... but the cactus shoved back.",
                 " thought a cactus was something less dangerous..."
             };
-            int randomNum =  Math.floor(Math.random() * m_cactusDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_cactusDeath.length + 0.5f); // Includes rounding up/down
             return m_cactusDeath[randomNum];
         }else if (cause == DamageCause.ENTITY_ATTACK) {
             Player player = (Player) event.getEntity();
@@ -143,7 +143,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " saw something shiny... a long way down",
                 " fell to their death"
             };
-            int randomNum =  Math.floor(Math.random() * m_fallDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_fallDeath.length + 0.5f); // Includes rounding up/down
             return m_fallDeath[randomNum];
         }else if (cause == DamageCause.FIRE) {
             String m_fireDeath[] = {
@@ -159,7 +159,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " thought they were the Human Torch.",
                 " died in a fire"
             };
-            int randomNum =  Math.floor(Math.random() * m_fireDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_fireDeath.length + 0.5f); // Includes rounding up/down
             return m_fireDeath[randomNum];
         }else if (cause == DamageCause.FIRE_TICK) {
             String m_fireTickDeath[] = {
@@ -175,7 +175,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " needed water.",
                 " died while on fire."
             };
-            int randomNum =  Math.floor(Math.random() * m_fireTickDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_fireTickDeath.length + 0.5f); // Includes rounding up/down
             return m_fireTickDeath[randomNum];
         }else if (cause == DamageCause.LAVA) {
             String m_lavaDeath[] = {
@@ -191,7 +191,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " wanted obsidian... but did it wrong.",
                 " burnt in lava."
             };
-            int randomNum =  Math.floor(Math.random() * m_lavaDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_lavaDeath.length + 0.5f); // Includes rounding up/down
             return m_lavaDeath[randomNum];
         }else if (cause == DamageCause.DROWNING) {
             String m_drowningDeath[] = {
@@ -207,7 +207,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " thought they were a fish.",
                 " drowned"
             };
-            int randomNum =  Math.floor(Math.random() * m_drowningDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_drowningDeath.length + 0.5f); // Includes rounding up/down
             return m_drowningDeath[randomNum];
         }else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
             String m_explosionDeath[] = {
@@ -220,10 +220,9 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " is now in orbit.",
                 " didn't understand the term 'blast-radius' means.",
                 " should have stayed further away from the big explosion.",
-                " got blown up.",
                 " got blown up."
             };
-            int randomNum =  Math.floor(Math.random() * m_explosionDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_explosionDeath.length + 0.5f); // Includes rounding up/down
             return m_explosionDeath[randomNum];
         }else if (cause == DamageCause.VOID) {
             String m_voidDeath[] = {
@@ -239,7 +238,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " thought bedrock was there for show.",
                 " fell into the void."
             };
-            int randomNum =  Math.floor(Math.random() * m_voidDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_voidDeath.length + 0.5f); // Includes rounding up/down
             return m_voidDeath[randomNum];
         }else if (cause == DamageCause.CUSTOM) {
             String m_customDeath[] = {
@@ -248,7 +247,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
                 " was killed by something unusual.",
                 " died at the hands of an unknown source"
             };
-            int randomNum =  Math.floor(Math.random() * m_customDeath.length + 0.5d); // Includes rounding up/down
+            int randomNum =  (int) Math.round(Math.random() * m_customDeath.length + 0.5f); // Includes rounding up/down
             return m_customDeath[randomNum];
         }
         return " died!";
