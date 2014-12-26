@@ -25,25 +25,24 @@ class Player{
                         $this->m_id = $row['player_id'];
                     }
                 } else {
+                    $query = sprintf( "
+                            INSERT INTO `mc_players` (
+                            `player_name`,
+                            `player_email`
+                    )
+                            VALUES (
+                            '%s', ''
+                    );
+                             
+                            ", $dblink->real_escape_string( $this->m_Name )
+                    );
 
-            $query = sprintf( "
-                    INSERT INTO `mc_players` (
-                    `player_name`,
-                    `player_email`
-            )
-                    VALUES (
-                    '%s', ''
-            );
-                     
-                    ", $dblink->real_escape_string( $this->m_Name )
-            );
-
-            if( $results = $dblink->query( $query ) ){
-                $this->m_id = $dblink->insert_id;
-            } else {
-                ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
-            }
-        }
+                    if( $results = $dblink->query( $query ) ){
+                        $this->m_id = $dblink->insert_id;
+                    } else {
+                        ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
+                    }
+                }
             } else {
                 ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
             }

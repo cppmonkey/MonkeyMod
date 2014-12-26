@@ -122,7 +122,7 @@ class Minecraft {
                 $server->GetAdminPass(),
                 $server->GetOwnerId()
         );
-
+        
         
         if($dblink->query($query)) {
             echo "insert complete!\n";
