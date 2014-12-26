@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
 include "config.php";
-include "minecraft.class.php";
+include "./lib/minecraft.class.php";
 
 function ReportError( $strMsg = "" ){
     $mailTo = "paul@cppmonkey.net";
@@ -91,19 +91,17 @@ if( isset($_GET["action"]) && $server ) {
                 ( $action == CONNECT || $action == DISCONNECT || $action == CHEST || $action == MODIFY || $action == TOWER || $action == IGNITE )) {
 
             $query = sprintf(
-                    "INSERT INTO `mc_transition` ( `player_id`, `server_id`, `action`, `timestamp` )
-                    VALUES
-                    ('%d', '%d', '%d', UTC_TIMESTAMP() )",
-                    $player->GetId(),
+                    "CALL LogPlayerAction('%d', '%d', '%d', UTC_TIMESTAMP())",
                     $server->GetId(),
+                    $player->GetId(),
                     $action
             );
         } else if( isset($_GET["message"])) {
             $query = sprintf(
-                    "INSERT INTO `mc_chat` (`player_id`, `server_id`, `chat_message`, `chat_date`) VALUES ( '%d', '%d', '%s', UTC_TIMESTAMP());",
-                    $player->GetId(),
+                    "CALL LogPlayerChat( '%d', '%d', '%s', UTC_TIMESTAMP());",
                     $server->GetId(),
-                    $dblink->real_escape_string( $_GET["message"])
+                    $player->GetId(),
+                    $_GET["message"]
             );
         }
         
@@ -115,11 +113,11 @@ if( isset($_GET["action"]) && $server ) {
         $package = new CServerPackage($_GET);
 
         $query = sprintf(
-                "INSERT INTO `mc_serverPackageStart` (`server_id`, `package_id`, `package_version`, `package_build`, `time`) VALUES ('%d', '%d', '%s', '%s', UTC_TIMESTAMP())",
+                "CALL LogServerPackageStart('%d', '%d', '%s', '%s', UTC_TIMESTAMP())",
                 $server->GetId(),
                 2, // TODO Get Plugin ID
-                $dblink->real_escape_string($_GET["version"]),
-                $dblink->real_escape_string($_GET["build"])
+                $_GET["version"],
+                $_GET["build"]
         );
         /* TODO Process this information! Ignite
          *

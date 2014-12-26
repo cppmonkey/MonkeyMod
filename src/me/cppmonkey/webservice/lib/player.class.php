@@ -25,16 +25,8 @@ class Player{
                         $this->m_id = $row['player_id'];
                     }
                 } else {
-                    $query = sprintf( "
-                            INSERT INTO `mc_players` (
-                            `player_name`,
-                            `player_email`
-                    )
-                            VALUES (
-                            '%s', ''
-                    );
-                             
-                            ", $dblink->real_escape_string( $this->m_Name )
+                    $query = sprintf( "CALL NewPlayer( '%s'); ",
+                            $dblink->real_escape_string( $this->m_Name )
                     );
 
                     if( $results = $dblink->query( $query ) ){
@@ -106,7 +98,9 @@ class Player{
                 SELECT `permission`, `value`
                 FROM `mc_permissions`
                 WHERE `player_id` = '%d' AND `server_id` = '%d'
-                ", $this->m_id, $server_id );
+                ",
+                $this->m_id,
+                $server_id );
 
         if( $results = $dblink->query( $query ) )
         {

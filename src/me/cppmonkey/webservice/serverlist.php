@@ -2,7 +2,7 @@
 
 include "config.php";
 
-include "minecraft.class.php";
+include "./lib/minecraft.class.php";
 
 $servers = new Minecraft();
 $servers->BuildServerList();

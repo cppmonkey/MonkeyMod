@@ -56,14 +56,6 @@ class Minecraft {
         }
     }// End BuildServerList()
 
-    function Dump() {
-        foreach( $this->servers as &$server ) {
-            echo sprintf( "<div>%s</div>",
-                    $server->GetTitle()
-            );
-        }
-    }
-
     function DumpJSON() {
         echo "[";
 

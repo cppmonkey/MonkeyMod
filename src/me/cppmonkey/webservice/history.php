@@ -3,7 +3,7 @@ error_reporting(E_ALL | E_STRICT);
 
 include "config.php";
 
-include "minecraft.class.php";
+include "./lib/minecraft.class.php";
 
 if (!isset($dblink)) {
     $dblink = new mysqli( $dbserver, $dbuser, $dbpass, $dbname );

@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `mc_players` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(32) NOT NULL,
+	`email` TEXT NULL DEFAULT NULL,
+	`last_action` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `player_name` (`name`)
+)ENGINE=InnoDB;
