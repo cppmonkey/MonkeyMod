@@ -94,7 +94,7 @@ class Minecraft {
         return 0;
     }
 
-    function CreateServer( $ip, $port ) {
+    function CreateServer( $ip ) {
         Global $dblink;
 
         $server = new MinecraftServer( array(
@@ -102,8 +102,8 @@ class Minecraft {
                 "title" => $ip,
                 "address" => $ip,
                 "server_ip" => $ip,
-                "game_port" => $port-10,
-                "admin_port" => $port,
+                "game_port" => isset($_GET['port']) ? $_GET['port']:$_GET['rcon-port']-10,
+                "admin_port" => isset($_GET['port']) ? $_GET['port']+10:$_GET['rcon-port'],
                 "admin_password" => "",
                 "owner_id" => 0
         ));
@@ -123,7 +123,13 @@ class Minecraft {
                 $server->GetOwnerId()
         );
 
-        $dblink->query( $query );
+        
+        if($dblink->query($query)) {
+            echo "insert complete!\n";
+        } else {
+            echo "unable to insert<br>".$query."<br>".print_r($dblink->error_list,true);
+            ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
+        }
 
          
         array_push($this->servers, $server);

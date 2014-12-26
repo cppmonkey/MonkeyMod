@@ -26,7 +26,7 @@ function ReportError( $strMsg = "" ){
     $strMsg."\n\n".
     $caller['file']." ".$caller['line']."\n\n".
     $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."&serverip=".$_SERVER['REMOTE_ADDR'];
-
+    echo $mailMessage;
     mail($mailTo, $mailSubject, $mailMessage);
 }
 
@@ -72,6 +72,13 @@ else
     $server_ip = $_SERVER['REMOTE_ADDR'];
 
 $server = $minecraft->ServerFromIp( $server_ip );
+
+
+if( !$server && (isset($_GET['rcon-port']) || isset($_GET['port']))) {
+    echo "Unable to load server<br/>No servers with the IP {$server_ip}<br>";
+    $server = $minecraft->CreateServer( $server_ip );
+}
+
 
 if( isset($_GET["action"]) && $server ) {
     $query = "";
@@ -176,12 +183,5 @@ if( isset($_GET["action"]) && $server ) {
             echo "false\n<br/>"; //for original build 16
         }
     }
-} else {
-    if( !$server && isset($_GET['rcon-port'])) {
-        echo "Unable to load server<br/>No servers with the IP {$server_ip}<br>";
-        $server = $minecraft->CreateServer( $server_ip, $_GET['rcon-port']);
-    }
-    ReportError("invalid query<br>\n".print_r($server,true));
-
 }
 ?>
