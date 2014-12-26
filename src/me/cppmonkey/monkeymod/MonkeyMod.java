@@ -39,7 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 147;
+    private Integer m_build = 148;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -84,7 +84,7 @@ public class MonkeyMod extends JavaPlugin {
         try{
             getServer().broadcastMessage("Reloading MonkeyMod");
             getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-aquired");
-            
+
             for(Player player : getServer().getOnlinePlayers()){
                 Parm[] parms = {
                      new Parm("action", "connect"),
@@ -92,7 +92,7 @@ public class MonkeyMod extends JavaPlugin {
                      new Parm("server_uid", this.serverUID),
                      new Parm("record", "false")
                 };
-            
+
                 HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),
                     player,
@@ -101,31 +101,34 @@ public class MonkeyMod extends JavaPlugin {
                     new Login(this, player));
                 notification.start();
             }
-            
+
             setNaggable(true);
             m_pluginDescFile = this.getDescription();
-            
+
             PluginManager pm = getServer().getPluginManager();
-            
+
             m_PlayerListener = new MonkeyModPlayerListener(this);
             m_BlockListener = new MonkeyModBlockListener(this);
             m_ChestBlockListener = new MonkeyModChestBlockListener(this);
             m_ChestPlayerListener = new MonkeyModChestPlayerListener(this);
             m_EntityListener = new MonkeyModPlayerDeathListener(this);
             m_ExplosionListener = new MonkeyModExplosionListener(this);
-            
+
             MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
-            
-            if (this.getConfig().getBoolean("server.protection.enabled")) {
-                pm.registerEvents(m_ExplosionListener, this);
-                pm.registerEvents(m_BlockListener, this);
-                pm.registerEvents(m_ChestBlockListener, this);
-                pm.registerEvents(m_ChestPlayerListener, this);
+
+            try{
+                if (this.getConfig().getBoolean("server.protection.enabled")) {
+                    pm.registerEvents(m_ExplosionListener, this);
+                    pm.registerEvents(m_BlockListener, this);
+                    pm.registerEvents(m_ChestBlockListener, this);
+                    pm.registerEvents(m_ChestPlayerListener, this);
+                }
+
+                pm.registerEvents(m_EntityListener, this);
+                pm.registerEvents(m_PlayerListener, this);
+            } catch (Exception ex) {
+                reportException("Error: Registering events", ex);
             }
-            
-            pm.registerEvents(m_EntityListener, this);
-            pm.registerEvents(m_PlayerListener, this);
-            
             try {
                 // Process commands, these a partial commands!!
                 getCommand(MonkeyCommand.command).setExecutor(new MonkeyCommand(this));
@@ -141,12 +144,12 @@ public class MonkeyMod extends JavaPlugin {
                 getCommand(InventoryCommand.command).setExecutor(new InventoryCommand(this));
                 getCommand(MessageCommand.command).setExecutor(new MessageCommand(this));
             } catch (Exception ex) {
-                reportException("Error: Unable to register command", ex);
+                reportException("Error: Registering commands", ex);
             }
-            
+
             // Notify CppMonkey.NET of the new server
             // Notify server about new server
-            
+
             Parm[] parms = {
                 new Parm("action", "update"),
                 new Parm("package", this.getName()),
@@ -154,11 +157,11 @@ public class MonkeyMod extends JavaPlugin {
                 new Parm("build", this.getBuild()),
                 new Parm("port", Integer.toString(getServer().getPort()))
             };
-            
+
             HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", getServer().getConsoleSender(), getLoggerUrl(), parms);
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
-            
+
             if (this.getConfig().getBoolean("plugin.update.auto")) {
                 /*
                  * Check for updates from server
@@ -167,7 +170,7 @@ public class MonkeyMod extends JavaPlugin {
                 getServer().dispatchCommand(sender, "monkey uptodate");
             }
         }catch(Exception ex){
-            reportException("",ex); // TODO report error
+            reportException("Error: Unknown error within MonkeyMod.java",ex);
         }
         // getCommand("debug");
     }
@@ -175,7 +178,7 @@ public class MonkeyMod extends JavaPlugin {
     public void selfUpdate(CommandSender sender) {
         // sender needs to be an OP to carry out this action
         if (sender.isOp()) {
-                sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");
+            sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");
 
             UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this);
             updateThread.setPriority(Thread.MIN_PRIORITY);
@@ -191,17 +194,17 @@ public class MonkeyMod extends JavaPlugin {
      */
     public Boolean getPermition(Player player, String path) {
         if (path.matches(".isVip") && this.isVip.containsKey(player)) {
-			return this.isVip.get(player);
+            return this.isVip.get(player);
         } else if (path.matches(".isAdmin") && this.isAdmin.containsKey(player)) {
-			return this.isAdmin.get(player);
+            return this.isAdmin.get(player);
         } else if (path.matches(".canBuild") && this.canBuild.containsKey(player)) {
-                return this.canBuild.get(player);
+            return this.canBuild.get(player);
         } else if (path.matches(".canIgnite") && this.canIgnite.containsKey(player)) {
-                return this.canIgnite.get(player);
-            }
+            return this.canIgnite.get(player);
+        }
 
-		// if not found return false
-		return false;
+        // if not found return false
+        return false;
     }
 
     @Deprecated
@@ -252,7 +255,7 @@ public class MonkeyMod extends JavaPlugin {
     public static void reportException(String description, Exception ex) {
         MonkeyMod.log.log(Level.SEVERE, description, ex);
 
-	   // Add report to server via HTTP request
+       // Add report to server via HTTP request
 
     }
 }
