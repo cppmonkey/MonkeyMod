@@ -1,0 +1,27 @@
+#results {
+	border: 2px solid red;
+}
+
+fieldset, #results {
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+}
+
+tr.alt td {
+	background: #ecf6fc;
+}
+
+tr.alt td {
+	background: #bcd4ec;
+}
+
+#chat thead td {
+	background: #0D5995;
+}
+
+select, input.text {
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}

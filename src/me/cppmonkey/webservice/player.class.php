@@ -7,13 +7,14 @@ class Player{
 
     function Player() {
         Global $dblink;
-
-        if(isset($_GET['player'])){
+        if(isset($_GET['player_id'])){
+            $this->m_id = $_GET['player_id'];
+        } else if(isset($_GET['player'])){
             $this->m_Name = $_GET['player'];
 
             $query = sprintf( "
                     SELECT `player_id`
-                    FROM `killerabbit`.`mc_players`
+                    FROM `mc_players`
                     WHERE `player_name` = '%s'
                     ", $dblink->real_escape_string( $this->m_Name )
             );
@@ -24,23 +25,9 @@ class Player{
                         $this->m_id = $row['player_id'];
                     }
                 } else {
-                    $this->m_id = -1;
-                }
-            } else {
-                ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
-            }
-        }
-
-        if(isset($_GET['player_id'])){
-            $this->m_id = $_GET['player_id'];
-        }
-
-        if( $this->m_id == -1 ) {
-            // Create new Player
-            Global $dblink;
 
             $query = sprintf( "
-                    INSERT INTO `killerabbit`.`mc_players` (
+                    INSERT INTO `mc_players` (
                     `player_name`,
                     `player_email`
             )
@@ -57,8 +44,10 @@ class Player{
                 ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
             }
         }
-
-
+            } else {
+                ReportError("unable to insert<br>".$query."<br>".print_r($dblink->error_list,true));
+            }
+        }
     }
 
     function GetId() {
@@ -70,7 +59,7 @@ class Player{
 
         $query = sprintf( "
                 SELECT *
-                FROM `killerabbit`.`mc_subscription`
+                FROM `mc_subscription`
                 WHERE `player` = '%s' AND `expired` = 0
                 ", $dblink->real_escape_string( $this->m_Name )
         );
@@ -116,7 +105,7 @@ class Player{
 
         $query = sprintf( "
                 SELECT `permission`, `value`
-                FROM `killerabbit`.`mc_permissions`
+                FROM `mc_permissions`
                 WHERE `player_id` = '%d' AND `server_id` = '%d'
                 ", $this->m_id, $server_id );
 

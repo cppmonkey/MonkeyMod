@@ -141,7 +141,7 @@ if( isset($_GET["action"]) && $server ) {
     }
 
     if($_GET["action"] == "connect") {
-        $player = new Player( $_GET['player'] );
+        $player = new Player();
         $permissions = $player->GetPermissions( $server->GetId() );
 
         // Print out permisions

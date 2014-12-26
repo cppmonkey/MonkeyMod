@@ -35,7 +35,7 @@ public class MonkeyModExplosionListener implements Listener {
                 if (entity instanceof LivingEntity) {
                     LivingEntity newEntity = (LivingEntity) entity;
                     newEntity.damage(5, killer);
-            }
+                }
             }
 
             event.getEntity().remove();

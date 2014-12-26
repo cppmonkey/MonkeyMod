@@ -3,62 +3,43 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>http request test forms</title>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript" src="./js/testforms.js"></script>
-<style type="text/css">
-#results {
-	border: 2px solid red;
-}
-
-fieldset, #results {
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-}
-
-tr.alt td {
-	background: #ecf6fc;
-}
-
-tr.alt td {
-	background: #bcd4ec;
-}
-
-#chat thead td {
-	background: #0D5995;
-}
-
-select, input.text {
-	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="./css/testforms.css" />
 </head>
 <body>
     <div>
-        <fieldset>
-            <legend>Simulate Chat</legend>
+		<img src="./img/logo.png" alt="CppMonkey.NET Logo. what can I say, we like bananas!" />
+	</div>
+    <div id="tabs">
+		<ul>
+			<li><a href="#server-history"><span>Server History</span></a></li>
+			<li><a href="#simulate-chat"><span>Simulate Chat</span></a></li>
+			<li><a href="#simulate-connection"><span>Simulate Connection</span></a></li>
+			<li><a href="#simulate-modify"><span>Simulate Modify</span></a></li>
+			<li><a href="#simulate-server-start"><span>Simulate Server Start</span></a></li>
+			<li><a href="#view-user-access"><span>View User Access</span></a></li>
+		</ul>
+        <div id="simulate-chat">
             <form id="usermessage">
                 <input type="hidden" name="action" value="message" />
                 <label for="serveripmessage">Server<select id="serveripmessage" name="serverip"></select></label>
-                <label for="playermessage">Player<select id="playermessage" name="player"></select></label>
+                <label for="playermessage">Player<select id="playermessage" name="player_id"></select></label>
                 <label for="message">Message<input type="text" id="message" name="message" value="Ajax test" /></label>
                 <input type="submit" />
             </form>
-        </fieldset>
-        <fieldset>
-            <legend>Simulate Connection</legend>
+        </div>
+        <div id="simulate-connection">
             <form id="userconnect">
                 <input type="hidden" name="action" value="connect" />
                 <label for="serveripconnect">Server<select id="serveripconnect" name="serverip"></select></label>
                 <label for="playerconnect">Player<select id="playerconnect" name="player" ></select></label>
                 <input type="submit" />
             </form>
-        </fieldset>
-        <fieldset>
-            <legend>Simulate Modify</legend>
+        </div>
+        <div id="simulate-modify">
             <form id="usermodify">
                 <input type="hidden" name="action" value="modify" />
                 <label>Server<select id="serveripmodify" name="serverip"></select></label>
@@ -67,9 +48,8 @@ select, input.text {
                 <label>Remove<input type="radio" id="type" name="type_modifty" value="remove" /></label>
                 <input type="submit" />
             </form>
-        </fieldset>
-        <fieldset>
-        <legend>Simulate Server Start</legend>
+        </div>
+        <div id="simulate-server-start">
         <form id="serverstart">
                 <input type="hidden" name="action" value="update" />
 	                <label>Server<select id="serveripstart" name="serverip"></select></label>
@@ -78,15 +58,8 @@ select, input.text {
 	                <label>Build<input type="text" id="build" name="build" value="144" /></label>
                 <input type="submit" />
         </form>
-        </fieldset>
-        <fieldset>
-            <legend>Add User</legend>
-            <form id="adduser">
-                <input type="hidden" name="action" value="" /> <select id="severipadduser" name="serverip"></select>
-            </form>
-        </fieldset>
-        <fieldset>
-            <legend>Edit User Access</legend>
+        </div>
+        <div id="view-user-access">
             <form id="edituseraccess">
                 <input type="hidden" name="action" value="" /> <select id="severipedituseraccess" name="serverip"></select>
                 <select id="serverknownusersedituseraccess" name="serverknownusers" size="7" multiple="multiple"></select>
@@ -96,9 +69,8 @@ select, input.text {
                 <label>canIgnite<input id="edituseraccesscanIgnite" name="canIgnite" type="checkbox" /></label>
                 <input type="submit" disabled="disabled"/>
             </form>
-        </fieldset>
     </div>
-    <div>
+    <div id="server-history">
         <form id="serverhistory">
             <label for="serveriphistory">Server<select id="serveriphistory" name="serveriphistory"></select></label>
             <label><select id="historylimit" name="limit">
@@ -110,6 +82,8 @@ select, input.text {
             <input type="button" id="refreshserveriphistory" value="Refresh" />
         </form>
     </div>
+    </div>
+
     <div id="results" class="results">
         <table id="chat">
             <thead>
