@@ -5,6 +5,7 @@ import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 public class MonkeyModBlockListener implements Listener {
 
@@ -81,6 +83,12 @@ public class MonkeyModBlockListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onBlockChange(EntityChangeBlockEvent event){
+        if(event.getEntityType().equals(EntityType.ENDERMAN)){
+            event.setCancelled(true);
+        }
+    }
     @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
         Player player = event.getPlayer();

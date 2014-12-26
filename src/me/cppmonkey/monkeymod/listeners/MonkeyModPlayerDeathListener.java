@@ -21,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
  *
@@ -259,7 +260,8 @@ public class MonkeyModPlayerDeathListener implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
-            m_plugin.getServer().broadcastMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + deathDescription(event));
+            PlayerDeathEvent playerevent = (PlayerDeathEvent)event;
+            playerevent.setDeathMessage(ChatColor.GOLD + ((Player) event.getEntity()).getName() + deathDescription(event));
         }
     }
 
