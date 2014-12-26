@@ -45,10 +45,10 @@ public class MonkeyModPlayerListener implements Listener {
             Parm[] parms = {
                 new Parm("action", "connect"),
                 new Parm("player", player.getName()),
-                new Parm("server_uid", m_plugin.serverUID)
+                new Parm("server_uid", m_plugin.getServerUID())
             };
 
-            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new OnPlayerLogin(m_plugin, player));
+            HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), m_plugin.getLoggerUrl(), parms, new OnPlayerLogin(m_plugin, player));
 
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
@@ -69,10 +69,10 @@ public class MonkeyModPlayerListener implements Listener {
         // reporting to cppmonkey.net
         Parm[] parms = {
             new Parm("action", "disconnect"),
-            new Parm("server_uid", m_plugin.serverUID),
-            new Parm("player_id", m_plugin.playerUIDs.get(player).toString())
+            new Parm("server_uid", m_plugin.getServerUID()),
+            new Parm("player_id", m_plugin.getPlayerUID(player).toString())
         };
-        HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, false);
+        HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), m_plugin.getLoggerUrl(), parms);
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
 
@@ -91,11 +91,11 @@ public class MonkeyModPlayerListener implements Listener {
         try {
             Parm parms[] = {
                 new Parm("action", "message"),
-                new Parm("player_id", m_plugin.playerUIDs.get(player).toString()),
-                new Parm("server_uid", m_plugin.serverUID),
+                new Parm("player_id", m_plugin.getPlayerUID(player).toString()),
+                new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
-            HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms);
+            HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), m_plugin.getLoggerUrl(), parms);
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         } catch (RuntimeException rex){

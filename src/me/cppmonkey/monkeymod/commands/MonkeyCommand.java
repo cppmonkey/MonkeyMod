@@ -43,7 +43,7 @@ public class MonkeyCommand implements CommandExecutor {
                 };
 
                 // Create http request thread
-                HttpRequestThread updateQuery = new HttpRequestThread("uptodate", sender, "http://cppmonkey.net/monkeymod/ajax.php", parms, new CSelfUpdateCallback(m_plugin, sender));
+                HttpRequestThread updateQuery = new HttpRequestThread("uptodate", "http://cppmonkey.net/monkeymod/ajax.php", parms, new CSelfUpdateCallback(m_plugin, sender));
                 // Start the thread
                 updateQuery.start();
 
@@ -70,7 +70,7 @@ public class MonkeyCommand implements CommandExecutor {
             if ("setvar".equalsIgnoreCase(args[0])) {
                 // process setvar commands
                 String[] stringOptions = {
-                        "plugin.update.url", "logger.url"
+                    "plugin.update.url", "logger.url"
                 };
 
                 if (args.length == 3) {
@@ -143,7 +143,7 @@ public class MonkeyCommand implements CommandExecutor {
             if (args.length == 3) {
                 // Must be admin to add users
                 if (sender instanceof Player && !m_plugin.getPermition((Player) sender,".isAdmin")) {
-                        sender.sendMessage("You do not have permission to do that");
+                    sender.sendMessage("You do not have permission to do that");
                     return true;
                 }
 
@@ -153,42 +153,42 @@ public class MonkeyCommand implements CommandExecutor {
                     if ("add".equalsIgnoreCase(args[0]) || "remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
 
                         Player grantToPlayer = m_plugin.getServer().getPlayer(args[2]);
-                        Parm player_id = new Parm("player_id", sender instanceof Player ? m_plugin.playerUIDs.get((Player)sender):-1);
+                        Parm player_id = new Parm("player_id", sender instanceof Player ? m_plugin.getPlayerUID((Player)sender):-1);
                         Boolean grant = "add".equalsIgnoreCase(args[0]);
 
                         if( grantToPlayer == null ) {
-                        sender.sendMessage("Unable to find player called "+ args[2]);
-                        return true;
-                        }Parm permission = new Parm("add".equalsIgnoreCase(args[2])?"add":"remove","user");
-
-                    if ("user".equalsIgnoreCase(args[1])) {
-                            if (!m_plugin.canBuild.containsKey(grantToPlayer)) {
-                                m_plugin.canBuild.put(grantToPlayer, grant);
+                            sender.sendMessage("Unable to find player called "+ args[2]);
+                            return true;
                         }
-                            sender.sendMessage("User player '" + grantToPlayer.getName() + "' added");
+                        Parm permission = new Parm("add".equalsIgnoreCase(args[2])?"add":"remove","user");
+                    if ("user".equalsIgnoreCase(args[1])) {
+                        if (!m_plugin.canBuild.containsKey(grantToPlayer)) {
+                            m_plugin.canBuild.put(grantToPlayer, grant);
+                        }
+                        sender.sendMessage("User player '" + grantToPlayer.getName() + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                            m_plugin.isVip.put(grantToPlayer, grant);
-                            m_plugin.canBuild.put(grantToPlayer, grant);
-                            permission.setValue("vip");
-                            sender.sendMessage("Vip player '" + grantToPlayer.getName() + "' added");
+                        m_plugin.isVip.put(grantToPlayer, grant);
+                        m_plugin.canBuild.put(grantToPlayer, grant);
+                        permission.setValue("vip");
+                        sender.sendMessage("Vip player '" + grantToPlayer.getName() + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                            m_plugin.isAdmin.put(grantToPlayer, grant);
-                            m_plugin.canBuild.put(grantToPlayer, grant);
-                            permission.setValue("admin");
-                            sender.sendMessage("Admin player '" + grantToPlayer.getName() + "' added");
+                        m_plugin.isAdmin.put(grantToPlayer, grant);
+                        m_plugin.canBuild.put(grantToPlayer, grant);
+                        permission.setValue("admin");
+                        sender.sendMessage("Admin player '" + grantToPlayer.getName() + "' added");
                     } else {
                         return false;
                     }
 
                     Parm[] parms = {
                         new Parm("action", "modify"),
-                                new Parm("grant_to_id", m_plugin.playerUIDs.get(grantToPlayer)), // This is the Granted By ID
-                                new Parm("server_uid", m_plugin.serverUID),
-                                player_id,						
+                        new Parm("grant_to_id", m_plugin.getPlayerUID(grantToPlayer)), // This is the Granted By ID
+                        new Parm("server_uid", m_plugin.getServerUID()),
+                        player_id,
                         permission
                     };
 
-                        HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + grantToPlayer.getName(), sender, m_plugin.getLoggerUrl(), parms);
+                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + grantToPlayer.getName(), m_plugin.getLoggerUrl(), parms);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                     return true;
@@ -205,7 +205,7 @@ public class MonkeyCommand implements CommandExecutor {
                     sender.sendMessage(player.getName() + ".canIgnite: " + m_plugin.getPermition(player,".canIgnite"));
                     sender.sendMessage(player.getName() + ".isAdmin: " + m_plugin.getPermition(player,".isAdmin"));
                     sender.sendMessage(player.getName() + ".isVip: " + m_plugin.getPermition(player,".isVip"));
-                    sender.sendMessage(player.getName() + ".UID: " + m_plugin.playerUIDs.get(player));
+                    sender.sendMessage(player.getName() + ".UID: " + m_plugin.getPlayerUID(player));
                 } else {
                     sender.sendMessage("User is offline");
                 }

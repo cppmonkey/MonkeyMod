@@ -39,7 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 148;
+    private Integer m_build = 150;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -61,9 +61,18 @@ public class MonkeyMod extends JavaPlugin {
     public final HashMap<Material, Boolean> canSpawn = new HashMap<Material, Boolean>();
 
     // Server Details
-    public Integer serverUID = 0;
+    private Integer serverUID = 0;
 
-    public HashMap<Player, Integer> playerUIDs = new HashMap<Player, Integer>();
+    private final HashMap<Player, Integer> playerUIDs = new HashMap<Player, Integer>();
+
+    public Integer getPlayerUID(Player player){
+        return playerUIDs.get(player);
+    }
+
+    public void addPlayerUID(Player player, Integer uid) {
+        playerUIDs.put(player, uid);
+
+    }
 
     public void onDisable() {
 
@@ -95,7 +104,6 @@ public class MonkeyMod extends JavaPlugin {
 
                 HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),
-                    player,
                     this.getLoggerUrl(),
                     parms,
                     new OnPlayerLogin(this, player));
@@ -162,7 +170,7 @@ public class MonkeyMod extends JavaPlugin {
                 new Parm("port", Integer.toString(getServer().getPort()))
             };
 
-            HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", getServer().getConsoleSender(), getLoggerUrl(), parms);
+            HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", getLoggerUrl(), parms);
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
 
@@ -248,6 +256,14 @@ public class MonkeyMod extends JavaPlugin {
         }
 
         return names;
+    }
+
+    public Integer getServerUID() {
+        return serverUID;
+    }
+
+    public void setServerUID(Integer uid) {
+        serverUID = uid;
     }
 
     public static void reportException(String description, Exception ex) {

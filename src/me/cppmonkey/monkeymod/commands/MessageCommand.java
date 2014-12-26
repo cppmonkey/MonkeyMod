@@ -44,17 +44,15 @@ public class MessageCommand implements CommandExecutor {
                         String message = URLEncoder.encode(Details[1], "UTF-8");
                         Parm[] parms = {
                             new Parm("action", "offline"),
-                            new Parm("player_id", m_plugin.playerUIDs.get(player)),
-                            new Parm("server_uid", m_plugin.serverUID),
+                            new Parm("player_id", m_plugin.getPlayerUID(player)),
+                            new Parm("server_uid", m_plugin.getServerUID()),
                             new Parm("recipient",to),
                             new Parm("message", message)
                         };
                         HttpRequestThread notification = new HttpRequestThread(
                             "Connection Notification Thread:" + player.getName(),
-                            player,
                             m_plugin.getLoggerUrl(),
-                            parms,
-                            false);
+                            parms);
                         notification.setPriority(Thread.MIN_PRIORITY);
                         notification.start();
                         sender.sendMessage("Message sent! Message will be transmitted on next logon.");

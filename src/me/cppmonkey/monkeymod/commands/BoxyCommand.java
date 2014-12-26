@@ -115,16 +115,14 @@ public class BoxyCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
                     Parm[] parms = {
                         new Parm("action", "boxy-attempt"),
-                        new Parm("player_id", m_plugin.playerUIDs.get(player)),
-                        new Parm("server_uid", m_plugin.serverUID),
+                        new Parm("player_id", m_plugin.getPlayerUID(player)),
+                        new Parm("server_uid", m_plugin.getServerUID()),
                         new Parm("data", player.getLocation().getX()+","+player.getLocation().getY()+","+player.getLocation().getZ())
                     };
                     HttpRequestThread notification = new HttpRequestThread(
                         "Connection Notification Thread:" + player.getName(),
-                        player,
                         m_plugin.getLoggerUrl(),
-                        parms,
-                        false);
+                        parms);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                     return true;

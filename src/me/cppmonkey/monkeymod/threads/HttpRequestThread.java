@@ -12,8 +12,6 @@ import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 import me.cppmonkey.monkeymod.utils.Parm;
 
-import org.bukkit.command.CommandSender;
-
 /**
  *
  * @author CppMonkey
@@ -22,86 +20,27 @@ import org.bukkit.command.CommandSender;
 public class HttpRequestThread extends Thread {
 
     public final static String name = "Http Request Thread";
-    public final static String version = "1.4.1";
-    private CommandSender m_ThreadOwner;
+    public final static String version = "1.5";
     private URL m_url;
-    private boolean m_debug;
-    // New for Bukkit
+
     private IThreadCallback m_callback = null;
 
-    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms) {
-
-        m_ThreadOwner = player;
-        m_debug = false;
-
-        try {
-            m_url = new URL(url + parseUrlParms(parms));
-        } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
-        }
+    public HttpRequestThread(String id, String url, Parm[] parms) {
+        buildUrl(url, parms);
     }
 
-    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, IThreadCallback callback) {
+    public HttpRequestThread(String id, String url, Parm[] parms, IThreadCallback callback) {
         m_callback = callback;
+        buildUrl(url, parms);
+        }
 
-        m_ThreadOwner = player;
-        m_debug = false;
-
+    private void buildUrl(String url, Parm parms[]) {
         try {
             m_url = new URL(url + parseUrlParms(parms));
+        } catch (RuntimeException rex){
+            MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run()", rex);
         } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
-        }
-    }
-
-    public HttpRequestThread(String id, CommandSender player, String url, Parm[] parms, Boolean debug) {
-
-        m_ThreadOwner = player;
-        m_debug = debug;
-
-        try {
-            m_url = new URL(url + parseUrlParms(parms));
-        } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
-        }
-
-        if (m_debug) {
-            message(getName());
-            message("url: " + url);
-            message("parms: " + parseUrlParms(parms));
-        }
-
-    }
-
-    public HttpRequestThread(String id, String url, Parm parms[], boolean debug) {
-        super(id);
-
-        m_ThreadOwner = null;
-        m_debug = debug;
-
-        if (m_debug) {
-            message(getName());
-            message("url: " + url);
-            message("parms: " + parseUrlParms(parms));
-        }
-
-        try {
-            m_url = new URL(url + parseUrlParms(parms));
-        } catch (MalformedURLException e) {
-            message("HttpRequestThread() Exception");
-            message(e.getMessage());
-        }
-
-    }
-
-    private void message(String msg) {
-        if (m_ThreadOwner != null) {
-            m_ThreadOwner.sendMessage(msg);
-        } else {
-            MonkeyMod.log.info(msg);
+            MonkeyMod.reportException("HttpRequestThread() Exception", e);
         }
     }
 
@@ -109,13 +48,19 @@ public class HttpRequestThread extends Thread {
         HttpURLConnection urlConn = null;
         try {
             while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
-            urlConn = (HttpURLConnection) m_url.openConnection();
-            urlConn.setDoOutput(true);
+                urlConn = (HttpURLConnection) m_url.openConnection();
+                urlConn.setDoOutput(true);
 
                 // Output to stream must occur before establishing connection
-                OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream()); // TODO close stream properly try, catch, finally
-                wr.write("this=test");
-                wr.flush();
+                OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream());
+                try {
+                    wr.write("this=test");
+                    wr.flush();
+                } catch (IOException e) {
+                    MonkeyMod.reportException(name + " Unable to get InputStream: ", e);
+                } finally {
+                    wr.close();
+                }
 
                 HttpURLConnection.setFollowRedirects(true);
 
@@ -129,18 +74,14 @@ public class HttpRequestThread extends Thread {
 
             BufferedReader in = null;
 
-            try {
-
-                if (m_callback != null) {
+            if (m_callback != null) {
+                try {
                     in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK || urlConn.getResponseCode() == HttpURLConnection.HTTP_ACCEPTED) {
                     String inputLine;
-
                     while ((inputLine = in.readLine()) != null) {
                         // debug output
                         MonkeyMod.log.finest(inputLine);
-
                         m_callback.processLine(inputLine);
                     }
                     in.close();
@@ -149,12 +90,8 @@ public class HttpRequestThread extends Thread {
                         MonkeyMod.log.severe("Http request failed (" + urlConn.getURL() + ")");
                         MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
                     }
-
-                } else {
-                    // Basic call
-                    urlConn.getInputStream();
-                }
-
+                } catch (RuntimeException rex){
+                    MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run()", rex);
             } catch (IOException e) {
                 MonkeyMod.reportException(name + " Unable to get InputStream: ", e);
             } finally {
@@ -162,13 +99,22 @@ public class HttpRequestThread extends Thread {
                     in.close();
                 }
             }
+
+            } else {
+                // Basic call
+                urlConn.getInputStream();
+            }
+
+
+
+        } catch (RuntimeException rex){
+            MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run()", rex);
         } catch (IOException e) {
             MonkeyMod.reportException("HttpRequestThread.run() Exception", e);
         } finally {
             if (urlConn != null) {
                 urlConn.disconnect();
             }
-            m_ThreadOwner = null;
             m_url = null;
         }
     }

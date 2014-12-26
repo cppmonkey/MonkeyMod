@@ -22,7 +22,7 @@ public class OnPlayerLogin implements IThreadCallback {
     /*
      * TODO Create a login notification details to be submitted to web server
      */
-    public static Runnable NewPlayerLogin() {
+    public static Runnable newPlayerLogin() {
 
         return null;
     }
@@ -67,7 +67,7 @@ public class OnPlayerLogin implements IThreadCallback {
                     }
 
                     if (split[0].equalsIgnoreCase("playerUID")) {
-                        m_plugin.playerUIDs.put(player, Integer.parseInt(split[1]));
+                        m_plugin.addPlayerUID(player, Integer.parseInt(split[1]));
                         return;
                     }
 

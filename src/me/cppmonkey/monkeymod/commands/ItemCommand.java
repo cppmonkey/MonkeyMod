@@ -14,28 +14,26 @@ import org.bukkit.inventory.ItemStack;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
-
 public class ItemCommand implements CommandExecutor {
 
     public final static String command = "item";
     private MonkeyMod m_plugin;
-    private final HashMap<Material, Boolean> m_restrictedItems = new HashMap<Material, Boolean>();
 
     public ItemCommand(MonkeyMod instance) {
         m_plugin = instance;
 
         // TODO Should acquire restricted items from web service.
 
-        m_restrictedItems.put(Material.BEDROCK, true);
-        m_restrictedItems.put(Material.WATER, true);
-        m_restrictedItems.put(Material.STATIONARY_WATER, true);
-        m_restrictedItems.put(Material.LAVA, true);
-        m_restrictedItems.put(Material.STATIONARY_LAVA, true);
-        m_restrictedItems.put(Material.TNT, true);
-        m_restrictedItems.put(Material.FIRE, true);
-        m_restrictedItems.put(Material.MOB_SPAWNER, true);
-        m_restrictedItems.put(Material.FLINT_AND_STEEL, true);
-        m_restrictedItems.put(Material.LAVA_BUCKET, true);
+        m_plugin.canSpawn.put(Material.BEDROCK, true);
+        m_plugin.canSpawn.put(Material.WATER, true);
+        m_plugin.canSpawn.put(Material.STATIONARY_WATER, true);
+        m_plugin.canSpawn.put(Material.LAVA, true);
+        m_plugin.canSpawn.put(Material.STATIONARY_LAVA, true);
+        m_plugin.canSpawn.put(Material.TNT, true);
+        m_plugin.canSpawn.put(Material.FIRE, true);
+        m_plugin.canSpawn.put(Material.MOB_SPAWNER, true);
+        m_plugin.canSpawn.put(Material.FLINT_AND_STEEL, true);
+        m_plugin.canSpawn.put(Material.LAVA_BUCKET, true);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -70,16 +68,14 @@ public class ItemCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "This item is restricted");
                         Parm[] parms = {
                             new Parm("action", "restricted-item-attempt"),
-                            new Parm("player_id", m_plugin.playerUIDs.get(player)),
-                            new Parm("server_uid", m_plugin.serverUID),
+                            new Parm("player_id", m_plugin.getPlayerUID(player)),
+                            new Parm("server_uid", m_plugin.getServerUID()),
                             new Parm("data",itemMaterial.name())
                         };
                         HttpRequestThread notification = new HttpRequestThread(
                             "Connection Notification Thread:" + player.getName(),
-                            player,
                             m_plugin.getLoggerUrl(),
-                            parms,
-                            false);
+                            parms);
                         notification.setPriority(Thread.MIN_PRIORITY);
                         notification.start();
                         return true;
@@ -134,8 +130,8 @@ public class ItemCommand implements CommandExecutor {
     }
 
     private boolean itemRestricted(Material item) {
-        if(m_restrictedItems.containsKey(item)){
-            return m_restrictedItems.get(item);
+        if(m_plugin.canSpawn.containsKey(item)){
+            return m_plugin.canSpawn.get(item);
         }
         return false;
     }

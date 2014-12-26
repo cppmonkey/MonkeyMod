@@ -60,16 +60,14 @@ public class MonkeyModChestPlayerListener implements Listener {
                     //reporting to cppmonkey.net
                     Parm[] parms = {
                         new Parm("action", "attempt_to_unlock_chest"),
-                        new Parm("player_id", m_plugin.playerUIDs.get(player)),
-                        new Parm("server_uid", m_plugin.serverUID),
+                        new Parm("player_id", m_plugin.getPlayerUID(player)),
+                        new Parm("server_uid", m_plugin.getServerUID()),
                         new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                     };
                     HttpRequestThread notification = new HttpRequestThread(
                         "Connection Notification Thread:" + player.getName(),
-                        player,
                         m_plugin.getLoggerUrl(),
-                        parms,
-                        false);
+                        parms);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                 }
@@ -83,16 +81,14 @@ public class MonkeyModChestPlayerListener implements Listener {
                 //reporting to cppmonkey.net
                 Parm[] parms = {
                     new Parm("action", "attempt_to_open_chest"),
-                    new Parm("player_id", m_plugin.playerUIDs.get(player)),
-                    new Parm("server_uid", m_plugin.serverUID),
+                    new Parm("player_id", m_plugin.getPlayerUID(player)),
+                    new Parm("server_uid", m_plugin.getServerUID()),
                     new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                 };
                 HttpRequestThread notification = new HttpRequestThread(
                     "Connection Notification Thread:" + player.getName(),
-                    player,
                     m_plugin.getLoggerUrl(),
-                    parms,
-                    false);
+                    parms);
                 notification.setPriority(Thread.MIN_PRIORITY);
                 notification.start();
             }

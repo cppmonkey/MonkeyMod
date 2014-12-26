@@ -19,7 +19,7 @@ public class OnPluginStart implements IThreadCallback {
             
             if (split.length == 2) {
                 if( "serverUID".equalsIgnoreCase(split[0]) ) {
-                    m_plugin.serverUID = Integer.parseInt(split[1]);
+                    m_plugin.setServerUID(Integer.parseInt(split[1]));
                 }
             }
         }
