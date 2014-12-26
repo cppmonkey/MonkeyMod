@@ -89,6 +89,7 @@ public class MonkeyModBlockListener implements Listener {
             event.setCancelled(true);
         }
     }
+
     @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
         Player player = event.getPlayer();

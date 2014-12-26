@@ -47,8 +47,7 @@ public class CBoxyRuleEverything implements IBoxyReplacer {
                 try {
                     m_exclusionList.put(Material.matchMaterial(excl), true);
                 } catch (NullPointerException e) {
-                    MonkeyMod.log.info("[EXCEPTION] " + this.getClass().getName());
-                    MonkeyMod.log.info(e.getMessage());
+                    MonkeyMod.reportException("[EXCEPTION] " + this.getClass().getName(), e);
                 }
             }
         }

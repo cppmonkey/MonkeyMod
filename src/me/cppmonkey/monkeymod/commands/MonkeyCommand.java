@@ -153,7 +153,7 @@ public class MonkeyCommand implements CommandExecutor {
                     if ("add".equalsIgnoreCase(args[0]) || "remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
 
                         Player grantToPlayer = m_plugin.getServer().getPlayer(args[2]);
-                        Parm player_id = new Parm("player_id", m_plugin.playerUIDs.get((Player)sender));
+                        Parm player_id = new Parm("player_id", sender instanceof Player ? m_plugin.playerUIDs.get((Player)sender):-1);
                         Boolean grant = "add".equalsIgnoreCase(args[0]);
 
                         if( grantToPlayer == null ) {

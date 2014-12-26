@@ -51,7 +51,7 @@ public class MonkeyModPlayerListener implements Listener {
 
         } catch (Exception ex) {
             // Shouldn't really cause any exceptions
-            m_plugin.reportException("Excption within onPlayerJoin()", ex);
+            MonkeyMod.reportException("Excption within onPlayerJoin()", ex);
         }
     }
 
@@ -92,7 +92,7 @@ public class MonkeyModPlayerListener implements Listener {
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
         } catch (Exception e) {
-           MonkeyMod.log.info(e.getMessage());
+            MonkeyMod.reportException("",e); // TODO provide description
         }
     }
 

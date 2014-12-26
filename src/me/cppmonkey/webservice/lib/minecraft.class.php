@@ -114,7 +114,6 @@ class Minecraft {
                 $server->GetOwnerId()
         );
         
-        
         if($dblink->query($query)) {
             echo "insert complete!\n";
         } else {

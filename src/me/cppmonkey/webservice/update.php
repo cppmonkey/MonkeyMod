@@ -73,17 +73,16 @@ else
 
 $server = $minecraft->ServerFromIp( $server_ip );
 
-
 if( !$server && (isset($_GET['rcon-port']) || isset($_GET['port']))) {
     echo "Unable to load server<br/>No servers with the IP {$server_ip}<br>";
     $server = $minecraft->CreateServer( $server_ip );
 }
 
-
 if( isset($_GET["action"]) && $server ) {
     $query = "";
 
     if(isset( $_GET["player"]) || isset($_GET["player_id"])) {
+        include_once "./lib/player.class.php";
         $player = new Player();
 
         $action = Action($_GET["action"]);
@@ -146,18 +145,13 @@ if( isset($_GET["action"]) && $server ) {
     }
 
     if($_GET["action"] == "connect") {
+        include_once "./lib/player.class.php";
         $player = new Player();
         $permissions = $player->GetPermissions( $server->GetId() );
 
         // Print out permisions
         foreach ($permissions as $key => $value) {
             print( $key.":".$value."\n");
-        }
-
-        if ($server->ValidateVips()) {
-            if( $player->HasActiveSubscription( $dblink )) {
-                print "\nisVip:true\n";
-            }
         }
     }
 

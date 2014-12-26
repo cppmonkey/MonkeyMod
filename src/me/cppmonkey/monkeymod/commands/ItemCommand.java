@@ -102,9 +102,9 @@ public class ItemCommand implements CommandExecutor {
                     sender.sendMessage(ex.getMessage());
                     return false;
                 } catch (NullPointerException e) {
-                   MonkeyMod.log.info(e.getMessage());
+                    MonkeyMod.reportException(e.getMessage(),e);
                 } catch (Exception e) {
-                   MonkeyMod.log.info(e.getMessage());
+                    MonkeyMod.reportException(e.getMessage(),e);
                 }
             } /*END /item (player) */ else {
                 //TODO Process Console /item Commands. Will require player name!

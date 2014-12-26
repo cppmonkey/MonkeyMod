@@ -110,6 +110,12 @@ public class HttpRequestThread extends Thread {
             while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
             urlConn = (HttpURLConnection) m_url.openConnection();
             urlConn.setDoOutput(true);
+
+                // Output to stream must occur before establishing connection
+                OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream());
+                wr.write("this=test");
+                wr.flush();
+
                 HttpURLConnection.setFollowRedirects(true);
 
                 urlConn.connect();
@@ -119,10 +125,6 @@ public class HttpRequestThread extends Thread {
                     urlConn.disconnect();
                 }
             }
-
-            OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream());
-            wr.write("this=test");
-            wr.flush();
 
             BufferedReader in = null;
 
@@ -153,17 +155,14 @@ public class HttpRequestThread extends Thread {
                 }
 
             } catch (IOException e) {
-                message(name + " Unable to get InputStream: " + e.getMessage());
+                MonkeyMod.reportException(name + " Unable to get InputStream: ", e);
             } finally {
                 if (in != null) {
                     in.close();
                 }
             }
         } catch (IOException e) {
-            message("HttpRequestThread.run() Exception");
-            for (int i = 0; i < e.getMessage().length() / 50; ++i) {
-                message(e.getMessage().substring(i * 50, (i + 1) * 50));
-            }
+            MonkeyMod.reportException("HttpRequestThread.run() Exception", e);
         } finally {
             if (urlConn != null) {
                 urlConn.disconnect();

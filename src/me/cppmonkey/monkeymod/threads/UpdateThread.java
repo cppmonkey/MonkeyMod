@@ -124,6 +124,7 @@ public class UpdateThread extends Thread {
                        data = is.read();
                     }
                 } catch (FileNotFoundException e) {
+                    MonkeyMod.reportException("",e); // TODO declare description
                 } finally {
                     if (os != null) {
                         os.close();
