@@ -124,7 +124,7 @@ public class UpdateThread extends Thread {
                        data = is.read();
                     }
                 } catch (FileNotFoundException e) {
-                    MonkeyMod.reportException("",e); // TODO declare description
+                    MonkeyMod.reportException("FileNotFoundException within UpdateThread.java",e);
                 } finally {
                     if (os != null) {
                         os.close();
@@ -134,7 +134,7 @@ public class UpdateThread extends Thread {
                 
                 try {
                     if (m_isPlugin) {
-                       m_plugin.getServer().reload();
+                        m_plugin.getServer().reload();
                     } else {
                         m_plugin.getServer().dispatchCommand(m_ThreadOwner, "stop");
                     }

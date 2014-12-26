@@ -16,6 +16,7 @@ import org.bukkit.util.Vector;
  *
  * @author Alex
  */
+@SuppressWarnings("deprecation")
 public class BoxyExecutor {
 
     private final MonkeyMod m_plugin;

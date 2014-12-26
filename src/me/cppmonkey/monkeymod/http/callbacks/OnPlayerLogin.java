@@ -29,7 +29,7 @@ public class OnPlayerLogin implements IThreadCallback {
 
     public void processLine(String result) {
         try {
-            if (m_owner instanceof Player && result != null && !result.isEmpty()) {
+            if (m_owner instanceof Player && result != null && result.length() != 0) {
                 Player player = (Player) m_owner;
 
                 String booleanValues[] = {

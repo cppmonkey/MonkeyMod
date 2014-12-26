@@ -175,9 +175,9 @@ public class MonkeyMod extends JavaPlugin {
                 getServer().dispatchCommand(sender, "monkey uptodate");
             }
         } catch(RuntimeException rex) {
-            reportException("RuntimeException",rex);
+            reportException("RuntimeException within MonkeyMod.onEnable()",rex);
         } catch(Exception ex) {
-            reportException("Error: Unknown error within MonkeyMod.java",ex);
+            reportException("Exception within MonkeyMod.onEnable()",ex);
         }
         // getCommand("debug");
     }
