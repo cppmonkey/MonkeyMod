@@ -1,6 +1,7 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
@@ -31,7 +32,8 @@ public class MonkeyModBlockListener implements Listener {
 
         // is player?
         if (player != null) {
-            if (m_plugin.getPermition(player, ".canIgnite")) {
+            PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
+            if (playerDetails.canIgnite()) {
                 // CAN BURN!!!
             } else {
                 //Not allowed to burn
@@ -40,7 +42,7 @@ public class MonkeyModBlockListener implements Listener {
                 event.setCancelled(true);
                 Parm[] parms = {
                     new Parm("action", "ignite-attempt"),
-                    new Parm("player_id", m_plugin.getPlayerUID(player)),
+                    new Parm("player_id", playerDetails.getPlayerUID()),
                     new Parm("server_uid", m_plugin.getServerUID()),
                     new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
@@ -61,12 +63,12 @@ public class MonkeyModBlockListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
+        if (player != null && !m_plugin.getPlayerDetails(player).canBuild()) {
             player.sendMessage(ChatColor.RED + "You don't have pemission to build");
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "build-attempt"),
-                new Parm("player_id", m_plugin.getPlayerUID(player)),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };
@@ -91,12 +93,12 @@ public class MonkeyModBlockListener implements Listener {
         Player player = event.getPlayer();
 
         //return is not a player
-        if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to destroy");
+        if (player != null && !m_plugin.getPlayerDetails(player).canBuild()) {
+            player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "block-break-attempt"),
-                new Parm("player_id", m_plugin.getPlayerUID(player)),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("data",event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };
@@ -113,13 +115,13 @@ public class MonkeyModBlockListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         // THIS MUST BE HERE!!! Otherwise people can wipe the text from signs
-        if (player != null && !m_plugin.getPermition(player, ".canBuild")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to destroy");
+        if (player != null && !m_plugin.getPlayerDetails(player).canBuild()) {
+            player.sendMessage(ChatColor.RED + "You don't have pemission to destroy");
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "block-break-attempt"),
-                new Parm("player_id", m_plugin.getPlayerUID(player)),
-	            new Parm("server_uid", m_plugin.getServerUID()),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
+                new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };
             HttpRequestThread notification = new HttpRequestThread(

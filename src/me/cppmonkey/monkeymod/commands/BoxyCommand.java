@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod.commands;
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
@@ -30,14 +31,14 @@ public class BoxyCommand implements CommandExecutor {
         m_plugin.getConfig().set(PlayerName.toLowerCase(Locale.ENGLISH) + ".height", 1);
     }
 
-    @SuppressWarnings("deprecation")
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0) {
             // Must be a player to use these commands
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+				PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
-                if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
+                if (playerDetails.isVip() || playerDetails.isAdmin()) {
                     if (args.length == 4) {
                         try {
                             m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".fromId", Integer.parseInt(args[0]));
@@ -115,7 +116,7 @@ public class BoxyCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
                     Parm[] parms = {
                         new Parm("action", "boxy-attempt"),
-                        new Parm("player_id", m_plugin.getPlayerUID(player)),
+                        new Parm("player_id", playerDetails.getPlayerUID()),
                         new Parm("server_uid", m_plugin.getServerUID()),
                         new Parm("data", player.getLocation().getX()+","+player.getLocation().getY()+","+player.getLocation().getZ())
                     };

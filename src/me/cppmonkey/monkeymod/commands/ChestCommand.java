@@ -2,6 +2,8 @@ package me.cppmonkey.monkeymod.commands;
 
 import java.util.Locale;
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -22,11 +24,12 @@ public class ChestCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
                 player.setGameMode(GameMode.CREATIVE);
                 if (args.length > 0) {
                 // Must be a player to use these commands
 
-                if (m_plugin.getPermition(player, ".isVip") || m_plugin.getPermition(player, ".isAdmin")) {
+                if (playerDetails.isVip() || playerDetails.isAdmin()) {
                     if (args.length == 1) {
                         if ("UNLOCK".equalsIgnoreCase(args[0])) {
                             m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "UNLOCK");

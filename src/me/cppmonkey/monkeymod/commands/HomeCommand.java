@@ -7,6 +7,7 @@ package me.cppmonkey.monkeymod.commands;
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -32,10 +33,11 @@ public class HomeCommand implements CommandExecutor {
         if (cmndargs.length > 0 && cs instanceof Player) {
 
             Player player = (Player) cs;
+            PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
             // Permission check.
             // TODO Comments :-/
-            if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+            if (!playerDetails.isVip() && !playerDetails.isAdmin()) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use teleport commands");
             } else if (cmndargs.length == 2 && cmndargs[0].equalsIgnoreCase("set") && cmndargs[1].matches("[1-5]")) {
                 String path = player.getName().toLowerCase(Locale.ENGLISH) + "." + player.getWorld().getName() + "." + cmndargs[1];

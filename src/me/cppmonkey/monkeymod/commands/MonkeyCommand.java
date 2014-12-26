@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.callback.CSelfUpdateCallback;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
@@ -142,7 +143,7 @@ public class MonkeyCommand implements CommandExecutor {
             } // END /monkey [enable/disable]
             if (args.length == 3) {
                 // Must be admin to add users
-                if (sender instanceof Player && !m_plugin.getPermition((Player) sender,".isAdmin")) {
+                if (sender instanceof Player && !m_plugin.getPlayerDetails((Player) sender).isAdmin()) {
                     sender.sendMessage("You do not have permission to do that");
                     return true;
                 }
@@ -153,27 +154,31 @@ public class MonkeyCommand implements CommandExecutor {
                     if ("add".equalsIgnoreCase(args[0]) || "remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
 
                         Player grantToPlayer = m_plugin.getServer().getPlayer(args[2]);
-                        Parm player_id = new Parm("player_id", sender instanceof Player ? m_plugin.getPlayerUID((Player)sender):-1);
-                        Boolean grant = "add".equalsIgnoreCase(args[0]);
-
                         if( grantToPlayer == null ) {
                             sender.sendMessage("Unable to find player called "+ args[2]);
                             return true;
                         }
+
+                        PlayerDetails playerDetails = m_plugin.getPlayerDetails(grantToPlayer);
+
+                        Parm player_id = new Parm("player_id", sender instanceof Player ? playerDetails.getPlayerUID():-1);
+                        Boolean grant = "add".equalsIgnoreCase(args[0]);
+
+
                         Parm permission = new Parm("add".equalsIgnoreCase(args[2])?"add":"remove","user");
                     if ("user".equalsIgnoreCase(args[1])) {
-                        if (!m_plugin.canBuild.containsKey(grantToPlayer)) {
-                            m_plugin.canBuild.put(grantToPlayer, grant);
+                        if (!playerDetails.canBuild()) {
+                             playerDetails.setCanBuild(grant);
                         }
                         sender.sendMessage("User player '" + grantToPlayer.getName() + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        m_plugin.isVip.put(grantToPlayer, grant);
-                        m_plugin.canBuild.put(grantToPlayer, grant);
+                        playerDetails.setIsVip(grant);
+                        playerDetails.setCanBuild(grant);
                         permission.setValue("vip");
                         sender.sendMessage("Vip player '" + grantToPlayer.getName() + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        m_plugin.isAdmin.put(grantToPlayer, grant);
-                        m_plugin.canBuild.put(grantToPlayer, grant);
+                        playerDetails.setIsAdmin(grant);
+                        playerDetails.setCanBuild(grant);
                         permission.setValue("admin");
                         sender.sendMessage("Admin player '" + grantToPlayer.getName() + "' added");
                     } else {
@@ -182,7 +187,7 @@ public class MonkeyCommand implements CommandExecutor {
 
                     Parm[] parms = {
                         new Parm("action", "modify"),
-                        new Parm("grant_to_id", m_plugin.getPlayerUID(grantToPlayer)), // This is the Granted By ID
+                        new Parm("grant_to_id", playerDetails.getPlayerUID()), // This is the Granted By ID
                         new Parm("server_uid", m_plugin.getServerUID()),
                         player_id,
                         permission
@@ -201,11 +206,12 @@ public class MonkeyCommand implements CommandExecutor {
                 // FIXME Update to new variables
                 Player player = m_plugin.getServer().getPlayer(args[1]);
                 if (player != null) {
-                    sender.sendMessage(player.getName() + ".canBuild: " + m_plugin.getPermition(player,".canBuild"));
-                    sender.sendMessage(player.getName() + ".canIgnite: " + m_plugin.getPermition(player,".canIgnite"));
-                    sender.sendMessage(player.getName() + ".isAdmin: " + m_plugin.getPermition(player,".isAdmin"));
-                    sender.sendMessage(player.getName() + ".isVip: " + m_plugin.getPermition(player,".isVip"));
-                    sender.sendMessage(player.getName() + ".UID: " + m_plugin.getPlayerUID(player));
+                    PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
+                    sender.sendMessage(player.getName() + ".canBuild: " + playerDetails.canBuild());
+                    sender.sendMessage(player.getName() + ".canIgnite: " + playerDetails.canIgnite());
+                    sender.sendMessage(player.getName() + ".isAdmin: " + playerDetails.isAdmin());
+                    sender.sendMessage(player.getName() + ".isVip: " + playerDetails.isVip());
+                    sender.sendMessage(player.getName() + ".UID: " + playerDetails.getPlayerUID());
                 } else {
                     sender.sendMessage("User is offline");
                 }

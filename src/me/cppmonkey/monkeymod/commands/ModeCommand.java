@@ -23,7 +23,7 @@ public class ModeCommand implements CommandExecutor {
 
         if (args.length == 1) {
             // For console use and administrators
-            if (sender instanceof Player && !m_plugin.getPermition((Player) sender, ".isAdmin")) {
+            if (sender instanceof Player && !m_plugin.getPlayerDetails((Player) sender).isAdmin()) {
                 // Doesn't have access to do this
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use " + ModeCommand.command + " commands");
                 return true;

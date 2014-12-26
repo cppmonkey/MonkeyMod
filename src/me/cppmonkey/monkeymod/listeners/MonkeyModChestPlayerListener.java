@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod.listeners;
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
@@ -25,9 +26,10 @@ public class MonkeyModChestPlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
         // if player cannot build disallow access to chests!
-        if(!m_plugin.canBuild.containsKey(player) || !m_plugin.canBuild.get(player)){
+        if(!playerDetails.canBuild() || !playerDetails.canBuild()){
             event.setCancelled(true);
             return;
         }
@@ -60,7 +62,7 @@ public class MonkeyModChestPlayerListener implements Listener {
                     //reporting to cppmonkey.net
                     Parm[] parms = {
                         new Parm("action", "attempt_to_unlock_chest"),
-                        new Parm("player_id", m_plugin.getPlayerUID(player)),
+                        new Parm("player_id", playerDetails.getPlayerUID()),
                         new Parm("server_uid", m_plugin.getServerUID()),
                         new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                     };
@@ -73,7 +75,7 @@ public class MonkeyModChestPlayerListener implements Listener {
                 }
             } else if (!chestOwner.equalsIgnoreCase(player.getName())
                     && !chestOwner.matches("PUBLIC")
-                    && !m_plugin.getPermition(player, ".isAdmin")
+                    && !playerDetails.isAdmin()
                     && !chestLock.matches("OPEN")) {
                 player.sendMessage(ChatColor.RED + "You cannot access this chest.");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner + ", and is locked.");
@@ -81,7 +83,7 @@ public class MonkeyModChestPlayerListener implements Listener {
                 //reporting to cppmonkey.net
                 Parm[] parms = {
                     new Parm("action", "attempt_to_open_chest"),
-                    new Parm("player_id", m_plugin.getPlayerUID(player)),
+                    new Parm("player_id", playerDetails.getPlayerUID()),
                     new Parm("server_uid", m_plugin.getServerUID()),
                     new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                 };

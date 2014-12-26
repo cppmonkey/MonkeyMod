@@ -23,6 +23,7 @@ import me.cppmonkey.monkeymod.listeners.MonkeyModChestPlayerListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModExplosionListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerDeathListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
 import me.cppmonkey.monkeymod.utils.Parm;
@@ -52,26 +53,19 @@ public class MonkeyMod extends JavaPlugin {
 
     public static final Logger log = Logger.getLogger("Minecraft");
 
-    // Temp
-    public final HashMap<Player, Boolean> canBuild = new HashMap<Player, Boolean>();
-    public final HashMap<Player, Boolean> canIgnite = new HashMap<Player, Boolean>();
-    public final HashMap<Player, Boolean> isVip = new HashMap<Player, Boolean>();
-    public final HashMap<Player, Boolean> isAdmin = new HashMap<Player, Boolean>();
-
     public final HashMap<Material, Boolean> canSpawn = new HashMap<Material, Boolean>();
 
     // Server Details
     private Integer serverUID = 0;
 
-    private final HashMap<Player, Integer> playerUIDs = new HashMap<Player, Integer>();
+    private final HashMap<Player, PlayerDetails> playerDetails = new HashMap<Player, PlayerDetails>();
 
-    public Integer getPlayerUID(Player player){
-        return playerUIDs.get(player);
+    public PlayerDetails getPlayerDetails(Player player){
+        return playerDetails.get(player);
     }
 
-    public void addPlayerUID(Player player, Integer uid) {
-        playerUIDs.put(player, uid);
-
+    public void addPlayerDetails(Player player, PlayerDetails playerDetails) {
+        this.playerDetails.put(player, playerDetails);
     }
 
     public void onDisable() {
@@ -201,24 +195,6 @@ public class MonkeyMod extends JavaPlugin {
             sender.sendMessage(ChatColor.RED + "You don't have permission to update");
             sender.sendMessage(ChatColor.RED + "You have to be Op!");
         }
-    }
-
-    /*
-     *
-     */
-    public Boolean getPermition(Player player, String path) {
-        if (path.matches(".isVip") && this.isVip.containsKey(player)) {
-            return this.isVip.get(player);
-        } else if (path.matches(".isAdmin") && this.isAdmin.containsKey(player)) {
-            return this.isAdmin.get(player);
-        } else if (path.matches(".canBuild") && this.canBuild.containsKey(player)) {
-            return this.canBuild.get(player);
-        } else if (path.matches(".canIgnite") && this.canIgnite.containsKey(player)) {
-            return this.canIgnite.get(player);
-        }
-
-        // if not found return false
-        return false;
     }
 
     public String getLoggerUrl() {

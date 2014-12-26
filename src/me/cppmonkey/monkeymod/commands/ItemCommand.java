@@ -1,8 +1,9 @@
 package me.cppmonkey.monkeymod.commands;
 
-import java.util.HashMap;
-
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,8 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 public class ItemCommand implements CommandExecutor {
 
@@ -44,12 +43,13 @@ public class ItemCommand implements CommandExecutor {
             if (sender instanceof Player) {
 
                 Player player = (Player) sender;
+                PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
                 // Permission check.
-                if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+                if (!playerDetails.isVip() && !playerDetails.isAdmin()) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to spawn items");
-                    MonkeyMod.log.info(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
-                    MonkeyMod.log.info(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
+                    MonkeyMod.log.info(player.getName() + " isVip " + playerDetails.isVip());
+                    MonkeyMod.log.info(player.getName() + " isAdmin " + playerDetails.isAdmin());
                     return true;
                 }
 
@@ -62,13 +62,13 @@ public class ItemCommand implements CommandExecutor {
                     if (itemRestricted(itemMaterial)) {
                         // Item is restricted
                         // Allow exceptions to rule
-                        if (m_plugin.getPermition(player, ".isAdmin")) {
+                        if (playerDetails.isAdmin()) {
                             return false;
                         }
                         player.sendMessage(ChatColor.RED + "This item is restricted");
                         Parm[] parms = {
                             new Parm("action", "restricted-item-attempt"),
-                            new Parm("player_id", m_plugin.getPlayerUID(player)),
+                            new Parm("player_id", playerDetails.getPlayerUID()),
                             new Parm("server_uid", m_plugin.getServerUID()),
                             new Parm("data",itemMaterial.name())
                         };
@@ -118,7 +118,7 @@ public class ItemCommand implements CommandExecutor {
                 }catch (RuntimeException rex){
                     MonkeyMod.reportException("RuntimeExcption within ItemCommand.onCommand()", rex);
                 } catch (Exception ex) {
-                    MonkeyMod.reportException("Excption within ItemCommand.onCommand()", ex);
+                    MonkeyMod.reportException("Exception within ItemCommand.onCommand()", ex);
                 }
             } /*END /item (player) */ else {
                 //TODO Process Console /item Commands. Will require player name!

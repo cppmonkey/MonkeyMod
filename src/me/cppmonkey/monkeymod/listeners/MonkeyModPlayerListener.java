@@ -8,6 +8,7 @@ import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.boxy.BoxyThread;
 import me.cppmonkey.monkeymod.http.callbacks.OnPlayerLogin;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
@@ -70,17 +71,11 @@ public class MonkeyModPlayerListener implements Listener {
         Parm[] parms = {
             new Parm("action", "disconnect"),
             new Parm("server_uid", m_plugin.getServerUID()),
-            new Parm("player_id", m_plugin.getPlayerUID(player).toString())
+            new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID().toString())
         };
         HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), m_plugin.getLoggerUrl(), parms);
         notification.setPriority(Thread.MIN_PRIORITY);
         notification.start();
-
-        // Clean up permissions
-        m_plugin.isAdmin.remove(player);
-        m_plugin.isVip.remove(player);
-        m_plugin.canBuild.remove(player);
-        m_plugin.canIgnite.remove(player);
     }
 
     @EventHandler
@@ -91,7 +86,7 @@ public class MonkeyModPlayerListener implements Listener {
         try {
             Parm parms[] = {
                 new Parm("action", "message"),
-                new Parm("player_id", m_plugin.getPlayerUID(player).toString()),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID().toString()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
@@ -110,9 +105,10 @@ public class MonkeyModPlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && m_plugin.getConfig().getBoolean(player.getName().toLowerCase(Locale.ENGLISH) + ".enabled", false) && m_plugin.getConfig().getInt("boxy.tool") == player.getItemInHand().getTypeId()) {
             MonkeyMod.log.info(event.getPlayer().getName() + " is trying to use boxy");
-            if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
+            if (!playerDetails.isVip() && !playerDetails.isAdmin()) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
             } else {
 
