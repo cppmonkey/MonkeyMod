@@ -28,7 +28,7 @@ onerror=function handleErr( msg, url, l )
 				for ( var i = 0; i < data.length; i++ ) {
 					$('select[id][name^="serverip"]').append( new Option( data[i].title ,data[i].ip ));
 				}
-
+				$("#img_please_wait").hide();
 			});
 
 		$("#severipedituseraccess").change(function(){
@@ -64,6 +64,7 @@ onerror=function handleErr( msg, url, l )
 
 
 		$("#serveriphistory").change(function(){
+			$("#img_please_wait").show();
 				$.getJSON("history.php?", { serverip: this.value, limit: $("#historylimit").val() }, function(data){
 						//Process data
 						$('#chat tbody').empty();
@@ -72,6 +73,7 @@ onerror=function handleErr( msg, url, l )
 						}
 
 						$("#chat tbody tr:even").addClass("alt");
+						$("#img_please_wait").hide();
 					});
 			});
 		$("#refreshserveriphistory").click(function(){

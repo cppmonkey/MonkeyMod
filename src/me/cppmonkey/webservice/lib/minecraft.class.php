@@ -1,7 +1,6 @@
 <?php
 
 include "minecraftserver.class.php";
-include "playerlist.class.php";
 
 class Minecraft {
     //private variables

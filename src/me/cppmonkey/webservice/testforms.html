@@ -10,8 +10,16 @@
 <link rel="stylesheet" type="text/css" href="./css/testforms.css" />
 </head>
 <body>
-    <div>
-		<img src="./img/logo.png" alt="CppMonkey.NET Logo. what can I say, we like bananas!" />
+	<div style="font-family:cursive;font-size:300%;padding-bottom:.2em;">
+		<span>Cpp</span>
+		<img src="./img/m.png" alt="M" style="vertical-align:text-top;position:relative;left:-0.3em;" />
+		<span style="position:relative;left:-1em;">onkey</span>
+		<span style="position:relative;top:1em;left:-6em;font-size:50%;">.net</span>
+		<span style="position:relative;left:-2.0em;">/</span>
+		<img src="./img/m.png" alt="M" style="vertical-align:text-top;position:relative;left:-2.3em;" />
+		<span style="position:relative;left:-3.0em;">onkey</span>
+		<img src="./img/m.png" alt="M" style="vertical-align:text-top;position:relative;left:-3.6em;" />
+		<span style="position:relative;left:-4.3em;">od</span>
 	</div>
     <div id="tabs">
 		<ul>
@@ -80,11 +88,12 @@
             	<option value="100">100</option>
             </select></label>
             <input type="button" id="refreshserveriphistory" value="Refresh" />
+				<img id="img_please_wait" alt="Please wait, loading" src="./img/ajax-loader.gif" />
         </form>
     </div>
     </div>
 
-    <div id="results" class="results">
+    <div id="results" class="results ui-corner-all ui-widget-content">
         <table id="chat">
             <thead>
                 <tr>
