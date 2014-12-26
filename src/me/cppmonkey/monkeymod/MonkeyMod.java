@@ -1,7 +1,6 @@
 package me.cppmonkey.monkeymod;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -212,14 +211,6 @@ public class MonkeyMod extends JavaPlugin {
 
         // if not found return false
         return false;
-    }
-
-    @Deprecated
-    public Object isKnownUser(Player player) {
-        // FIXME need to be seeing if there username exists. not, can they
-        // build!
-        // Couldn't figure it out at the time
-        return this.getConfig().getString(player.getName().toLowerCase(Locale.ENGLISH) + ".canBuild");
     }
 
     public String getLoggerUrl() {

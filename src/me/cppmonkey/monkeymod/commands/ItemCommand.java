@@ -1,5 +1,7 @@
 package me.cppmonkey.monkeymod.commands;
 
+import java.util.HashMap;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
@@ -17,9 +19,23 @@ public class ItemCommand implements CommandExecutor {
 
     public final static String command = "item";
     private MonkeyMod m_plugin;
+    private final HashMap<Material, Boolean> m_restrictedItems = new HashMap<Material, Boolean>();
 
     public ItemCommand(MonkeyMod instance) {
         m_plugin = instance;
+
+        // TODO Should acquire restricted items from web service.
+
+        m_restrictedItems.put(Material.BEDROCK, true);
+        m_restrictedItems.put(Material.WATER, true);
+        m_restrictedItems.put(Material.STATIONARY_WATER, true);
+        m_restrictedItems.put(Material.LAVA, true);
+        m_restrictedItems.put(Material.STATIONARY_LAVA, true);
+        m_restrictedItems.put(Material.TNT, true);
+        m_restrictedItems.put(Material.FIRE, true);
+        m_restrictedItems.put(Material.MOB_SPAWNER, true);
+        m_restrictedItems.put(Material.FLINT_AND_STEEL, true);
+        m_restrictedItems.put(Material.LAVA_BUCKET, true);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -118,22 +134,9 @@ public class ItemCommand implements CommandExecutor {
     }
 
     private boolean itemRestricted(Material item) {
-        switch (item) {
-
-            case BEDROCK:
-            case WATER:
-            case STATIONARY_WATER:
-            case LAVA:
-            case STATIONARY_LAVA:
-            case TNT:
-            case FIRE:
-            case MOB_SPAWNER:
-            case FLINT_AND_STEEL:
-            case LAVA_BUCKET:
-                return true;
-            default:
-                return false;
+        if(m_restrictedItems.containsKey(item)){
+            return m_restrictedItems.get(item);
         }
-        
+        return false;
     }
 }

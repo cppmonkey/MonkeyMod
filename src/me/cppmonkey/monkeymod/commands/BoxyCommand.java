@@ -30,6 +30,7 @@ public class BoxyCommand implements CommandExecutor {
         m_plugin.getConfig().set(PlayerName.toLowerCase(Locale.ENGLISH) + ".height", 1);
     }
 
+    @SuppressWarnings("deprecation")
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0) {
             // Must be a player to use these commands

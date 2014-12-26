@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -84,7 +84,7 @@ public class MonkeyModPlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChat(PlayerChatEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
 
@@ -151,7 +151,6 @@ public class MonkeyModPlayerListener implements Listener {
                     }
                 } catch (NullPointerException e) {
                     player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
-                    m_plugin.getServer().broadcastMessage(ChatColor.GREEN + "[SERVER] BOXY OPERATION FAILED!");
                 }
             }
         }
