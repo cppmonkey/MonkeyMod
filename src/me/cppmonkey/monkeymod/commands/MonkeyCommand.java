@@ -225,7 +225,7 @@ public class MonkeyCommand implements CommandExecutor {
 
         }// END args > 0
         }catch(Exception ex){
-            m_plugin.reportException("Exception within MonkeyCommand.java", ex);
+            MonkeyMod.reportException("Exception within MonkeyCommand.java", ex);
         }
 
         sender.sendMessage("No matching commands found");

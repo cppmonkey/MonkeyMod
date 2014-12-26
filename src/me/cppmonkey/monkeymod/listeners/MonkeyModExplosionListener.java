@@ -11,10 +11,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
  * @author alex
  */
 public class MonkeyModExplosionListener implements Listener {
-    MonkeyMod m_plugin;
 
     public MonkeyModExplosionListener(MonkeyMod instance) {
-        m_plugin = instance;
     }
 
     @EventHandler

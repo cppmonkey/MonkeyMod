@@ -68,19 +68,19 @@ public class MonkeyModChestBlockListener implements Listener {
         Player player = event.getPlayer();
         if (player != null && m_plugin.getPermition(player, ".canBuild")) {
 
-                // Is the item being place a chest?
-                if (event.getBlockPlaced().getType() == Material.CHEST) {
-                    String nextTo = nextToChest(event);
-                if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
-                    player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
-                    String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," +event.getBlock().getY() + "," + event.getBlock().getZ();
-                    m_plugin.getConfig().set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
-                    m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You cannot place a chest here.");
-                        player.sendMessage(ChatColor.RED + "The adjacent chest does not belong to you");
-                        event.setCancelled(true);
-                    }
+            // Is the item being place a chest?
+            if (event.getBlockPlaced().getType() == Material.CHEST) {
+                String nextTo = nextToChest(event);
+            if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
+                player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
+                String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," +event.getBlock().getY() + "," + event.getBlock().getZ();
+                m_plugin.getConfig().set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
+                m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
+                } else {
+                    player.sendMessage(ChatColor.RED + "You cannot place a chest here.");
+                    player.sendMessage(ChatColor.RED + "The adjacent chest does not belong to you");
+                    event.setCancelled(true);
+                }
             } 
         }
     }
@@ -92,7 +92,7 @@ public class MonkeyModChestBlockListener implements Listener {
             //player.sendMessage(ChatColor.YELLOW + "onBlockDamage");
             String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ();
             String chestOwner = m_plugin.getConfig().getString(chestLocation + ".owner", "PUBLIC").toLowerCase(Locale.ENGLISH);
-            
+
             if (!chestOwner.equalsIgnoreCase(player.getName().toLowerCase(Locale.ENGLISH)) && !m_plugin.getPermition(player, ".isAdmin")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner);
@@ -123,7 +123,7 @@ public class MonkeyModChestBlockListener implements Listener {
         Player player = event.getPlayer();
 
         if (player != null && event.getBlock().getType() == Material.CHEST) {
-            String chestLocation = event.getBlock().getWorld().getName() + ":" + (int)(event.getBlock().getX()) + "," + (int)(event.getBlock().getY()) + "," + (int)(event.getBlock().getZ());
+            String chestLocation = event.getBlock().getWorld().getName() + ":" + (event.getBlock().getX()) + "," + (event.getBlock().getY()) + "," + (event.getBlock().getZ());
             String chestOwner = m_plugin.getConfig().getString(chestLocation + ".owner", "PUBLIC");
             if (chestOwner.equalsIgnoreCase(player.getName()) || m_plugin.getPermition(player, ".isAdmin")) {
                 m_plugin.getConfig().set(chestLocation + ".owner", null);
