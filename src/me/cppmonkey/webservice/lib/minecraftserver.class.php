@@ -5,8 +5,8 @@ include "serverpackage.class.php";
 class MinecraftServer {
     var $id;
     var $title;
-    var $address, $gamePort, $adminPort, $adminPass;
-    var $ip;
+    var $address, $gamePort;
+    var $ipv4, $ipv6;
     var $packages;
 
     var $rcon;
@@ -16,10 +16,9 @@ class MinecraftServer {
         $this->id		= $details['id'];
         $this->title		= $details['title'];
         $this->address	= $details['address'];
-        $this->ip		= $details['server_ip'];
+        $this->ipv4		= $details['ipv4'];
+        $this->ipv6		= $details['ipv6'];
         $this->gamePort	= $details['game_port'];
-        $this->adminPort	= $details['admin_port'];
-        $this->adminPass	= $details['admin_password'];
         $this->owner	= $details['owner_id'];
     }
 
@@ -32,31 +31,18 @@ class MinecraftServer {
     function GetAddress() {
         return $this->address;
     }
-    function GetIp() {
-        return $this->ip;
+    function GetIp( $ipv4 = true ) {
+        if($ipv4){
+            return $this->ipv4;
+        }else{
+            return $this->ipv6;
+        }
     }
     function GetGamePort() {
         return $this->gamePort;
     }
-    function GetAdminPort() {
-        return $this->adminPort;
-    }
-    function GetAdminPass() {
-        return $this->adminPass;
-    }
     function GetOwnerId() {
         return $this->owner;
-    }
-
-    function UpdateString() {
-
-    }
-
-    function ValidateVips() {
-        if ($this->owner > 0) {
-            return true;
-        }
-        return false;
     }
 }
 

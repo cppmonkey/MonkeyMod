@@ -38,7 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 146;
+    private Integer m_build = 147;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -60,7 +60,7 @@ public class MonkeyMod extends JavaPlugin {
     public final HashMap<Material, Boolean> canSpawn = new HashMap<Material, Boolean>();
 
     // Server Details
-    public Integer serverUID = null;
+    public Integer serverUID = 0;
 
     public HashMap<Player, Integer> playerUIDs = new HashMap<Player, Integer>();
 

@@ -21,37 +21,32 @@ if( isset($_GET["serverip"])) {
 
         $query = sprintf("
                 (
-                SELECT
-                `mc_players`.`player_name` AS 'name',
-                `chat_message` AS 'msg',
-                `chat_date` as 'timestamp'
-                FROM
+SELECT
+ `mc_players`.`name` AS 'name',
+ `mc_chat`.`message` AS 'msg',
+ `chat_date` AS 'timestamp'
+FROM
                 `mc_chat`
-                LEFT
-                JOIN `mc_players`
-                ON
-                `mc_chat`.`player_id` = `mc_players`.`player_id`
-                WHERE
+LEFT JOIN `mc_players` ON
+ `mc_chat`.`player_id` = `mc_players`.`id`
+WHERE
                 `server_id` = '%1\$d'
-        )
-                UNION
+) UNION
                 (
-                SELECT
-                `mc_players`.`player_name` AS 'name',
+SELECT
+ `mc_players`.`name` AS 'name',
                 `mc_transition`.`action` AS 'msg',
                 `mc_transition`.`timestamp` AS 'timestamp'
-                FROM
+FROM
                 `mc_transition`
-                LEFT
-                JOIN `mc_players`
-                ON
-                `mc_transition`.`player_id` = `mc_players`.`player_id`
-                WHERE
+LEFT JOIN `mc_players` ON
+ `mc_transition`.`player_id` = `mc_players`.`id`
+WHERE
                 `server_id` = '%1\$d'
-        )
-                ORDER BY
+)
+ORDER BY
                 `timestamp` DESC
-                LIMIT 0 , %2\$d
+LIMIT 0, %2\$d
                 ",
                 $server->GetId(),
                 (isset($_GET["limit"]) ? $_GET["limit"]:30)

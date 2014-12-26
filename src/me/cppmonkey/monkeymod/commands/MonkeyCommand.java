@@ -2,8 +2,6 @@ package me.cppmonkey.monkeymod.commands;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.Parm;
 import me.cppmonkey.monkeymod.callback.CSelfUpdateCallback;

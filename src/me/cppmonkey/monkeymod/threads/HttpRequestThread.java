@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod.threads;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -108,11 +109,7 @@ public class HttpRequestThread extends Thread {
         try {
             while (urlConn == null || urlConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
             urlConn = (HttpURLConnection) m_url.openConnection();
-
-            urlConn.setRequestMethod("GET");
-            urlConn.setAllowUserInteraction(false);
             urlConn.setDoOutput(true);
-            urlConn.addRequestProperty("Content-type", "text/xml");
                 HttpURLConnection.setFollowRedirects(true);
 
                 urlConn.connect();
@@ -122,6 +119,10 @@ public class HttpRequestThread extends Thread {
                     urlConn.disconnect();
                 }
             }
+
+            OutputStreamWriter wr = new OutputStreamWriter(urlConn.getOutputStream());
+            wr.write("this=test");
+            wr.flush();
 
             BufferedReader in = null;
 
