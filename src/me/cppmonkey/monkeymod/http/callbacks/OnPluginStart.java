@@ -2,12 +2,28 @@ package me.cppmonkey.monkeymod.http.callbacks;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
+import me.cppmonkey.monkeymod.utils.Parm;
 
 public class OnPluginStart implements IThreadCallback {
     private MonkeyMod m_plugin;
     
     public OnPluginStart(MonkeyMod plugin) {
         m_plugin = plugin;
+    }
+
+    public static void (){
+        Parm[] parms = {
+            new Parm("action", "update"),
+            new Parm("package", m_plugin.getName()),
+            new Parm("version", m_plugin.getVersion()),
+            new Parm("build", m_plugin.getBuild()),
+            new Parm("port", Integer.toString(m_plugin.getServer().getPort()))
+        };
+
+        HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", m_plugin.getServer().getConsoleSender(), m_plugin.getLoggerUrl(), parms);
+        notification.setPriority(Thread.MIN_PRIORITY);
+        notification.start();
     }
 
     public void processLine(String result) {
@@ -23,8 +39,6 @@ public class OnPluginStart implements IThreadCallback {
                 }
             }
         }
-        
-
     }
 
     public void complete() {

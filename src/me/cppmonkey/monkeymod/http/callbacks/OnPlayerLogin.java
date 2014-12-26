@@ -19,6 +19,14 @@ public class OnPlayerLogin implements IThreadCallback {
         m_owner = owner;
     }
 
+    /*
+     * TODO Create a login notification details to be submitted to web server
+     */
+    public static Runnable NewPlayerLogin() {
+
+        return null;
+    }
+
     public void processLine(String result) {
         try {
             if (m_owner instanceof Player && result != null && !result.isEmpty()) {
@@ -57,7 +65,7 @@ public class OnPlayerLogin implements IThreadCallback {
                         m_plugin.isAdmin.put((Player) m_owner, split[1].equalsIgnoreCase("true"));
                         return;
                     }
-                    
+
                     if (split[0].equalsIgnoreCase("playerUID")) {
                         m_plugin.playerUIDs.put(player, Integer.parseInt(split[1]));
                         return;
@@ -74,9 +82,9 @@ public class OnPlayerLogin implements IThreadCallback {
                 message(result);
             }
         }catch (RuntimeException rex){
-			MonkeyMod.reportException("RuntimeExcption within LoginCallback.processLine()", rex);
-		} catch (Exception ex) {
-            MonkeyMod.reportException("Excetion within LoginCallback.processLine()", ex);
+            MonkeyMod.reportException("RuntimeExcption within LoginCallback.processLine()", rex);
+        } catch (Exception ex) {
+            MonkeyMod.reportException("Exception within LoginCallback.processLine()", ex);
         }
     }
 

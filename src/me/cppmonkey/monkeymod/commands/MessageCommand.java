@@ -29,8 +29,8 @@ public class MessageCommand implements CommandExecutor {
         try{
             if (sender instanceof Player) {
             Player player = (Player) sender;
-                boolean compacted = false;
-                    String Details[] = args[0].split(":");
+                boolean compacted = false; // FIXME Whats this for?
+                String Details[] = args[0].split(":");
                 if(args.length > 1){
                     for(int i = 1;i<args.length;i++){
                         Details[1] += " " + args[i];
