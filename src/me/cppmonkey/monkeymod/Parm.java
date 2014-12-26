@@ -14,6 +14,13 @@ public class Parm {
         this.name = name;
         this.value = value;
     }
+    public Parm(String name, Integer serverUID) {
+    this.name = name;
+        this.value = Integer.toString(serverUID);
+    }
     public String name;
     public String value;
+    public void setValue(String string) {
+        this.value = string;
+    }
 }

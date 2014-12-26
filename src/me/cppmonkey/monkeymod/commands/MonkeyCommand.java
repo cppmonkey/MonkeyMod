@@ -26,6 +26,7 @@ public class MonkeyCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        try{
         // Priority to /monkey update!
         if (args.length > 0) {
             if ("update".equalsIgnoreCase(args[0])) {
@@ -151,102 +152,53 @@ public class MonkeyCommand implements CommandExecutor {
                 /*
                  * Was just a quick implementation to get it working
                  */
-                if ("add".equalsIgnoreCase(args[0])) {
+                    if ("add".equalsIgnoreCase(args[0]) || "remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
 
-                    Player player = m_plugin.getServer().getPlayer(args[2]);
+                        Player grantToPlayer = m_plugin.getServer().getPlayer(args[2]);
+                        Parm player_id = new Parm("player_id", m_plugin.playerUIDs.get((Player)sender));
+                        Boolean grant = "add".equalsIgnoreCase(args[0]);
 
-                    if( player == null ) {
+                        if( grantToPlayer == null ) {
                         sender.sendMessage("Unable to find player called "+ args[2]);
                         return true;
-                    }
-
-                    Parm admin = new Parm("admin", sender.getName());
-
-
-                    Parm permission;
+                        }Parm permission = new Parm("add".equalsIgnoreCase(args[2])?"add":"remove","user");
 
                     if ("user".equalsIgnoreCase(args[1])) {
-                        if (!m_plugin.canBuild.containsKey(player)) {
-                            m_plugin.canBuild.put(player, true);
+                            if (!m_plugin.canBuild.containsKey(grantToPlayer)) {
+                                m_plugin.canBuild.put(grantToPlayer, grant);
                         }
-                        permission = new Parm("add", "user");
-                        sender.sendMessage("User player '" + player.getName() + "' added");
+                            sender.sendMessage("User player '" + grantToPlayer.getName() + "' added");
                     } else if ("vip".equalsIgnoreCase(args[1])) {
-                        m_plugin.isVip.put(player, true);
-                        m_plugin.canBuild.put(player, true);
-                        permission = new Parm("add", "vip");
-                        sender.sendMessage("Vip player '" + player.getName() + "' added");
+                            m_plugin.isVip.put(grantToPlayer, grant);
+                            m_plugin.canBuild.put(grantToPlayer, grant);
+                            permission.setValue("vip");
+                            sender.sendMessage("Vip player '" + grantToPlayer.getName() + "' added");
                     } else if ("admin".equalsIgnoreCase(args[1])) {
-                        m_plugin.isAdmin.put(player, true);
-                        m_plugin.canBuild.put(player, true);
-                        permission = new Parm("add", "admin");
-                        sender.sendMessage("Admin player '" + player.getName() + "' added");
+                            m_plugin.isAdmin.put(grantToPlayer, grant);
+                            m_plugin.canBuild.put(grantToPlayer, grant);
+                            permission.setValue("admin");
+                            sender.sendMessage("Admin player '" + grantToPlayer.getName() + "' added");
                     } else {
                         return false;
                     }
 
                     Parm[] parms = {
                         new Parm("action", "modify"),
-                        new Parm("player", player.getName()),
-                        admin,
+                                new Parm("grant_to_id", m_plugin.playerUIDs.get(grantToPlayer)), // This is the Granted By ID
+                                new Parm("server_uid", m_plugin.serverUID),
+                                player_id,						
                         permission
                     };
 
-                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + player.getName(), sender, m_plugin.getLoggerUrl(), parms);
+                        HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + grantToPlayer.getName(), sender, m_plugin.getLoggerUrl(), parms);
                     notification.setPriority(Thread.MIN_PRIORITY);
                     notification.start();
                     return true;
-
-                }/* END add */else if ("remove".equalsIgnoreCase(args[0]) || "rm".equalsIgnoreCase(args[0])) {
-                    // Username
-                    String playerName = args[2].toLowerCase(Locale.ENGLISH);
-                    Parm permission;
-
-                    Player player = m_plugin.getServer().getPlayer(playerName);
-
-                    if( player == null ) {
-                        sender.sendMessage("Unable to find player called "+ args[2]);
-                        return true;
-                    }
-
-                    if ("user".equalsIgnoreCase(args[1])) {
-                        if (player != null && m_plugin.canBuild.containsKey(player)) {
-                            m_plugin.canBuild.remove(player);
-                        }
-                        permission = new Parm("remove", "user");
-                        sender.sendMessage("player '" + playerName + "' removed");
-                    } else if ("vip".equalsIgnoreCase(args[1])) {
-                        if (player != null && m_plugin.isVip.containsKey(player)) {
-                            m_plugin.isVip.remove(player);
-                        }
-                        permission = new Parm("remove", "vip");
-                        sender.sendMessage("Vip player '" + playerName + "' removed");
-                    } else if ("admin".equalsIgnoreCase(args[1])) {
-                        if (player != null && m_plugin.isAdmin.containsKey(player)) {
-                            m_plugin.isAdmin.remove(player);
-                        }
-                        permission = new Parm("remove", "admin");
-                        sender.sendMessage("Admin player '" + playerName + "' removed");
-                    } else {
-                        return false;
-                    }
-
-                    Parm[] parms = {
-                        new Parm("action", "modify"),
-                        new Parm("player", playerName),
-                        permission
-                    };
-
-                    HttpRequestThread notification = new HttpRequestThread("Permission Notification Thread:" + playerName, sender, m_plugin.getLoggerUrl(), parms
-                    /* , new LoginCallback(m_plugin,player) */);
-                    notification.setPriority(Thread.MIN_PRIORITY);
-                    notification.start();
 
                 } else {
                     // Command not found;
                     return false;
                 }
-                return true;
             } /* END args == 4 */else if ("user".equalsIgnoreCase(args[0]) && args.length == 2) {
                 // FIXME Update to new variables
                 Player player = m_plugin.getServer().getPlayer(args[1]);
@@ -274,6 +226,9 @@ public class MonkeyCommand implements CommandExecutor {
             }
 
         }// END args > 0
+        }catch(Exception ex){
+            m_plugin.reportException("Exception within MonkeyCommand.java", ex);
+        }
 
         sender.sendMessage("No matching commands found");
         return false;

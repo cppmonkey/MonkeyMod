@@ -15,7 +15,7 @@ import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 
 public class ItemCommand implements CommandExecutor {
 
-	public final static String command = "item";
+    public final static String command = "item";
     private MonkeyMod m_plugin;
 
     public ItemCommand(MonkeyMod instance) {
@@ -35,8 +35,8 @@ public class ItemCommand implements CommandExecutor {
                 if (!m_plugin.getPermition(player, ".isVip") && !m_plugin.getPermition(player, ".isAdmin")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to spawn items");
                     MonkeyMod.log.info(player.getName() + " isVip " + m_plugin.getPermition(player, ".isVip"));
-					MonkeyMod.log.info(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
-					return true;
+                    MonkeyMod.log.info(player.getName() + " isAdmin " + m_plugin.getPermition(player, ".isAdmin"));
+                    return true;
                 }
 
                 try {
@@ -54,15 +54,16 @@ public class ItemCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "This item is restricted");
                         Parm[] parms = {
                             new Parm("action", "restricted-item-attempt"),
-                            new Parm("player", player.getName()),
+                            new Parm("player_id", m_plugin.playerUIDs.get(player)),
+                            new Parm("server_uid", m_plugin.serverUID),
                             new Parm("data",itemMaterial.name())
                         };
                         HttpRequestThread notification = new HttpRequestThread(
-                                "Connection Notification Thread:" + player.getName(),
-                                player,
-                                m_plugin.getLoggerUrl(),
-                                parms,
-                                false);
+                            "Connection Notification Thread:" + player.getName(),
+                            player,
+                            m_plugin.getLoggerUrl(),
+                            parms,
+                            false);
                         notification.setPriority(Thread.MIN_PRIORITY);
                         notification.start();
                         return true;
@@ -128,8 +129,8 @@ public class ItemCommand implements CommandExecutor {
             case FLINT_AND_STEEL:
             case LAVA_BUCKET:
                 return true;
-			default:
-				return false;
+            default:
+                return false;
         }
         
     }

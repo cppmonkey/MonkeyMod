@@ -28,7 +28,6 @@ public class PluginStart implements IThreadCallback {
     }
 
     public void complete() {
-        // TODO Auto-generated method stub
 
     }
 

@@ -3,14 +3,15 @@
  * and open the template in the editor.
  */
 package me.cppmonkey.monkeymod.commands;
+import java.net.URLEncoder;
+
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.Parm;
+import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.cppmonkey.monkeymod.Parm;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import java.net.URLEncoder;
 
 /**
  *
@@ -42,16 +43,17 @@ public class MessageCommand implements CommandExecutor {
                         String message = URLEncoder.encode(Details[1], "UTF-8");
                         Parm[] parms = {
                             new Parm("action", "offline"),
-                            new Parm("player", URLEncoder.encode(player.getName(), "UTF-8")),
+                            new Parm("player_id", m_plugin.playerUIDs.get(player)),
+                            new Parm("server_uid", m_plugin.serverUID),
                             new Parm("recipient",to),
                             new Parm("message", message)
                         };
                         HttpRequestThread notification = new HttpRequestThread(
-                                "Connection Notification Thread:" + player.getName(),
-                                player,
-                                m_plugin.getLoggerUrl(),
-                                parms,
-                                false);
+                            "Connection Notification Thread:" + player.getName(),
+                            player,
+                            m_plugin.getLoggerUrl(),
+                            parms,
+                            false);
                         notification.setPriority(Thread.MIN_PRIORITY);
                         notification.start();
                         sender.sendMessage("Message sent! Message will be transmitted on next logon.");

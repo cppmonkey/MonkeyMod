@@ -41,15 +41,17 @@ public class MonkeyModPlayerListener implements Listener {
             Parm[] parms = {
                 new Parm("action", "connect"),
                 new Parm("player", player.getName()),
-                new Parm("ip", player.getAddress().getAddress().toString())
+                new Parm("server_uid", m_plugin.serverUID)
             };
 
             HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, new Login(m_plugin, player));
 
             notification.setPriority(Thread.MIN_PRIORITY);
             notification.start();
-        } catch (Throwable ex) {
-           MonkeyMod.log.info("Exception within onPlayerJoin()");
+
+        } catch (Exception ex) {
+            // Shouldn't really cause any exceptions
+            m_plugin.reportException("Excption within onPlayerJoin()", ex);
         }
     }
 
@@ -60,7 +62,8 @@ public class MonkeyModPlayerListener implements Listener {
         // reporting to cppmonkey.net
         Parm[] parms = {
             new Parm("action", "disconnect"),
-                new Parm("player_id", m_plugin.playerUIDs.get(player).toString())
+            new Parm("server_uid", m_plugin.serverUID),
+            new Parm("player_id", m_plugin.playerUIDs.get(player).toString())
         };
         HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms, false);
         notification.setPriority(Thread.MIN_PRIORITY);
@@ -81,7 +84,8 @@ public class MonkeyModPlayerListener implements Listener {
         try {
             Parm parms[] = {
                 new Parm("action", "message"),
-                    new Parm("player_id", m_plugin.playerUIDs.get(player).toString()),
+                new Parm("player_id", m_plugin.playerUIDs.get(player).toString()),
+                new Parm("server_uid", m_plugin.serverUID),
                 new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
             HttpRequestThread notification = new HttpRequestThread("Disconnection Notification Thread:" + player.getName(), player, m_plugin.getLoggerUrl(), parms);

@@ -74,7 +74,7 @@ public class Login implements IThreadCallback {
                 message(result);
             }
         } catch (Exception e) {
-            message("Excetion within LoginCallback.java");
+            m_plugin.reportException("Excetion within LoginCallback.java", e);
         }
     }
 

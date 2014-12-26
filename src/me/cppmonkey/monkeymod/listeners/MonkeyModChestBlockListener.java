@@ -39,7 +39,7 @@ public class MonkeyModChestBlockListener implements Listener {
             Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
         }
         X -= 2;
-		if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
+        if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
             Location = World + ":" + X + "," + Y + "," + Z;
             if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
                 Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
@@ -47,14 +47,14 @@ public class MonkeyModChestBlockListener implements Listener {
         }
         X++;
         Z--;
-		if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
+        if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
             Location = World + ":" + X + "," + Y + "," + Z;
             if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
                 Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
             }
         }
         Z += 2;
-		if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
+        if (event.getPlayer().getWorld().getBlockAt(X, Y, Z).getType() == Material.CHEST) {
             Location = World + ":" + X + "," + Y + "," + Z;
             if (!Owner.matches(m_plugin.getConfig().getString(Location + ".owner", "NONE"))) {
                 Owner = m_plugin.getConfig().getString(Location + ".owner", "NONE");
@@ -72,7 +72,7 @@ public class MonkeyModChestBlockListener implements Listener {
                 if (event.getBlockPlaced().getType() == Material.CHEST) {
                     String nextTo = nextToChest(event);
                 if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
-                        player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
+                    player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
                     String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," +event.getBlock().getY() + "," + event.getBlock().getZ();
                     m_plugin.getConfig().set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
                     m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
@@ -103,11 +103,11 @@ public class MonkeyModChestBlockListener implements Listener {
                     new Parm("data", chestOwner + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
                 HttpRequestThread notification = new HttpRequestThread(
-                        "Connection Notification Thread:" + player.getName(),
-                        player,
-                        m_plugin.getLoggerUrl(),
-                        parms,
-                        false);
+                    "Connection Notification Thread:" + player.getName(),
+                    player,
+                    m_plugin.getLoggerUrl(),
+                    parms,
+                    false);
                 notification.setPriority(Thread.MIN_PRIORITY);
                 notification.start();
             }

@@ -58,7 +58,7 @@ public class MonkeyMod extends JavaPlugin {
     public final HashMap<Player, Boolean> isAdmin = new HashMap<Player, Boolean>();
 
     public final HashMap<Material, Boolean> canSpawn = new HashMap<Material, Boolean>();
-    
+
     // Server Details
     public Integer serverUID = null;
 
@@ -81,90 +81,90 @@ public class MonkeyMod extends JavaPlugin {
 
     public void onEnable() {
         try{
-        getServer().broadcastMessage("Reloading MonkeyMod");
-        getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-aquired");
+           getServer().broadcastMessage("Reloading MonkeyMod");
+           getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-aquired");
 
-        for(Player player : getServer().getOnlinePlayers()){
-            Parm[] parms = {
-                    new Parm("action", "connect"),
-                    new Parm("player", player.getName()),
-                    new Parm("ip", player.getAddress().getAddress().toString()),
-                    new Parm("record", "false")
-            };
+           for(Player player : getServer().getOnlinePlayers()){
+               Parm[] parms = {
+                   new Parm("action", "connect"),
+                   new Parm("player", player.getName()),
+                   new Parm("server_uid", this.serverUID),
+                   new Parm("record", "false")
+               };
 
-            HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    player,
-                    this.getLoggerUrl(),
-                    parms,
-                    new Login(this, player));
-            notification.start();
-        }
+               HttpRequestThread notification = new HttpRequestThread(
+                   "Connection Notification Thread:" + player.getName(),
+                   player,
+                   this.getLoggerUrl(),
+                   parms,
+                   new Login(this, player));
+               notification.start();
+           }
 
-        setNaggable(true);
-        m_pluginDescFile = this.getDescription();
+           setNaggable(true);
+           m_pluginDescFile = this.getDescription();
 
-        PluginManager pm = getServer().getPluginManager();
+           PluginManager pm = getServer().getPluginManager();
 
-        m_PlayerListener = new MonkeyModPlayerListener(this);
-        m_BlockListener = new MonkeyModBlockListener(this);
-        m_ChestBlockListener = new MonkeyModChestBlockListener(this);
-        m_ChestPlayerListener = new MonkeyModChestPlayerListener(this);
-        m_EntityListener = new MonkeyModPlayerDeathListener(this);
-        m_ExplosionListener = new MonkeyModExplosionListener(this);
+           m_PlayerListener = new MonkeyModPlayerListener(this);
+           m_BlockListener = new MonkeyModBlockListener(this);
+           m_ChestBlockListener = new MonkeyModChestBlockListener(this);
+           m_ChestPlayerListener = new MonkeyModChestPlayerListener(this);
+           m_EntityListener = new MonkeyModPlayerDeathListener(this);
+           m_ExplosionListener = new MonkeyModExplosionListener(this);
 
-        MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
+           MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
-        if (this.getConfig().getBoolean("server.protection.enabled")) {
-            pm.registerEvents(m_ExplosionListener, this);
-            pm.registerEvents(m_BlockListener, this);
-            pm.registerEvents(m_ChestBlockListener, this);
-            pm.registerEvents(m_ChestPlayerListener, this);
-        }
+           if (this.getConfig().getBoolean("server.protection.enabled")) {
+               pm.registerEvents(m_ExplosionListener, this);
+               pm.registerEvents(m_BlockListener, this);
+               pm.registerEvents(m_ChestBlockListener, this);
+               pm.registerEvents(m_ChestPlayerListener, this);
+           }
 
-        pm.registerEvents(m_EntityListener, this);
-        pm.registerEvents(m_PlayerListener, this);
+           pm.registerEvents(m_EntityListener, this);
+           pm.registerEvents(m_PlayerListener, this);
 
-        try {
-        // Process commands, these a partial commands!!
-            getCommand(MonkeyCommand.command).setExecutor(new MonkeyCommand(this));
-            getCommand(ItemCommand.command).setExecutor(new ItemCommand(this));
-            getCommand(BoxyCommand.command).setExecutor(new BoxyCommand(this));
-            getCommand(ChestCommand.command).setExecutor(new ChestCommand(this));
-            getCommand(TeleCommand.command).setExecutor(new TeleCommand(this));
-            getCommand(SpawnCommand.command).setExecutor(new SpawnCommand(this));
-            getCommand(HomeCommand.command).setExecutor(new HomeCommand(this));
-            getCommand(BackCommand.command).setExecutor(new BackCommand(this));
-            getCommand(CompassCommand.command).setExecutor(new CompassCommand(this));
-            getCommand(ModeCommand.command).setExecutor(new ModeCommand(this));
-            getCommand(InventoryCommand.command).setExecutor(new InventoryCommand(this));
-            getCommand(MessageCommand.command).setExecutor(new MessageCommand(this));
-        } catch (Exception ex) {
-            MonkeyMod.log.severe("[Error] Unable to register command");
-        }
+           try {
+           // Process commands, these a partial commands!!
+               getCommand(MonkeyCommand.command).setExecutor(new MonkeyCommand(this));
+               getCommand(ItemCommand.command).setExecutor(new ItemCommand(this));
+               getCommand(BoxyCommand.command).setExecutor(new BoxyCommand(this));
+               getCommand(ChestCommand.command).setExecutor(new ChestCommand(this));
+               getCommand(TeleCommand.command).setExecutor(new TeleCommand(this));
+               getCommand(SpawnCommand.command).setExecutor(new SpawnCommand(this));
+               getCommand(HomeCommand.command).setExecutor(new HomeCommand(this));
+               getCommand(BackCommand.command).setExecutor(new BackCommand(this));
+               getCommand(CompassCommand.command).setExecutor(new CompassCommand(this));
+               getCommand(ModeCommand.command).setExecutor(new ModeCommand(this));
+               getCommand(InventoryCommand.command).setExecutor(new InventoryCommand(this));
+               getCommand(MessageCommand.command).setExecutor(new MessageCommand(this));
+           } catch (Exception ex) {
+               MonkeyMod.log.severe("[Error] Unable to register command");
+           }
 
-        // Notify CppMonkey.NET of the new server
-        // Notify server about new server
+           // Notify CppMonkey.NET of the new server
+           // Notify server about new server
 
-        Parm[] parms = {
-            new Parm("action", "update"),
-            new Parm("package", this.getName()),
-            new Parm("version", this.getVersion()),
-            new Parm("build", this.getBuild()),
-                new Parm("rcon-port", Integer.toString(getServer().getPort() + 10))
-        };
+           Parm[] parms = {
+               new Parm("action", "update"),
+               new Parm("package", this.getName()),
+               new Parm("version", this.getVersion()),
+               new Parm("build", this.getBuild()),
+               new Parm("port", Integer.toString(getServer().getPort()))
+           };
 
-        HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", getServer().getConsoleSender(), getLoggerUrl(), parms);
-        notification.setPriority(Thread.MIN_PRIORITY);
-        notification.start();
+           HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", getServer().getConsoleSender(), getLoggerUrl(), parms);
+           notification.setPriority(Thread.MIN_PRIORITY);
+           notification.start();
 
-        if (this.getConfig().getBoolean("plugin.update.auto")) {
-            /*
-             * Check for updates from server
-             */
-            ConsoleCommandSender sender = getServer().getConsoleSender();
-            getServer().dispatchCommand(sender, "monkey uptodate");
-        }
+           if (this.getConfig().getBoolean("plugin.update.auto")) {
+               /*
+                * Check for updates from server
+                */
+               ConsoleCommandSender sender = getServer().getConsoleSender();
+               getServer().dispatchCommand(sender, "monkey uptodate");
+           }
         }catch(Exception ex){
             // TODO report error
         }
@@ -174,11 +174,7 @@ public class MonkeyMod extends JavaPlugin {
     public void selfUpdate(CommandSender sender) {
         // sender needs to be an OP to carry out this action
         if (sender.isOp()) {
-            try {
                 sender.sendMessage(ChatColor.GREEN + "Trying to update MonkeyMod");
-            } catch (Exception e) {
-                MonkeyMod.log.info("Unable to message sender");
-            }
 
             UpdateThread updateThread = new UpdateThread("Update", sender, this.getName(), "http://cppmonkey.net/minecraft/", this);
             updateThread.setPriority(Thread.MIN_PRIORITY);
@@ -229,14 +225,14 @@ public class MonkeyMod extends JavaPlugin {
 
     public String[] getStatus() {
         return new String[] {
-                "logger.enabled " + this.getConfig().getBoolean("logger.enabled"),
-                "logger.connect " + this.getConfig().getBoolean("logger.connect"),
-                "logger.disconnect " + this.getConfig().getBoolean("logger.disconnect"),
-                "logger.chat " + this.getConfig().getBoolean("logger.chat"),
-                "logger.url " + this.getConfig().getString("logger.url"),
-                "protection.grief " + this.getConfig().getBoolean("protection.grief"),
-                "plugin.update.auto " + this.getConfig().getBoolean("plugin.update.auto"),
-                "server.protection.enabled " + this.getConfig().getBoolean("server.protection.enabled")
+            "logger.enabled " + this.getConfig().getBoolean("logger.enabled"),
+            "logger.connect " + this.getConfig().getBoolean("logger.connect"),
+            "logger.disconnect " + this.getConfig().getBoolean("logger.disconnect"),
+            "logger.chat " + this.getConfig().getBoolean("logger.chat"),
+            "logger.url " + this.getConfig().getString("logger.url"),
+            "protection.grief " + this.getConfig().getBoolean("protection.grief"),
+            "plugin.update.auto " + this.getConfig().getBoolean("plugin.update.auto"),
+            "server.protection.enabled " + this.getConfig().getBoolean("server.protection.enabled")
         };
     }
 
@@ -250,5 +246,12 @@ public class MonkeyMod extends JavaPlugin {
         }
 
         return names;
+    }
+
+    public void reportException(String description, Exception ex) {
+	   MonkeyMod.log.severe(description);
+
+	   // Add report to server via HTTP request
+
     }
 }
