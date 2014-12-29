@@ -61,7 +61,11 @@ public class MonkeyMod extends JavaPlugin {
     private final HashMap<Player, PlayerDetails> playerDetails = new HashMap<Player, PlayerDetails>();
 
     public PlayerDetails getPlayerDetails(Player player){
-        return playerDetails.get(player);
+        if( playerDetails.containsKey(player)) {
+            return playerDetails.get(player);
+        } else {
+            return new PlayerDetails(-1);
+        }
     }
 
     public void addPlayerDetails(Player player, PlayerDetails playerDetails) {
@@ -243,7 +247,7 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public static void reportException(String description, Exception ex) {
-        MonkeyMod.log.log(Level.WARNING, description, ex);
+        MonkeyMod.log.log(Level.WARNING, description/*, ex*/);
 
        // Add report to server via HTTP request
 

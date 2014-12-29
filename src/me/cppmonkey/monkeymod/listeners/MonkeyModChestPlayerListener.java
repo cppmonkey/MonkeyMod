@@ -29,7 +29,7 @@ public class MonkeyModChestPlayerListener implements Listener {
         PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
         // if player cannot build disallow access to chests!
-        if(!playerDetails.canBuild() || !playerDetails.canBuild()){
+        if(!playerDetails.canBuild() || !playerDetails.isAdmin()){
             event.setCancelled(true);
             return;
         }
