@@ -37,7 +37,7 @@ public class OnPlayerLogin implements IThreadCallback {
                 String split[] = result.split(":");
 
                 if (split.length == 2) {
-                    if(playerDetails != null){
+                    if(playerDetails.playerUID() != -1){
                         if ("isOp".equalsIgnoreCase(split[0])) {
                             m_owner.setOp(split[1].equalsIgnoreCase("true"));
                         }else if (split[0].equalsIgnoreCase("canBuild")) {

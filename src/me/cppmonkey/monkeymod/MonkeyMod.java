@@ -40,7 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 150;
+    private Integer m_build = 154;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -61,8 +61,8 @@ public class MonkeyMod extends JavaPlugin {
     private final HashMap<Player, PlayerDetails> playerDetails = new HashMap<Player, PlayerDetails>();
 
     public PlayerDetails getPlayerDetails(Player player){
-        if( playerDetails.containsKey(player)) {
-            return playerDetails.get(player);
+        if( this.playerDetails.containsKey(player)) {
+            return this.playerDetails.get(player);
         } else {
             return new PlayerDetails(-1);
         }
