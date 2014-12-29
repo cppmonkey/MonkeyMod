@@ -1,5 +1,6 @@
 package me.cppmonkey.monkeymod.player;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 import org.bukkit.Material;
@@ -8,25 +9,33 @@ import org.bukkit.Material;
 public class PlayerDetails {
 
     private Integer m_playerUID;
+    private Integer m_blocksPlaced = 0;
+    private Integer m_blocksDestroyed = 0;
     private Boolean m_canBuild = false;
     private Boolean m_canIgnite = false;
     private Boolean m_isVip = false;
     private Boolean m_isAdmin = false;
+    private Timestamp m_connectionTime;
 
     private HashMap<Material, Boolean> m_canSpawnList;
     private HashMap<Material, Boolean> m_cantPlaceList;
 
     public PlayerDetails(Integer playerUID){
         this.m_playerUID = playerUID;
+        java.util.Date date= new java.util.Date();
+        m_connectionTime = new Timestamp(date.getTime());
     }
 
     // Getters
     public Integer playerUID(){return m_playerUID;}
+    public Integer blocksPlaced(){return m_blocksPlaced;}
+    public Integer blocksDestroyed(){return m_blocksDestroyed;}
 
     public Boolean canBuild(){ return m_canBuild; }
     public Boolean canIgnite(){ return m_canIgnite; }
     public Boolean isVip(){ return m_isVip; }
     public Boolean isAdmin(){ return m_isAdmin; }
+    public Timestamp connectionTime(){ return m_connectionTime; }
 
     // Setters
     public void setCanIgnite(Boolean canIgnite){ this.m_canIgnite = canIgnite; }
@@ -35,6 +44,14 @@ public class PlayerDetails {
     public void setIsAdmin(Boolean isAdmin){ this.m_isAdmin = isAdmin; }
     public void setCantPlace(HashMap<Material, Boolean> CantPlaceList){ this.m_cantPlaceList = CantPlaceList; }
     public void setCanSpawn(HashMap<Material, Boolean> canSpawnList){ this.m_canSpawnList = canSpawnList; }
+
+    // Incrementers
+    public void incrementBlockPlaced() {m_blocksPlaced++;}
+    public void incrementBlockDestroyed() {m_blocksDestroyed++;}
+
+    // Reset Counters
+    public void resetBlockPlaced() { m_blocksPlaced = 0; }
+    public void resetBlockDestroyed() { m_blocksDestroyed = 0; }
 
     // TODO should this be can't spawn? Inclusive rather than exclusion
 
