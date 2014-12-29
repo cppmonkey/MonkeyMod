@@ -17,7 +17,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -29,6 +28,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  *
@@ -313,10 +313,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
             if (mobEvent.getDamager() instanceof Arrow) {
                 Arrow projectile = (Arrow) mobEvent.getDamager();
 
-                LivingEntity attacker = projectile.getShooter();
+                ProjectileSource projectileSource = projectile.getShooter();
 
-                if (attacker instanceof Player) {
-                    Player murderer = (Player) attacker;
+                if (projectileSource instanceof Player) {
+                    Player murderer = (Player) projectileSource;
                     String usingitem = murderer.getItemInHand().getType().name();
                     if (usingitem.equalsIgnoreCase("AIR")) {
                         usingitem = "bare hands";
