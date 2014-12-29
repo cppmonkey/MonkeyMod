@@ -65,11 +65,14 @@ public class MonkeyModPlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
+        PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
         // reporting to cppmonkey.net
         Parm[] parms = {
             new Parm("action", "disconnect"),
             new Parm("server_uid", m_plugin.getServerUID()),
-            new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID())
+            new Parm("player_id", playerDetails.playerUID()),
+            new Parm("blocks_placed", playerDetails.blocksPlaced()),
+            new Parm("blocks_destroyed", playerDetails.blocksDestroyed())
         };
         HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), m_plugin.getLoggerUrl(), parms);
         notification.setPriority(Thread.MIN_PRIORITY);

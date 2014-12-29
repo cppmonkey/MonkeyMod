@@ -2,8 +2,6 @@ package me.cppmonkey.monkeymod.listeners;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.player.PlayerDetails;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
@@ -36,20 +34,10 @@ public class MonkeyModBlockListener implements Listener {
             if (!playerDetails.canIgnite()) {
                 //Not allowed to burn
                 player.sendMessage(ChatColor.RED + "You don't have permission to ignite");
-
+                playerDetails.incrementDeniedBlocksIgnited();
                 event.setCancelled(true);
-                Parm[] parms = {
-                    new Parm("action", "ignite-attempt"),
-                    new Parm("player_id", playerDetails.playerUID()),
-                    new Parm("server_uid", m_plugin.getServerUID()),
-                    new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
-                };
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    m_plugin.getLoggerUrl(),
-                    parms);
-                notification.setPriority(Thread.MIN_PRIORITY);
-                notification.start();
+            } else {
+                playerDetails.incrementBlocksIgnited();
             }
             /* Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all */
         } else if (m_plugin.getConfig().getBoolean("protection.fire", false)) {
@@ -65,29 +53,18 @@ public class MonkeyModBlockListener implements Listener {
             PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
             if (playerDetails.canBuild()) {
-                playerDetails.incrementBlockPlaced();
-            }else{
+                playerDetails.incrementBlocksPlaced();
+            } else {
                 player.sendMessage(ChatColor.RED + "You don't have permission to build");
+                playerDetails.incrementDeniedBlocksPlaced();
                 event.setCancelled(true);
-                Parm[] parms = {
-                    new Parm("action", "build-attempt"),
-                    new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
-                    new Parm("server_uid", m_plugin.getServerUID()),
-                    new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
-                };
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    m_plugin.getLoggerUrl(),
-                    parms);
-                notification.setPriority(Thread.MIN_PRIORITY);
-                notification.start();
             }
         }
     }
 
     @EventHandler
     public void onBlockChange(EntityChangeBlockEvent event){
-        if(event.getEntityType().equals(EntityType.ENDERMAN)){
+        if(event.getEntityType() == EntityType.ENDERMAN){
             event.setCancelled(true);
         }
     }
@@ -97,25 +74,10 @@ public class MonkeyModBlockListener implements Listener {
         Player player = event.getPlayer();
 
         //return is not a player
-        if (player != null) {
             PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
-
-            if(!playerDetails.canBuild()) {
-                player.sendMessage(ChatColor.RED + "You don't have permission to destroy");
-                event.setCancelled(true);
-                Parm[] parms = {
-                    new Parm("action", "block-break-attempt"),
-                    new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
-                    new Parm("server_uid", m_plugin.getServerUID()),
-                    new Parm("data",event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
-                };
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    m_plugin.getLoggerUrl(),
-                    parms);
-                notification.setPriority(Thread.MIN_PRIORITY);
-                notification.start();
-            }
+        if (player != null && !playerDetails.canBuild()) {
+            event.setCancelled(true);
+            playerDetails.incrementDeniedBlocksDamaged();
         }
     }
 
@@ -126,22 +88,11 @@ public class MonkeyModBlockListener implements Listener {
         if (player != null) {
             PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
             if(playerDetails.canBuild()) {
-                playerDetails.incrementBlockDestroyed();
+                playerDetails.incrementBlocksDestroyed();
             } else {
                 player.sendMessage(ChatColor.RED + "You don't have permission to destroy");
+                playerDetails.incrementDeniedBlocksDestroyed();
                 event.setCancelled(true);
-                Parm[] parms = {
-                    new Parm("action", "block-break-attempt"),
-                    new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
-                    new Parm("server_uid", m_plugin.getServerUID()),
-                    new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
-                };
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    m_plugin.getLoggerUrl(),
-                    parms );
-                notification.setPriority(Thread.MIN_PRIORITY);
-                notification.start();
             }
         }
     }

@@ -29,7 +29,6 @@ import me.cppmonkey.monkeymod.threads.UpdateThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 154;
+    private Integer m_build = 157;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -52,8 +51,6 @@ public class MonkeyMod extends JavaPlugin {
     private MonkeyModExplosionListener m_ExplosionListener;
 
     public static final Logger log = Logger.getLogger("Minecraft");
-
-    public final HashMap<Material, Boolean> canSpawn = new HashMap<Material, Boolean>();
 
     // Server Details
     private Integer serverUID = 0;

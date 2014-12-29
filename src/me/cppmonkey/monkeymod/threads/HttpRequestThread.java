@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownServiceException;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
@@ -38,9 +39,9 @@ public class HttpRequestThread extends Thread {
         try {
             m_url = new URL(url + parseUrlParms(parms));
         } catch (RuntimeException rex){
-            MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run()", rex);
+            MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.buildUrl()", rex);
         } catch (MalformedURLException e) {
-            MonkeyMod.reportException("HttpRequestThread() Exception", e);
+            MonkeyMod.reportException("HttpRequestThread.buildUrl() Exception", e);
         }
     }
 
@@ -91,26 +92,24 @@ public class HttpRequestThread extends Thread {
                         MonkeyMod.log.severe("Server response to request - " + urlConn.getResponseCode());
                     }
                 } catch (RuntimeException rex){
-                    MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run()", rex);
-            } catch (IOException e) {
-                MonkeyMod.reportException(name + " Unable to get InputStream: ", e);
-            } finally {
-                if (in != null) {
-                    in.close();
+                    MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run() with Callback", rex);
+                } catch (IOException e) {
+                    MonkeyMod.reportException(name + " Unable to get InputStream: ", e);
+                } finally {
+                    if (in != null) {
+                        in.close();
+                    }
                 }
-            }
-
             } else {
                 // Basic call
                 urlConn.getInputStream();
             }
-
-
-
         } catch (RuntimeException rex){
             MonkeyMod.reportException("RuntimeExcption within HttpRequestThread.run()", rex);
+        } catch (UnknownServiceException e){
+            MonkeyMod.reportException("UnknownServiceException within HttpRequestThread.run()", e);
         } catch (IOException e) {
-            MonkeyMod.reportException("HttpRequestThread.run() Exception", e);
+            MonkeyMod.reportException("IOException within HttpRequestThread.run()", e);
         } finally {
             if (urlConn != null) {
                 urlConn.disconnect();

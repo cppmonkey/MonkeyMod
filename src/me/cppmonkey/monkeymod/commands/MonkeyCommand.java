@@ -165,7 +165,7 @@ public class MonkeyCommand implements CommandExecutor {
                         Boolean grant = "add".equalsIgnoreCase(args[0]);
 
 
-                        Parm permission = new Parm("add".equalsIgnoreCase(args[2])?"add":"remove","user");
+                        Parm permission = new Parm("add".equalsIgnoreCase(args[0])?"add":"remove","user");
                     if ("user".equalsIgnoreCase(args[1])) {
                         if (!playerDetails.canBuild()) {
                              playerDetails.setCanBuild(grant);

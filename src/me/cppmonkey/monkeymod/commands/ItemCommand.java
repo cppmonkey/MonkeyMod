@@ -22,17 +22,6 @@ public class ItemCommand implements CommandExecutor {
         m_plugin = instance;
 
         // TODO Should acquire restricted items from web service.
-
-        m_plugin.canSpawn.put(Material.BEDROCK, true);
-        m_plugin.canSpawn.put(Material.WATER, true);
-        m_plugin.canSpawn.put(Material.STATIONARY_WATER, true);
-        m_plugin.canSpawn.put(Material.LAVA, true);
-        m_plugin.canSpawn.put(Material.STATIONARY_LAVA, true);
-        m_plugin.canSpawn.put(Material.TNT, true);
-        m_plugin.canSpawn.put(Material.FIRE, true);
-        m_plugin.canSpawn.put(Material.MOB_SPAWNER, true);
-        m_plugin.canSpawn.put(Material.FLINT_AND_STEEL, true);
-        m_plugin.canSpawn.put(Material.LAVA_BUCKET, true);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -59,7 +48,7 @@ public class ItemCommand implements CommandExecutor {
                     String itemDetails[] = args[0].split(":");
                     Material itemMaterial = Material.matchMaterial(itemDetails[0]);
 
-                    if (itemRestricted(itemMaterial)) {
+                    if (playerDetails.cantPlace(itemMaterial)) {
                         // Item is restricted
                         // Allow exceptions to rule
                         if (playerDetails.isAdmin()) {
@@ -124,14 +113,6 @@ public class ItemCommand implements CommandExecutor {
                 //TODO Process Console /item Commands. Will require player name!
                 sender.sendMessage("Error: the console cant do that yet!");
             }
-        }
-
-        return false;
-    }
-
-    private boolean itemRestricted(Material item) {
-        if(m_plugin.canSpawn.containsKey(item)){
-            return m_plugin.canSpawn.get(item);
         }
         return false;
     }
