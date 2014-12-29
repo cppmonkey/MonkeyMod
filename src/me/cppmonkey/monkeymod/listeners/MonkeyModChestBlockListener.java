@@ -8,8 +8,6 @@ import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.player.PlayerDetails;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -107,18 +105,6 @@ public class MonkeyModChestBlockListener implements Listener {
                 player.sendMessage(ChatColor.RED + "You do not have permission to destroy this chest");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner);
                 event.setCancelled(true);
-                Parm[] parms = {
-                    new Parm("action", "chest-break-attempt"),
-                    new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
-                    new Parm("server_uid", m_plugin.getServerUID()),
-                    new Parm("data", chestOwner + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
-                };
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    m_plugin.getLoggerUrl(),
-                    parms );
-                notification.setPriority(Thread.MIN_PRIORITY);
-                notification.start();
             }
         } else if (event.getBlock().getType() == Material.CHEST) {
             event.setCancelled(true);

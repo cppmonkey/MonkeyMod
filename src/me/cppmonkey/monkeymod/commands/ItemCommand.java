@@ -2,8 +2,6 @@ package me.cppmonkey.monkeymod.commands;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.player.PlayerDetails;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,18 +56,6 @@ public class ItemCommand implements CommandExecutor {
                         // Item is restricted
                         // Allow exceptions to rule
                         player.sendMessage(ChatColor.RED + "This item is restricted");
-                        Parm[] parms = {
-                            new Parm("action", "restricted-item-attempt"),
-                            new Parm("player_id", playerDetails.playerUID()),
-                            new Parm("server_uid", m_plugin.getServerUID()),
-                            new Parm("data",itemMaterial.name())
-                        };
-                        HttpRequestThread notification = new HttpRequestThread(
-                            "Connection Notification Thread:" + player.getName(),
-                            m_plugin.getLoggerUrl(),
-                            parms);
-                        notification.setPriority(Thread.MIN_PRIORITY);
-                        notification.start();
                         return true;
                     }
 

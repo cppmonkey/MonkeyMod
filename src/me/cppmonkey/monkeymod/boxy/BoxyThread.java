@@ -2,6 +2,7 @@ package me.cppmonkey.monkeymod.boxy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -43,6 +44,10 @@ public class BoxyThread implements Runnable {
         int blocksProcessed = 0;
         
         while( blocksProcessed < g_maxBlocks) {
+            Block current = m_current.toLocation(m_world).getBlock();
+            if( current != null ){
+                current.breakNaturally();
+            }
             blocksProcessed++;
             
             if(m_current.equals(m_end)){
@@ -66,8 +71,8 @@ public class BoxyThread implements Runnable {
 
         if(blocksProcessed == g_maxBlocks) {
             // create new process to continue the task next tick, prevents stalling
-            Bukkit.broadcastMessage("process too large, rescheduling");
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(m_plugin, new BoxyThread(m_plugin,m_world, m_start, m_current, m_end, m_totalProcessed));
+            // Bukkit.broadcastMessage("process too large, rescheduling");
+            Bukkit.getScheduler().scheduleSyncDelayedTask(m_plugin, new BoxyThread(m_plugin,m_world, m_start, m_current, m_end, m_totalProcessed));
         }else{
             // Process finished
             Bukkit.broadcastMessage("Blocks processed in total = " + Integer.toString(m_totalProcessed));

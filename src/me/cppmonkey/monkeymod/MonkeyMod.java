@@ -11,12 +11,10 @@ import me.cppmonkey.monkeymod.commands.CompassCommand;
 import me.cppmonkey.monkeymod.commands.HomeCommand;
 import me.cppmonkey.monkeymod.commands.InventoryCommand;
 import me.cppmonkey.monkeymod.commands.ItemCommand;
-import me.cppmonkey.monkeymod.commands.MessageCommand;
 import me.cppmonkey.monkeymod.commands.ModeCommand;
 import me.cppmonkey.monkeymod.commands.MonkeyCommand;
 import me.cppmonkey.monkeymod.commands.SpawnCommand;
 import me.cppmonkey.monkeymod.commands.TeleCommand;
-import me.cppmonkey.monkeymod.http.callbacks.OnPlayerLogin;
 import me.cppmonkey.monkeymod.listeners.MonkeyModBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestBlockListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModChestPlayerListener;
@@ -24,9 +22,7 @@ import me.cppmonkey.monkeymod.listeners.MonkeyModExplosionListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerDeathListener;
 import me.cppmonkey.monkeymod.listeners.MonkeyModPlayerListener;
 import me.cppmonkey.monkeymod.player.PlayerDetails;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.threads.UpdateThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -61,7 +57,7 @@ public class MonkeyMod extends JavaPlugin {
         if( this.playerDetails.containsKey(player)) {
             return this.playerDetails.get(player);
         } else {
-            return new PlayerDetails(-1);
+            return new PlayerDetails(-1, player.getGameMode());
         }
     }
 
@@ -86,25 +82,6 @@ public class MonkeyMod extends JavaPlugin {
 
     public void onEnable() {
         try{
-            getServer().broadcastMessage("Reloading MonkeyMod");
-            getServer().broadcastMessage("There maybe a slight delay whilst permissions rights are re-acquired");
-
-            for(Player player : getServer().getOnlinePlayers()){
-                Parm[] parms = {
-                     new Parm("action", "connect"),
-                     new Parm("player", player.getName()),
-                     new Parm("server_uid", this.serverUID),
-                     new Parm("record", "false")
-                };
-
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    this.getLoggerUrl(),
-                    parms,
-                    new OnPlayerLogin(this, player));
-                notification.start();
-            }
-
             setNaggable(true);
             m_pluginDescFile = this.getDescription();
 
@@ -147,27 +124,11 @@ public class MonkeyMod extends JavaPlugin {
                 getCommand(CompassCommand.command).setExecutor(new CompassCommand(this));
                 getCommand(ModeCommand.command).setExecutor(new ModeCommand(this));
                 getCommand(InventoryCommand.command).setExecutor(new InventoryCommand(this));
-                getCommand(MessageCommand.command).setExecutor(new MessageCommand(this));
             } catch (RuntimeException rex) {
                 MonkeyMod.reportException("RuntimeExcption within MonkeyMod.onEnable()", rex);
             } catch (Exception ex) {
                 reportException("Exception within MonkeyMod.onEnable()", ex);
             }
-
-            // Notify CppMonkey.NET of the new server
-            // Notify server about new server
-
-            Parm[] parms = {
-                new Parm("action", "update"),
-                new Parm("package", this.getName()),
-                new Parm("version", this.getVersion()),
-                new Parm("build", this.getBuild()),
-                new Parm("port", Integer.toString(getServer().getPort()))
-            };
-
-            HttpRequestThread notification = new HttpRequestThread("Notification thread: Plugin initialized", getLoggerUrl(), parms);
-            notification.setPriority(Thread.MIN_PRIORITY);
-            notification.start();
 
             if (this.getConfig().getBoolean("plugin.update.auto")) {
                 /*

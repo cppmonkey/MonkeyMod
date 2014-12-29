@@ -4,8 +4,6 @@ import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.player.PlayerDetails;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -114,18 +112,6 @@ public class BoxyCommand implements CommandExecutor {
 
                 } else {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
-                    Parm[] parms = {
-                        new Parm("action", "boxy-attempt"),
-                        new Parm("player_id", playerDetails.playerUID()),
-                        new Parm("server_uid", m_plugin.getServerUID()),
-                        new Parm("data", player.getLocation().getX()+","+player.getLocation().getY()+","+player.getLocation().getZ())
-                    };
-                    HttpRequestThread notification = new HttpRequestThread(
-                        "Connection Notification Thread:" + player.getName(),
-                        m_plugin.getLoggerUrl(),
-                        parms);
-                    notification.setPriority(Thread.MIN_PRIORITY);
-                    notification.start();
                     return true;
                 }
             } else {

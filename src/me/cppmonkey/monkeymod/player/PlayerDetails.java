@@ -3,6 +3,7 @@ package me.cppmonkey.monkeymod.player;
 import java.sql.Timestamp;
 import java.util.HashMap;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 
 
@@ -31,6 +32,19 @@ public class PlayerDetails {
         this.m_playerUID = playerUID;
         java.util.Date date= new java.util.Date();
         m_connectionTime = new Timestamp(date.getTime());
+    }
+
+    public PlayerDetails(Integer playerUID, GameMode gameMode){
+        this.m_playerUID = playerUID;
+        java.util.Date date= new java.util.Date();
+        m_connectionTime = new Timestamp(date.getTime());
+
+        if( gameMode == GameMode.CREATIVE ) {
+            m_canBuild = true;
+            m_canIgnite = true;
+            m_isVip = true;
+            m_isAdmin = true;
+        }
     }
 
     // Getters

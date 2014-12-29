@@ -4,8 +4,6 @@ import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.player.PlayerDetails;
-import me.cppmonkey.monkeymod.threads.HttpRequestThread;
-import me.cppmonkey.monkeymod.utils.Parm;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -60,19 +58,6 @@ public class MonkeyModChestPlayerListener implements Listener {
                     player.sendMessage(ChatColor.RED + "This is not your chest!");
                     player.sendMessage(ChatColor.RED + "You cannot lock / unlock it");
                     event.setCancelled(true);
-                    //reporting to cppmonkey.net
-                    Parm[] parms = {
-                        new Parm("action", "attempt_to_unlock_chest"),
-                        new Parm("player_id", playerDetails.playerUID()),
-                        new Parm("server_uid", m_plugin.getServerUID()),
-                        new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
-                    };
-                    HttpRequestThread notification = new HttpRequestThread(
-                        "Connection Notification Thread:" + player.getName(),
-                        m_plugin.getLoggerUrl(),
-                        parms);
-                    notification.setPriority(Thread.MIN_PRIORITY);
-                    notification.start();
                 }
             } else if (!chestOwner.equalsIgnoreCase(player.getName())
                     && !chestOwner.matches("PUBLIC")
@@ -81,19 +66,6 @@ public class MonkeyModChestPlayerListener implements Listener {
                 player.sendMessage(ChatColor.RED + "You cannot access this chest.");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner + ", and is locked.");
                 event.setCancelled(true);
-                //reporting to cppmonkey.net
-                Parm[] parms = {
-                    new Parm("action", "attempt_to_open_chest"),
-                    new Parm("player_id", playerDetails.playerUID()),
-                    new Parm("server_uid", m_plugin.getServerUID()),
-                    new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
-                };
-                HttpRequestThread notification = new HttpRequestThread(
-                    "Connection Notification Thread:" + player.getName(),
-                    m_plugin.getLoggerUrl(),
-                    parms);
-                notification.setPriority(Thread.MIN_PRIORITY);
-                notification.start();
             }
         }
     }
