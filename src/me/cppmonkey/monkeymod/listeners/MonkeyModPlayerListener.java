@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Locale;
 
-import me.cppmonkey.monkeymod.BoxyExecutor;
 import me.cppmonkey.monkeymod.MonkeyMod;
 import me.cppmonkey.monkeymod.boxy.BoxyThread;
 import me.cppmonkey.monkeymod.http.callbacks.OnPlayerLogin;
@@ -71,7 +70,7 @@ public class MonkeyModPlayerListener implements Listener {
         Parm[] parms = {
             new Parm("action", "disconnect"),
             new Parm("server_uid", m_plugin.getServerUID()),
-            new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID().toString())
+            new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID())
         };
         HttpRequestThread notification = new HttpRequestThread("Connection Notification Thread:" + player.getName(), m_plugin.getLoggerUrl(), parms);
         notification.setPriority(Thread.MIN_PRIORITY);
@@ -86,7 +85,7 @@ public class MonkeyModPlayerListener implements Listener {
         try {
             Parm parms[] = {
                 new Parm("action", "message"),
-                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID().toString()),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("message", URLEncoder.encode(message, "UTF-8"))
             };
@@ -110,44 +109,16 @@ public class MonkeyModPlayerListener implements Listener {
             MonkeyMod.log.info(event.getPlayer().getName() + " is trying to use boxy");
             if (!playerDetails.isVip() && !playerDetails.isAdmin()) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
+            } else if (!mp_playerStartVector.containsKey(event.getPlayer())) {
+                mp_playerStartVector.put(event.getPlayer(), event.getClickedBlock().getLocation().toVector());
             } else {
-
-                Block block = event.getClickedBlock();
-
-                try {
-
-                    /*
-                     * /* //the switch compensates coords for the side of
-                     * the block clicked switch (event.getBlockFace()) {
-                     * case UP: Y++; break; case DOWN: Y--; break; case
-                     * NORTH: X++; break; case SOUTH: X--; break; case EAST:
-                     * Z++; break; case WEST: Z--; break; default: break; }
-                    */
-                    if ( !m_plugin.getConfig().getBoolean("boxy.experimental")){
-                    /* FIXME shouldn't create a new BoxyExecutor just to update start block
-                     * by all means make it a static function within your class to update the start location
-                     * but a temp variable would be adequate to keep the start location. Means less file access
-                     * Does mean that reloading the plugin resets players start location >_<
-                     */
-                    BoxyExecutor BoxyRunner = new BoxyExecutor(m_plugin);
-                    BoxyRunner.playerBoxyClickEvent(player, block);
-                    } else {
-                        // New scheduled task
-                        if (!mp_playerStartVector.containsKey(event.getPlayer())) {
-                            mp_playerStartVector.put(event.getPlayer(), event.getClickedBlock().getLocation().toVector());
-                        } else {
-                            // Player is selecting end block
-                            Vector minVector = Vector.getMinimum(event.getClickedBlock().getLocation().toVector(), mp_playerStartVector.get(event.getPlayer()));
-                            event.getPlayer().sendMessage("Min " + minVector.toString());
-                            Vector maxVector = Vector.getMaximum(event.getClickedBlock().getLocation().toVector(), mp_playerStartVector.get(event.getPlayer()));
-                            event.getPlayer().sendMessage("Max " + maxVector.toString());
-                            Bukkit.getScheduler().scheduleAsyncDelayedTask(m_plugin, new BoxyThread(m_plugin, event.getPlayer().getWorld(), minVector, maxVector));
-                            mp_playerStartVector.remove(event.getPlayer());
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    player.sendMessage(ChatColor.RED + "This is NOT a valid Boxy position or block type!");
-                }
+                // Player is selecting end block
+                Vector minVector = Vector.getMinimum(event.getClickedBlock().getLocation().toVector(), mp_playerStartVector.get(event.getPlayer()));
+                event.getPlayer().sendMessage("Min " + minVector.toString());
+                Vector maxVector = Vector.getMaximum(event.getClickedBlock().getLocation().toVector(), mp_playerStartVector.get(event.getPlayer()));
+                event.getPlayer().sendMessage("Max " + maxVector.toString());
+                Bukkit.getScheduler().scheduleAsyncDelayedTask(m_plugin, new BoxyThread(m_plugin, event.getPlayer().getWorld(), minVector, maxVector));
+                mp_playerStartVector.remove(event.getPlayer());
             }
         }
     } // END onPlayerInteract()

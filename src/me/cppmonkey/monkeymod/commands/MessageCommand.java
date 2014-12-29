@@ -44,7 +44,7 @@ public class MessageCommand implements CommandExecutor {
                         String message = URLEncoder.encode(Details[1], "UTF-8");
                         Parm[] parms = {
                             new Parm("action", "offline"),
-                            new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
+                            new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
                             new Parm("server_uid", m_plugin.getServerUID()),
                             new Parm("recipient",to),
                             new Parm("message", message)

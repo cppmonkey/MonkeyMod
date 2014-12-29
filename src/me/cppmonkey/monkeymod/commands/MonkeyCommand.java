@@ -161,7 +161,7 @@ public class MonkeyCommand implements CommandExecutor {
 
                         PlayerDetails playerDetails = m_plugin.getPlayerDetails(grantToPlayer);
 
-                        Parm player_id = new Parm("player_id", sender instanceof Player ? playerDetails.getPlayerUID():-1);
+                        Parm player_id = new Parm("player_id", sender instanceof Player ? playerDetails.playerUID():-1);
                         Boolean grant = "add".equalsIgnoreCase(args[0]);
 
 
@@ -187,7 +187,7 @@ public class MonkeyCommand implements CommandExecutor {
 
                     Parm[] parms = {
                         new Parm("action", "modify"),
-                        new Parm("grant_to_id", playerDetails.getPlayerUID()), // This is the Granted By ID
+                        new Parm("grant_to_id", playerDetails.playerUID()), // This is the Granted By ID
                         new Parm("server_uid", m_plugin.getServerUID()),
                         player_id,
                         permission
@@ -211,7 +211,7 @@ public class MonkeyCommand implements CommandExecutor {
                     sender.sendMessage(player.getName() + ".canIgnite: " + playerDetails.canIgnite());
                     sender.sendMessage(player.getName() + ".isAdmin: " + playerDetails.isAdmin());
                     sender.sendMessage(player.getName() + ".isVip: " + playerDetails.isVip());
-                    sender.sendMessage(player.getName() + ".UID: " + playerDetails.getPlayerUID());
+                    sender.sendMessage(player.getName() + ".UID: " + playerDetails.playerUID());
                 } else {
                     sender.sendMessage("User is offline");
                 }

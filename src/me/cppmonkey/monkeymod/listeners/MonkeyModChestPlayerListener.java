@@ -62,7 +62,7 @@ public class MonkeyModChestPlayerListener implements Listener {
                     //reporting to cppmonkey.net
                     Parm[] parms = {
                         new Parm("action", "attempt_to_unlock_chest"),
-                        new Parm("player_id", playerDetails.getPlayerUID()),
+                        new Parm("player_id", playerDetails.playerUID()),
                         new Parm("server_uid", m_plugin.getServerUID()),
                         new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                     };
@@ -83,7 +83,7 @@ public class MonkeyModChestPlayerListener implements Listener {
                 //reporting to cppmonkey.net
                 Parm[] parms = {
                     new Parm("action", "attempt_to_open_chest"),
-                    new Parm("player_id", playerDetails.getPlayerUID()),
+                    new Parm("player_id", playerDetails.playerUID()),
                     new Parm("server_uid", m_plugin.getServerUID()),
                     new Parm("data", chestOwner + ":" + event.getClickedBlock().getX() + "," + event.getClickedBlock().getY() + "," + event.getClickedBlock().getZ())
                 };

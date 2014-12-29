@@ -116,7 +116,7 @@ public class BoxyCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use Boxy");
                     Parm[] parms = {
                         new Parm("action", "boxy-attempt"),
-                        new Parm("player_id", playerDetails.getPlayerUID()),
+                        new Parm("player_id", playerDetails.playerUID()),
                         new Parm("server_uid", m_plugin.getServerUID()),
                         new Parm("data", player.getLocation().getX()+","+player.getLocation().getY()+","+player.getLocation().getZ())
                     };

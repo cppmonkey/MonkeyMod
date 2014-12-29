@@ -68,7 +68,7 @@ public class ItemCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "This item is restricted");
                         Parm[] parms = {
                             new Parm("action", "restricted-item-attempt"),
-                            new Parm("player_id", playerDetails.getPlayerUID()),
+                            new Parm("player_id", playerDetails.playerUID()),
                             new Parm("server_uid", m_plugin.getServerUID()),
                             new Parm("data",itemMaterial.name())
                         };

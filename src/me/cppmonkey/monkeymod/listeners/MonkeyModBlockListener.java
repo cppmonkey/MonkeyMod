@@ -42,7 +42,7 @@ public class MonkeyModBlockListener implements Listener {
                 event.setCancelled(true);
                 Parm[] parms = {
                     new Parm("action", "ignite-attempt"),
-                    new Parm("player_id", playerDetails.getPlayerUID()),
+                    new Parm("player_id", playerDetails.playerUID()),
                     new Parm("server_uid", m_plugin.getServerUID()),
                     new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
@@ -68,7 +68,7 @@ public class MonkeyModBlockListener implements Listener {
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "build-attempt"),
-                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };
@@ -98,7 +98,7 @@ public class MonkeyModBlockListener implements Listener {
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "block-break-attempt"),
-                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("data",event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };
@@ -120,7 +120,7 @@ public class MonkeyModBlockListener implements Listener {
             event.setCancelled(true);
             Parm[] parms = {
                 new Parm("action", "block-break-attempt"),
-                new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
+                new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
                 new Parm("server_uid", m_plugin.getServerUID()),
                 new Parm("data", event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
             };

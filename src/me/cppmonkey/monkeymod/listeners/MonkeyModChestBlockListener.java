@@ -99,7 +99,7 @@ public class MonkeyModChestBlockListener implements Listener {
                 event.setCancelled(true);
                 Parm[] parms = {
                     new Parm("action", "chest-break-attempt"),
-                    new Parm("player_id", m_plugin.getPlayerDetails(player).getPlayerUID()),
+                    new Parm("player_id", m_plugin.getPlayerDetails(player).playerUID()),
                     new Parm("server_uid", m_plugin.getServerUID()),
                     new Parm("data", chestOwner + ":" + event.getBlock().getX() + "," + event.getBlock().getY() + "," + event.getBlock().getZ())
                 };
