@@ -27,7 +27,7 @@ function ReportError( $strMsg = "" ){
     $caller['file']." ".$caller['line']."\n\n".
     $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."&serverip=".$_SERVER['REMOTE_ADDR'];
     echo $mailMessage;
-    mail($mailTo, $mailSubject, $mailMessage);
+    //mail($mailTo, $mailSubject, $mailMessage);
 }
 
 $dblink = new mysqli( $dbserver, $dbuser, $dbpass, $dbname );
@@ -167,7 +167,7 @@ if( isset($_GET["action"]) && $server ) {
         echo "search package list for package<br/>\n";
         echo "compare package versions<br/>\n";
         echo "update is needed<br/>\n";
-        echo "serverUID:".$server->id()."\n";
+        echo "serverUID:".$server->GetId()."\n";
         $package = new CServerPackage();
 
         if( !$package->IsUptodate("mc_packages")) {

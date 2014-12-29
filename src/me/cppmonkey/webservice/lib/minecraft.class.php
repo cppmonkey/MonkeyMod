@@ -33,6 +33,7 @@ class Minecraft {
             $query = "
             SELECT *
             FROM `mc_servers`
+            WHERE `last_action` > NOW() - INTERVAL 2 MONTH
             ";
         }
 
@@ -92,25 +93,22 @@ class Minecraft {
                 "id" => -1,
                 "title" => $ip,
                 "address" => $ip,
-                "server_ip" => $ip,
+                "ipv4" => $ip,
+                "ipv6" => $ip,
                 "game_port" => isset($_GET['port']) ? $_GET['port']:$_GET['rcon-port']-10,
-                "admin_port" => isset($_GET['port']) ? $_GET['port']+10:$_GET['rcon-port'],
-                "admin_password" => "",
-                "owner_id" => 0
+                "owner_id" => -1
         ));
          
         $query = sprintf(
                 "INSERT INTO `mc_servers`
-                (`title`, `address`, `server_ip`, `game_port`, `admin_port`, `admin_password`, `owner_id`)
+                (`title`, `address`, `ipv4`, `game_port`,`owner_id`)
                 VALUES
-                ('%s', '%s', '%s', '%d', '%d', '%s', '%d')
+                ('%s', '%s', '%s', '%d', '%d')
                 ",
                 $server->GetTitle(),
                 $server->GetAddress(),
                 $server->GetIp(),
                 $server->GetGamePort(),
-                $server->GetAdminPort(),
-                $server->GetAdminPass(),
                 $server->GetOwnerId()
         );
         

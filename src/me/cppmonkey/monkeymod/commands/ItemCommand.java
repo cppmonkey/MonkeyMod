@@ -48,12 +48,15 @@ public class ItemCommand implements CommandExecutor {
                     String itemDetails[] = args[0].split(":");
                     Material itemMaterial = Material.matchMaterial(itemDetails[0]);
 
-                    if (playerDetails.cantPlace(itemMaterial)) {
+                    // Material wasn't found trying again
+                    if (itemMaterial == null) {
+                        player.sendMessage(ChatColor.RED + "Item not found");
+                        return true;
+                    }
+
+                    if (playerDetails.cantPlace(itemMaterial) && !playerDetails.isAdmin()) {
                         // Item is restricted
                         // Allow exceptions to rule
-                        if (playerDetails.isAdmin()) {
-                            return false;
-                        }
                         player.sendMessage(ChatColor.RED + "This item is restricted");
                         Parm[] parms = {
                             new Parm("action", "restricted-item-attempt"),
@@ -70,14 +73,7 @@ public class ItemCommand implements CommandExecutor {
                         return true;
                     }
 
-                    // Material wasn't found trying again
-                    if (itemMaterial == null) {
-                        player.sendMessage(ChatColor.RED + "Item not found");
-                        return true;
-                    }
-
                     //Create stack for item. Size is 0 to begin with!
-
                     short durability = 0;
                     if (itemDetails.length == 2) {
                         durability = (short) Integer.parseInt(itemDetails[1]);

@@ -161,7 +161,7 @@ public class MonkeyCommand implements CommandExecutor {
 
                         PlayerDetails playerDetails = m_plugin.getPlayerDetails(grantToPlayer);
 
-                        Parm player_id = new Parm("player_id", sender instanceof Player ? playerDetails.playerUID():-1);
+                        Parm player_id = new Parm("player_id", sender instanceof Player ? m_plugin.getPlayerDetails((Player)sender).playerUID():-1);
                         Boolean grant = "add".equalsIgnoreCase(args[0]);
 
 

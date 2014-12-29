@@ -5,11 +5,16 @@
 package me.cppmonkey.monkeymod.listeners;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -22,6 +27,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -268,6 +275,25 @@ public class MonkeyModPlayerDeathListener implements Listener {
     public void onEntityDeath(PlayerDeathEvent event) {
         PlayerDeathEvent playerevent = (PlayerDeathEvent)event;
         playerevent.setDeathMessage(ChatColor.GOLD + event.getEntity().getName() + deathDescription(event));
+
+        java.util.List<ItemStack> itemStack = playerevent.getDrops();
+
+        Location location = playerevent.getEntity().getLocation();
+
+        Block block = playerevent.getEntity().getWorld().getBlockAt(location);
+
+        block.setType(Material.CHEST);
+        Chest chest = (Chest) block.getState();
+        Inventory chestInvetory = chest.getInventory();
+
+        Iterator<ItemStack> itemIterator = itemStack.iterator();
+
+        while (itemIterator.hasNext()){
+            ItemStack items = itemIterator.next();
+            chestInvetory.addItem(items.clone());
+        }
+
+        playerevent.getDrops().clear();
     }
 
     @EventHandler

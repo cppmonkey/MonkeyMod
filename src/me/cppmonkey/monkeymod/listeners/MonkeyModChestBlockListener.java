@@ -1,8 +1,13 @@
 package me.cppmonkey.monkeymod.listeners;
 
+/* Version 1.01
+ *  made default chest setting to public is non-vip
+ */
+
 import java.util.Locale;
 
 import me.cppmonkey.monkeymod.MonkeyMod;
+import me.cppmonkey.monkeymod.player.PlayerDetails;
 import me.cppmonkey.monkeymod.threads.HttpRequestThread;
 import me.cppmonkey.monkeymod.utils.Parm;
 
@@ -66,16 +71,21 @@ public class MonkeyModChestBlockListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null && m_plugin.getPlayerDetails(player).canBuild()) {
+        PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
+        if (player != null && playerDetails.canBuild()) {
 
             // Is the item being place a chest?
             if (event.getBlockPlaced().getType() == Material.CHEST) {
                 String nextTo = nextToChest(event);
-            if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
-                player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
-                String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," +event.getBlock().getY() + "," + event.getBlock().getZ();
-                m_plugin.getConfig().set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
-                m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
+                if (nextTo.matches("NONE") || nextTo.matches(player.getName().toLowerCase(Locale.ENGLISH))) {
+                    player.sendMessage(ChatColor.GREEN + "This chest is now registered to you");
+                    String chestLocation = event.getBlock().getWorld().getName() + ":" + event.getBlock().getX() + "," +event.getBlock().getY() + "," + event.getBlock().getZ();
+                    m_plugin.getConfig().set(chestLocation + ".owner", player.getName().toLowerCase(Locale.ENGLISH));
+                    if (playerDetails.isVip() == true) {
+                        m_plugin.getConfig().set(chestLocation + ".lock", "CLOSED");
+                    } else {
+                        m_plugin.getConfig().set(chestLocation + ".key",  "UNLOCK");
+                    }
                 } else {
                     player.sendMessage(ChatColor.RED + "You cannot place a chest here.");
                     player.sendMessage(ChatColor.RED + "The adjacent chest does not belong to you");

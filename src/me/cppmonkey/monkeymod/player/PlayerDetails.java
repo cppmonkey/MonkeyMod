@@ -9,6 +9,7 @@ import org.bukkit.Material;
 public class PlayerDetails {
 
     private Integer m_playerUID;
+
     private Integer m_blocksPlaced = 0;
     private Integer m_blocksIgnited = 0;
     private Integer m_blocksDestroyed = 0;
@@ -23,8 +24,8 @@ public class PlayerDetails {
     private Boolean m_isAdmin = false;
     private Timestamp m_connectionTime;
 
-    private HashMap<Material, Boolean> m_canSpawnList;
-    private HashMap<Material, Boolean> m_cantPlaceList;
+    private HashMap<Material, Boolean> m_canSpawnList = new HashMap<Material, Boolean>();
+    private HashMap<Material, Boolean> m_cantPlaceList = new HashMap<Material, Boolean>();
 
     public PlayerDetails(Integer playerUID){
         this.m_playerUID = playerUID;
@@ -34,6 +35,7 @@ public class PlayerDetails {
 
     // Getters
     public Integer playerUID(){return m_playerUID;}
+
     public Integer blocksPlaced(){return m_blocksPlaced;}
     public Integer blocksIgnited(){return m_blocksIgnited;}
     public Integer blocksDestroyed(){return m_blocksDestroyed;}

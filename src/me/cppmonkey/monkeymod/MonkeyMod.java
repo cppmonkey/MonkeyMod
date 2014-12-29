@@ -39,7 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 157;
+    private Integer m_build = 161;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners

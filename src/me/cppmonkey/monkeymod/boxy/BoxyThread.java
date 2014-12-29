@@ -42,7 +42,7 @@ public class BoxyThread implements Runnable {
     public void run() {
         int blocksProcessed = 0;
         
-        while( blocksProcessed < g_maxBlocks || m_current.equals(m_end) ) {
+        while( blocksProcessed < g_maxBlocks) {
             blocksProcessed++;
             
             if(m_current.equals(m_end)){
@@ -53,15 +53,17 @@ public class BoxyThread implements Runnable {
                 m_current.setZ(m_current.getZ()+1);
             }else if(m_current.getBlockY() != m_end.getBlockY()) {
                 m_current.setY(m_current.getY()+1);
-                m_current.setZ(m_end.getZ());
+                m_current.setZ(m_start.getZ());
             }else if(m_current.getBlockX() != m_end.getBlockX()) {
                 m_current.setX(m_current.getX()+1);
-                m_current.setY(m_end.getY());
-                m_current.setZ(m_end.getZ());
+                m_current.setY(m_start.getY());
+                m_current.setZ(m_start.getZ());
             }
             
         }
         
+        m_totalProcessed += blocksProcessed;
+
         if(blocksProcessed == g_maxBlocks) {
             // create new process to continue the task next tick, prevents stalling
             Bukkit.broadcastMessage("process too large, rescheduling");
