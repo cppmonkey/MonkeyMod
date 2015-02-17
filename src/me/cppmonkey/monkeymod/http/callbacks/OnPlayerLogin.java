@@ -37,16 +37,16 @@ public class OnPlayerLogin implements IThreadCallback {
                 String split[] = result.split(":");
 
                 if (split.length == 2) {
-                    if(playerDetails.playerUID() != -1){
+                    if (playerDetails.playerUID() != -1) {
                         if ("isOp".equalsIgnoreCase(split[0])) {
                             m_owner.setOp(split[1].equalsIgnoreCase("true"));
-                        }else if (split[0].equalsIgnoreCase("canBuild")) {
+                        } else if (split[0].equalsIgnoreCase("canBuild")) {
                             playerDetails.setCanBuild(split[1].equalsIgnoreCase("true"));
-                        }else if (split[0].equalsIgnoreCase("canIgnite")) {
+                        } else if (split[0].equalsIgnoreCase("canIgnite")) {
                             playerDetails.setCanIgnite(split[1].equalsIgnoreCase("true"));
-                        }else if (split[0].equalsIgnoreCase("isVip")) {
-                            playerDetails.setIsVip( split[1].equalsIgnoreCase("true"));
-                        }else if (split[0].equalsIgnoreCase("isAdmin")) {
+                        } else if (split[0].equalsIgnoreCase("isVip")) {
+                            playerDetails.setIsVip(split[1].equalsIgnoreCase("true"));
+                        } else if (split[0].equalsIgnoreCase("isAdmin")) {
                             playerDetails.setIsAdmin(split[1].equalsIgnoreCase("true"));
                         }
                     } else if (split[0].equalsIgnoreCase("playerUID")) {
@@ -56,11 +56,11 @@ public class OnPlayerLogin implements IThreadCallback {
                         // TODO Report issue
                     }
 
-                message(result);
+                    message(result);
                 }
             }
 
-        }catch (RuntimeException rex){
+        } catch (RuntimeException rex) {
             MonkeyMod.reportException("RuntimeExcption within LoginCallback.processLine()", rex);
         } catch (Exception ex) {
             MonkeyMod.reportException("Exception within LoginCallback.processLine()", ex);

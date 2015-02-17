@@ -62,7 +62,7 @@ public class UpdateThread extends Thread {
         m_PackageName = packageName;
         m_ReposUrl = respoUrl;
     }
-    
+
     private void message(String msg) {
         if (m_ThreadOwner != null) {
             m_ThreadOwner.sendMessage(msg);
@@ -79,13 +79,13 @@ public class UpdateThread extends Thread {
             msg = "Attempting to download " + m_ReposUrl + m_PackageName + ".jar";
 
             message(ChatColor.GREEN + msg);
-                
+
             URL url = new URL(m_ReposUrl + m_PackageName + ".jar");
             if (m_debug) {
                 String hostAddr = InetAddress.getByName(url.getHost()).getHostAddress();
                 message(hostAddr);
             }
-            
+
             if (!HttpURLConnection.getFollowRedirects()) {
                 MonkeyMod.log.warning("HTTP Redirections are not allowed");
             }
@@ -116,22 +116,22 @@ public class UpdateThread extends Thread {
                     } else {
                         os = new FileOutputStream(m_PackageName + ".jar");
                     }
-                    
+
                     int data = is.read();
-                    
+
                     while (data != -1) {
-                       os.write(data);
-                       data = is.read();
+                        os.write(data);
+                        data = is.read();
                     }
                 } catch (FileNotFoundException e) {
-                    MonkeyMod.reportException("FileNotFoundException within UpdateThread.java",e);
+                    MonkeyMod.reportException("FileNotFoundException within UpdateThread.java", e);
                 } finally {
                     if (os != null) {
                         os.close();
                     }
                 }
                 is.close();
-                
+
                 try {
                     if (m_isPlugin) {
                         m_plugin.getServer().reload();

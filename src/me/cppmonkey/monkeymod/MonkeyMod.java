@@ -87,7 +87,7 @@ public class MonkeyMod extends JavaPlugin {
     }
 
     public void onEnable() {
-        try{
+        try {
             setNaggable(true);
             m_pluginDescFile = this.getDescription();
 
@@ -102,7 +102,7 @@ public class MonkeyMod extends JavaPlugin {
 
             MonkeyMod.log.info(m_pluginDescFile.getFullName() + "(" + m_build + ") is enabled!");
 
-            try{
+            try {
                 if (this.getConfig().getBoolean("server.protection.enabled")) {
                     pm.registerEvents(m_ExplosionListener, this);
                     pm.registerEvents(m_BlockListener, this);
@@ -143,10 +143,10 @@ public class MonkeyMod extends JavaPlugin {
                 ConsoleCommandSender sender = getServer().getConsoleSender();
                 getServer().dispatchCommand(sender, "monkey uptodate");
             }
-        } catch(RuntimeException rex) {
-            reportException("RuntimeException within MonkeyMod.onEnable()",rex);
-        } catch(Exception ex) {
-            reportException("Exception within MonkeyMod.onEnable()",ex);
+        } catch (RuntimeException rex) {
+            reportException("RuntimeException within MonkeyMod.onEnable()", rex);
+        } catch (Exception ex) {
+            reportException("Exception within MonkeyMod.onEnable()", ex);
         }
         // getCommand("debug");
     }

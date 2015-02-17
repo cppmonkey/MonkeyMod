@@ -39,12 +39,12 @@ public class InventoryCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use " + command + " commands");
                 return true;
             }
-            player = m_plugin.getServer().getPlayer(args[0]);
+            player = m_plugin.getServer().getPlayer(m_plugin.getPlayer(args[0]));
         } else {
             return false;
         }
-            
-            if (player != null) {
+
+        if (player != null) {
 
             HashMap<Material, Integer> playerItems = new HashMap<Material, Integer>();
             for (ItemStack itemStack : player.getInventory().getContents()) {
@@ -59,10 +59,10 @@ public class InventoryCommand implements CommandExecutor {
 
             for (Entry<Material, Integer> entry : playerItems.entrySet()) {
                 sender.sendMessage(ChatColor.GOLD + entry.getKey().name() + " " + entry.getValue());
-                }
-            } else {
-                sender.sendMessage(ChatColor.GOLD + "Player not found.");
             }
+        } else {
+            sender.sendMessage(ChatColor.GOLD + "Player not found.");
+        }
 
         return true;
     }

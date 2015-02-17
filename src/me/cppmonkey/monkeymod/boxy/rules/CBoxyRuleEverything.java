@@ -20,7 +20,8 @@ import org.bukkit.block.Block;
 public class CBoxyRuleEverything implements IBoxyReplacer {
 
     private Material m_toMaterial;
-    public CBoxyRuleEverything( Material blockTo ){
+
+    public CBoxyRuleEverything(Material blockTo) {
         m_toMaterial = blockTo;
     }
 

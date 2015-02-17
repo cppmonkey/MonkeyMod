@@ -15,7 +15,7 @@ public class CompassCommand implements CommandExecutor {
 
     public CompassCommand(MonkeyMod instance) {
     }
-    
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;

@@ -35,10 +35,10 @@ public class ModeCommand implements CommandExecutor {
 
         if (player != null) {
             if (player.getGameMode() == GameMode.CREATIVE) {
-                    player.setGameMode(GameMode.SURVIVAL);
+                player.setGameMode(GameMode.SURVIVAL);
             } else {
-                    player.setGameMode(GameMode.CREATIVE);
-                }
+                player.setGameMode(GameMode.CREATIVE);
+            }
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + "Unable to find player");

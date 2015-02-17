@@ -21,11 +21,11 @@ public class CBoxyRuleSolids implements IBoxyReplacer {
     private Material m_toMaterial;
     private boolean m_exclusionsEnabled = false;
     private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
-    
-    public CBoxyRuleSolids( Material toMaterial) {
+
+    public CBoxyRuleSolids(Material toMaterial) {
         m_toMaterial = toMaterial;
     }
-    
+
     public boolean exclude(Block block) {
         if (m_exclusionsEnabled) {
             return m_exclusionList.containsKey(block.getType()) || !isSolid(block);

@@ -5,7 +5,7 @@ import me.cppmonkey.monkeymod.interfaces.IThreadCallback;
 
 public class OnPluginStart implements IThreadCallback {
     private MonkeyMod m_plugin;
-    
+
     public OnPluginStart(MonkeyMod plugin) {
         m_plugin = plugin;
     }
@@ -13,12 +13,12 @@ public class OnPluginStart implements IThreadCallback {
     public void processLine(String result) {
         // TODO Auto-generated method stub
         if (result != null && result.length() != 0) {
-            
+
             result = result.trim();
             String split[] = result.split(":");
-            
+
             if (split.length == 2) {
-                if( "serverUID".equalsIgnoreCase(split[0]) ) {
+                if ("serverUID".equalsIgnoreCase(split[0])) {
                     m_plugin.setServerUID(Integer.parseInt(split[1]));
                 }
             }

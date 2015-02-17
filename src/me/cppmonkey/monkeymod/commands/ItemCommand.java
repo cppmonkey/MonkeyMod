@@ -59,7 +59,7 @@ public class ItemCommand implements CommandExecutor {
                         return true;
                     }
 
-                    //Create stack for item. Size is 0 to begin with!
+                    // Create stack for item. Size is 0 to begin with!
                     short durability = 0;
                     if (itemDetails.length == 2) {
                         durability = (short) Integer.parseInt(itemDetails[1]);
@@ -75,7 +75,6 @@ public class ItemCommand implements CommandExecutor {
                     // Collected all variables require
                     ItemStack item = new ItemStack(itemMaterial, quantity, durability);
 
-
                     player.getInventory().addItem(item);
                     player.sendMessage(ChatColor.GREEN + "There you go " + player.getName());
                     return true;
@@ -85,14 +84,14 @@ public class ItemCommand implements CommandExecutor {
                     sender.sendMessage(ex.getMessage());
                     return false;
                 } catch (NullPointerException e) {
-                    MonkeyMod.reportException(e.getMessage(),e);
-                }catch (RuntimeException rex){
+                    MonkeyMod.reportException(e.getMessage(), e);
+                } catch (RuntimeException rex) {
                     MonkeyMod.reportException("RuntimeExcption within ItemCommand.onCommand()", rex);
                 } catch (Exception ex) {
                     MonkeyMod.reportException("Exception within ItemCommand.onCommand()", ex);
                 }
-            } /*END /item (player) */ else {
-                //TODO Process Console /item Commands. Will require player name!
+            } /* END /item (player) */else {
+                // TODO Process Console /item Commands. Will require player name!
                 sender.sendMessage("Error: the console cant do that yet!");
             }
         }

@@ -24,7 +24,7 @@ public class MonkeyModBlockListener implements Listener {
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
-        //TODO Add exceptions to burning. caboose89 -> such as?
+        // TODO Add exceptions to burning. caboose89 -> such as?
 
         Player player = event.getPlayer();
 
@@ -32,14 +32,16 @@ public class MonkeyModBlockListener implements Listener {
         if (player != null) {
             PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
             if (!playerDetails.canIgnite()) {
-                //Not allowed to burn
+                // Not allowed to burn
                 player.sendMessage(ChatColor.RED + "You don't have permission to ignite");
                 playerDetails.incrementDeniedBlocksIgnited();
                 event.setCancelled(true);
             } else {
                 playerDetails.incrementBlocksIgnited();
             }
-            /* Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all */
+            /*
+             * Is environment caused burning allowed? Can't be first otherwise players wouldn't be able to place fire at all
+             */
         } else if (m_plugin.getConfig().getBoolean("protection.fire", false)) {
             // cancel environment based fire
             event.setCancelled(true);
@@ -49,7 +51,7 @@ public class MonkeyModBlockListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null){
+        if (player != null) {
             PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
             if (playerDetails.canBuild()) {
@@ -63,8 +65,8 @@ public class MonkeyModBlockListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockChange(EntityChangeBlockEvent event){
-        if(event.getEntityType() == EntityType.ENDERMAN){
+    public void onBlockChange(EntityChangeBlockEvent event) {
+        if (event.getEntityType() == EntityType.ENDERMAN) {
             event.setCancelled(true);
         }
     }
@@ -73,8 +75,8 @@ public class MonkeyModBlockListener implements Listener {
     public void onBlockDamage(BlockDamageEvent event) {
         Player player = event.getPlayer();
 
-        //return is not a player
-            PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
+        // return is not a player
+        PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
         if (player != null && !playerDetails.canBuild()) {
             event.setCancelled(true);
             playerDetails.incrementDeniedBlocksDamaged();
@@ -87,7 +89,7 @@ public class MonkeyModBlockListener implements Listener {
         // THIS MUST BE HERE!!! Otherwise people can wipe the text from signs
         if (player != null) {
             PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
-            if(playerDetails.canBuild()) {
+            if (playerDetails.canBuild()) {
                 playerDetails.incrementBlocksDestroyed();
             } else {
                 player.sendMessage(ChatColor.RED + "You don't have permission to destroy");

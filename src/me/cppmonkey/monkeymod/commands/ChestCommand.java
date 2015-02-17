@@ -26,13 +26,13 @@ public class ChestCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
-                if (args.length > 0) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
+            if (args.length > 0) {
                 // Must be a player to use these commands
-                if (args.length == 1){
-                    if((playerDetails.isVip() || playerDetails.isAdmin()) && "LOCK".equalsIgnoreCase(args[0])) {
+                if (args.length == 1) {
+                    if ((playerDetails.isVip() || playerDetails.isAdmin()) && "LOCK".equalsIgnoreCase(args[0])) {
                         m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "LOCK");
                         player.sendMessage(ChatColor.GREEN + "Your skellington key is set to LOCK");
                         return true;
@@ -40,10 +40,10 @@ public class ChestCommand implements CommandExecutor {
                         m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".key", "UNLOCK");
                         player.sendMessage(ChatColor.GREEN + "Your skellington key is set to UNLOCK");
                         return true;
-                   } else {
-                       player.sendMessage(ChatColor.RED + "Advanced chest functions are for VIPs only!");
-                       return true;
-                   }
+                    } else {
+                        player.sendMessage(ChatColor.RED + "Advanced chest functions are for VIPs only!");
+                        return true;
+                    }
                 }
             } else {
                 // No args supplied

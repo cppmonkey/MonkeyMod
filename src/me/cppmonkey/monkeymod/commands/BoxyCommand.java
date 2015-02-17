@@ -16,13 +16,12 @@ public class BoxyCommand implements CommandExecutor {
 
     private final MonkeyMod m_plugin;
 
-
     public BoxyCommand(MonkeyMod instance) {
         m_plugin = instance;
     }
 
     private void setDefaultSettings(String PlayerName) {
-        //set default settings on error occurring
+        // set default settings on error occurring
         m_plugin.getConfig().set(PlayerName.toLowerCase(Locale.ENGLISH) + ".fromId", 0);
         m_plugin.getConfig().set(PlayerName.toLowerCase(Locale.ENGLISH) + ".toId", 0);
         m_plugin.getConfig().set(PlayerName.toLowerCase(Locale.ENGLISH) + ".step", 1);
@@ -34,7 +33,7 @@ public class BoxyCommand implements CommandExecutor {
             // Must be a player to use these commands
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-				PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
+                PlayerDetails playerDetails = m_plugin.getPlayerDetails(player);
 
                 if (playerDetails.isVip() || playerDetails.isAdmin()) {
                     if (args.length == 4) {
@@ -47,31 +46,31 @@ public class BoxyCommand implements CommandExecutor {
                                 sender.sendMessage(ChatColor.RED + "Invalid argument value");
                                 setDefaultSettings(player.getName());
                             }
-                        player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
-                        return true;
+                            player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
+                            return true;
                         } catch (NumberFormatException ex) {
-                    // Report an error if text entered is invalid
-                    sender.sendMessage(ChatColor.RED + "Invalid argument value");
-                    sender.sendMessage(ex.getMessage());
-                    setDefaultSettings(player.getName());
-                    return false;
-                    }
+                            // Report an error if text entered is invalid
+                            sender.sendMessage(ChatColor.RED + "Invalid argument value");
+                            sender.sendMessage(ex.getMessage());
+                            setDefaultSettings(player.getName());
+                            return false;
+                        }
                     } else {
                         try {
-                        String boxyDetails[] = args[0].split(":");
+                            String boxyDetails[] = args[0].split(":");
                             if (boxyDetails[0].equals("h")) {
                                 m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".height", Integer.parseInt(boxyDetails[1]));
-                            player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
+                                player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                                 return true;
-                        }
+                            }
                             if (boxyDetails[0].equals("s")) {
                                 m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".step", Integer.parseInt(boxyDetails[1]));
-                            player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
+                                player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                                 return true;
-                        }
+                            }
                             if (boxyDetails[0].equals("e")) {
                                 m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude", boxyDetails[1]);
-                            player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
+                                player.sendMessage(ChatColor.GREEN + "Boxy settings accepted");
                                 return true;
                             }
                             if (boxyDetails[0].equals("help")) {
@@ -97,16 +96,16 @@ public class BoxyCommand implements CommandExecutor {
                                     m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".hasEnd", false);
                                     m_plugin.getConfig().set(player.getName().toLowerCase(Locale.ENGLISH) + ".exclude", "7");
                                     return true;
+                                }
+                            }
+                        } catch (NumberFormatException ex) {
+                            // Report an error if text entered is invalid
+                            sender.sendMessage(ChatColor.RED + "Invalid argument value");
+                            sender.sendMessage(ex.getMessage());
+                            setDefaultSettings(player.getName());
+                            return false;
                         }
                     }
-                        } catch (NumberFormatException ex) {
-                    // Report an error if text entered is invalid
-                    sender.sendMessage(ChatColor.RED + "Invalid argument value");
-                    sender.sendMessage(ex.getMessage());
-                    setDefaultSettings(player.getName());
-                    return false;
-                    }
-        }
                     player.sendMessage(ChatColor.RED + "Invalid Boxy command! Type Help for usage!");
                     return false;
 
@@ -115,7 +114,7 @@ public class BoxyCommand implements CommandExecutor {
                     return true;
                 }
             } else {
-                //TODO Undo capabilities for Console?
+                // TODO Undo capabilities for Console?
                 sender.sendMessage(ChatColor.RED + "Not implimented yet");
                 return false;
             }

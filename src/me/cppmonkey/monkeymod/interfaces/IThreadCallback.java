@@ -4,5 +4,5 @@ public abstract interface IThreadCallback {
 
     public abstract void processLine(String result);
 
-	public abstract void complete();
+    public abstract void complete();
 }

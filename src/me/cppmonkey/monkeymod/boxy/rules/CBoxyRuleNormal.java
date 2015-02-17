@@ -42,9 +42,9 @@ public class CBoxyRuleNormal implements IBoxyReplacer {
                 try {
                     m_exclusionList.put(Material.matchMaterial(excl), true);
                     System.out.println("put: exclude " + excl + " " + Material.matchMaterial(excl).name());
-                }catch (RuntimeException rex){
+                } catch (RuntimeException rex) {
                     MonkeyMod.reportException("RuntimeExcption within BoxyRuleNormal.setExclusions()", rex);
-                }catch (Exception ex) {
+                } catch (Exception ex) {
                     MonkeyMod.reportException("Exception within BoxyRuleNormal.setExclusions()", ex);
                 }
             }

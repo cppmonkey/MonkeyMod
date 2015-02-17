@@ -34,15 +34,32 @@ import org.bukkit.projectiles.ProjectileSource;
  *
  * @author CppMonkey
  */
-@Deprecated // Please use inbuilt enum for this purpose, even though I have added more error reporting
+@Deprecated
+// Please use inbuilt enum for this purpose, even though I have added more error
+// reporting
 enum e_monsters {
 
-    CraftZombie, CraftCreeper, CraftSpider, CraftPigZombie, CraftSlime, CraftGiant, CraftGhast, CraftSkeleton, CraftFireball, CraftCaveSpider, CraftEnderman, CraftSilverfish, CraftBlaze, CraftEnderDragon, CraftMagmaCube, novalue;
+    CraftZombie,
+    CraftCreeper,
+    CraftSpider,
+    CraftPigZombie,
+    CraftSlime,
+    CraftGiant,
+    CraftGhast,
+    CraftSkeleton,
+    CraftFireball,
+    CraftCaveSpider,
+    CraftEnderman,
+    CraftSilverfish,
+    CraftBlaze,
+    CraftEnderDragon,
+    CraftMagmaCube,
+    novalue;
 
     public static e_monsters fromString(String Str) {
         try {
             return valueOf(Str);
-        } catch (RuntimeException rex){
+        } catch (RuntimeException rex) {
             MonkeyMod.reportException("RuntimeExcption within e_monsters.fromString()", rex);
         } catch (Exception ex) {
             MonkeyMod.reportException("Exception within e_monsters.fromString()", ex);
@@ -59,7 +76,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
     }
 
     private String deathDescription(EntityDeathEvent event) {
-        try{
+        try {
             DamageCause cause = event.getEntity().getLastDamageCause().getCause();
             if (cause == DamageCause.CONTACT) {
                 String m_cactusDeath[] = {
@@ -67,81 +84,80 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " was pricked to death.",
                     " fought a cactus... and didn't win.",
                     " shoved a cactus... but the cactus shoved back.",
-                    " thought a cactus was something less dangerous..."
-                };
-                int randomNum =  (int) Math.round(Math.random() * m_cactusDeath.length + 0.5f); // Includes rounding up/down
+                    " thought a cactus was something less dangerous..." };
+                int randomNum = (int) Math.round(Math.random() * m_cactusDeath.length + 0.5f); // Includes rounding up/down
                 return m_cactusDeath[randomNum];
-            }else if (cause == DamageCause.ENTITY_ATTACK) {
+            } else if (cause == DamageCause.ENTITY_ATTACK) {
                 Player player = (Player) event.getEntity();
 
-                //Entity killer = player.getLastDamageCause().getEntity();
+                // Entity killer = player.getLastDamageCause().getEntity();
                 String killer = playerMap.get(player.getName());
                 String killerDetails[] = killer.split(":");
                 if (killerDetails.length > 1) {
-                    if("WOLF".equalsIgnoreCase(killerDetails[0])) {
+                    if ("WOLF".equalsIgnoreCase(killerDetails[0])) {
                         return " was mauled to  death by " + killerDetails[1] + "'s wolf.";
                     }
-                    if("SHOT".equalsIgnoreCase(killerDetails[0])) {
+                    if ("SHOT".equalsIgnoreCase(killerDetails[0])) {
                         return " was shot by " + killerDetails[2] + "'s " + killerDetails[1];
                     }
-                    if("PVP".equalsIgnoreCase(killerDetails[0])) {
+                    if ("PVP".equalsIgnoreCase(killerDetails[0])) {
                         return " was killed by " + killerDetails[2] + ", using a " + killerDetails[1];
                     }
                 } else {
                     String output = "";
                     switch (e_monsters.fromString(killer)) {
-                        case CraftZombie:
-                            output = " got their brain eaten.";
-                            break;
-                        case CraftCreeper:
-                            output = " saw a sad, green face... Briefly.";
-                            break;
-                        case CraftSpider:
-                            output = " wasn't carrying spider repellent.";
-                            break;
-                        case CraftPigZombie:
-                            output = " upset a Pig Zombie.";
-                            break;
-                        case CraftSlime:
-                            output = " got slimed.";
-                            break;
-                        case CraftGiant:
-                            output = " had their bones ground into bread.";
-                            break;
-                        case CraftGhast:
-                            output = " was spotted by a ghast.";
-                            break;
-                        case CraftSkeleton:
-                            output = " was assassinated by a skeletal archer.";
-                            break;
-                        case CraftFireball:
-                            output = " should have called ghastbusters.";
-                            break;
-                        case CraftCaveSpider:
-                            output = " thought the little blue spiders were passive.";
-                            break;
-                        case CraftEnderman:
-                            output = " got picked up, and taken to the End for supper.";
-                            break;
-                        case CraftSilverfish:
-                            output = " had a silver-fish burrow into them.";
-                            break;
-                        case CraftBlaze:
-                            output = " got blazed.";
-                            break;
-                        case CraftEnderDragon:
-                            output = " should have trained their dragon better.";
-                            break;
-                        case CraftMagmaCube:
-                            output = " was jumped on by animated lava.";
-                            break;
-                        default:
-                            output = " was killed by an angry mob.";
-                            break;
+                    case CraftZombie:
+                        output = " got their brain eaten.";
+                        break;
+                    case CraftCreeper:
+                        output = " saw a sad, green face... Briefly.";
+                        break;
+                    case CraftSpider:
+                        output = " wasn't carrying spider repellent.";
+                        break;
+                    case CraftPigZombie:
+                        output = " upset a Pig Zombie.";
+                        break;
+                    case CraftSlime:
+                        output = " got slimed.";
+                        break;
+                    case CraftGiant:
+                        output = " had their bones ground into bread.";
+                        break;
+                    case CraftGhast:
+                        output = " was spotted by a ghast.";
+                        break;
+                    case CraftSkeleton:
+                        output = " was assassinated by a skeletal archer.";
+                        break;
+                    case CraftFireball:
+                        output = " should have called ghastbusters.";
+                        break;
+                    case CraftCaveSpider:
+                        output = " thought the little blue spiders were passive.";
+                        break;
+                    case CraftEnderman:
+                        output = " got picked up, and taken to the End for supper.";
+                        break;
+                    case CraftSilverfish:
+                        output = " had a silver-fish burrow into them.";
+                        break;
+                    case CraftBlaze:
+                        output = " got blazed.";
+                        break;
+                    case CraftEnderDragon:
+                        output = " should have trained their dragon better.";
+                        break;
+                    case CraftMagmaCube:
+                        output = " was jumped on by animated lava.";
+                        break;
+                    default:
+                        output = " was killed by an angry mob.";
+                        break;
                     }
                     return output;
                 }
-            }else if (cause == DamageCause.FALL) {
+            } else if (cause == DamageCause.FALL) {
                 String m_fallDeath[] = {
                     " went bungee jumping... without the bungee.",
                     " has poor depth perception.",
@@ -153,11 +169,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " got owned by Newton.",
                     " should have used a ladder.",
                     " saw something shiny... a long way down",
-                    " fell to their death"
-                };
-                int randomNum =  (int) Math.round(Math.random() * m_fallDeath.length + 0.5f); // Includes rounding up/down
+                    " fell to their death" };
+                int randomNum = (int) Math.round(Math.random() * m_fallDeath.length + 0.5f); // Includes rounding up/down
                 return m_fallDeath[randomNum];
-            }else if (cause == DamageCause.FIRE) {
+            } else if (cause == DamageCause.FIRE) {
                 String m_fireDeath[] = {
                     " was on fire... literally.",
                     " played with matches.",
@@ -169,11 +184,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " thought they were a marshmallow.",
                     " is medium-rare.",
                     " thought they were the Human Torch.",
-                    " died in a fire"
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_fireDeath.length - 1)); // Includes rounding up/down
+                    " died in a fire" };
+                int randomNum = (int) Math.round(Math.random() * (m_fireDeath.length - 1)); // Includes rounding up/down
                 return m_fireDeath[randomNum];
-            }else if (cause == DamageCause.FIRE_TICK) {
+            } else if (cause == DamageCause.FIRE_TICK) {
                 String m_fireTickDeath[] = {
                     " should have had a water-bucket.",
                     " didn't find water fast enough.",
@@ -185,11 +199,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " slow-cooked themselves.",
                     " knows how the skellingtons feel now.",
                     " needed water.",
-                    " died while on fire."
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_fireTickDeath.length - 1)); // Includes rounding up/down
+                    " died while on fire." };
+                int randomNum = (int) Math.round(Math.random() * (m_fireTickDeath.length - 1)); // Includes rounding up/down
                 return m_fireTickDeath[randomNum];
-            }else if (cause == DamageCause.LAVA) {
+            } else if (cause == DamageCause.LAVA) {
                 String m_lavaDeath[] = {
                     " took a VERY hot bath.",
                     " didn't realise how hot lava was.",
@@ -201,11 +214,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " is now encased in molten rock.",
                     " thought a boat would be fine on lava.",
                     " wanted obsidian... but did it wrong.",
-                    " burnt in lava."
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_lavaDeath.length - 1)); // Includes rounding up/down
+                    " burnt in lava." };
+                int randomNum = (int) Math.round(Math.random() * (m_lavaDeath.length - 1)); // Includes rounding up/down
                 return m_lavaDeath[randomNum];
-            }else if (cause == DamageCause.DROWNING) {
+            } else if (cause == DamageCause.DROWNING) {
                 String m_drowningDeath[] = {
                     " is sleeping with the fishes.",
                     " couldn't hold their breath.",
@@ -217,11 +229,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " got taken by Davy Jones.",
                     " should have used a boat.",
                     " thought they were a fish.",
-                    " drowned"
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_drowningDeath.length - 1)); // Includes rounding up/down
+                    " drowned" };
+                int randomNum = (int) Math.round(Math.random() * (m_drowningDeath.length - 1)); // Includes rounding up/down
                 return m_drowningDeath[randomNum];
-            }else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
+            } else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
                 String m_explosionDeath[] = {
                     " didn't realise what the hissing sound was.",
                     " is in several pieces.",
@@ -232,11 +243,10 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " is now in orbit.",
                     " didn't understand the term 'blast-radius' means.",
                     " should have stayed further away from the big explosion.",
-                    " got blown up."
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_explosionDeath.length - 1)); // Includes rounding up/down
+                    " got blown up." };
+                int randomNum = (int) Math.round(Math.random() * (m_explosionDeath.length - 1)); // Includes rounding up/down
                 return m_explosionDeath[randomNum];
-            }else if (cause == DamageCause.VOID) {
+            } else if (cause == DamageCause.VOID) {
                 String m_voidDeath[] = {
                     " fell into nothingness.",
                     " made it past bedrock; it wasn't worth it.",
@@ -248,23 +258,21 @@ public class MonkeyModPlayerDeathListener implements Listener {
                     " went looking for the nether, but found nothing.",
                     " got Voided.",
                     " thought bedrock was there for show.",
-                    " fell into the void."
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_voidDeath.length - 1)); // Includes rounding up/down
+                    " fell into the void." };
+                int randomNum = (int) Math.round(Math.random() * (m_voidDeath.length - 1)); // Includes rounding up/down
                 return m_voidDeath[randomNum];
-            }else if (cause == DamageCause.CUSTOM) {
+            } else if (cause == DamageCause.CUSTOM) {
                 String m_customDeath[] = {
                     " encountered MISSINGNO.",
                     " died in mysterious circumstances.",
                     " was killed by something unusual.",
-                    " died at the hands of an unknown source"
-                };
-                    int randomNum =  (int) Math.round(Math.random() * (m_customDeath.length - 1)); // Includes rounding up/down
+                    " died at the hands of an unknown source" };
+                int randomNum = (int) Math.round(Math.random() * (m_customDeath.length - 1)); // Includes rounding up/down
                 return m_customDeath[randomNum];
             }
-        }catch (RuntimeException rex){
+        } catch (RuntimeException rex) {
             MonkeyMod.reportException("RuntimeException within MonkeyModPlayerDeathListener()", rex);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             MonkeyMod.reportException("Exception within MonkeyModPlayerDeathListener()", ex);
         }
 
@@ -273,7 +281,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(PlayerDeathEvent event) {
-        PlayerDeathEvent playerevent = (PlayerDeathEvent)event;
+        PlayerDeathEvent playerevent = (PlayerDeathEvent) event;
         playerevent.setDeathMessage(ChatColor.GOLD + event.getEntity().getName() + deathDescription(event));
 
         java.util.List<ItemStack> itemStack = playerevent.getDrops();
@@ -288,7 +296,7 @@ public class MonkeyModPlayerDeathListener implements Listener {
 
         Iterator<ItemStack> itemIterator = itemStack.iterator();
 
-        while (itemIterator.hasNext()){
+        while (itemIterator.hasNext()) {
             ItemStack items = itemIterator.next();
             chestInvetory.addItem(items.clone());
         }

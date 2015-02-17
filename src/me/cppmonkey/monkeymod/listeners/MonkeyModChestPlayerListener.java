@@ -29,7 +29,7 @@ public class MonkeyModChestPlayerListener implements Listener {
         Action click = event.getAction();
         if (player != null && click.equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().getType() == Material.CHEST) {
             // if player cannot build disallow access to chests!
-            if(!playerDetails.canBuild() && !playerDetails.isAdmin()){
+            if (!playerDetails.canBuild() && !playerDetails.isAdmin()) {
                 player.sendMessage(ChatColor.RED + "I can't let you do that");
                 event.setCancelled(true);
                 return;
@@ -59,10 +59,7 @@ public class MonkeyModChestPlayerListener implements Listener {
                     player.sendMessage(ChatColor.RED + "You cannot lock / unlock it");
                     event.setCancelled(true);
                 }
-            } else if (!chestOwner.equalsIgnoreCase(player.getName())
-                    && !chestOwner.matches("PUBLIC")
-                    && !playerDetails.isAdmin()
-                    && !chestLock.matches("OPEN")) {
+            } else if (!chestOwner.equalsIgnoreCase(player.getName()) && !chestOwner.matches("PUBLIC") && !playerDetails.isAdmin() && !chestLock.matches("OPEN")) {
                 player.sendMessage(ChatColor.RED + "You cannot access this chest.");
                 player.sendMessage(ChatColor.RED + "It belongs to " + chestOwner + ", and is locked.");
                 event.setCancelled(true);
