@@ -16,10 +16,11 @@ public class CBoxyRuleNormal implements IBoxyReplacer {
     private boolean m_exclusionsEnabled = false;
     private EnumMap<Material, Boolean> m_exclusionList = new EnumMap<Material, Boolean>(Material.class);
 
-    public CBoxyRuleNormal(int fromId, Material toMaterial) {
-        m_fromMaterial = Material.getMaterial(fromId);
+    public CBoxyRuleNormal(Material fromMaterial, Material toMaterial) {
+        m_fromMaterial = fromMaterial;
         m_toMaterial = toMaterial;
     }
+
     public boolean exclude(Block block) {
         if (block.getType() == m_fromMaterial && (m_exclusionsEnabled && !m_exclusionList.containsKey(block.getType()))) {
             return false;
@@ -50,7 +51,7 @@ public class CBoxyRuleNormal implements IBoxyReplacer {
         }
     }
 
-    public void setFrom(int descFromId) {
+    public void setFrom(String descFromId) {
         m_fromMaterial = Material.getMaterial(descFromId);
         System.out.println(m_fromMaterial.name());
     }

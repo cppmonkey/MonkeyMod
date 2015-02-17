@@ -33,14 +33,14 @@ public class CBoxyRuleSolids implements IBoxyReplacer {
         return !isSolid(block);
     }
 
-    // FIXME Needs improvement. Materials are suppose to have isSolid()
+    // FIXME Needs improvement. Materials are suppose to have isSolid() or !isLiquid()
     private boolean isSolid(Block block) {
-        switch (block.getTypeId()) {
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-        case 51:
+        switch (block.getType()) {
+        case WATER: // Formally block ID 8
+        case STATIONARY_WATER: // Formally block ID 9
+        case LAVA: // Formally block ID 10
+        case STATIONARY_LAVA: // Formally block ID 11
+        case FIRE: // Formally block ID 51
             return false;
         default:
             return true;
@@ -67,7 +67,7 @@ public class CBoxyRuleSolids implements IBoxyReplacer {
         }
     }
 
-    public void setFrom(int descFromId) {
+    public void setFrom(String descFromId) {
         // nothing to do
     }
 

@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  */
 public interface IBoxyReplacer {
 
-    public void setFrom(int descFromId);
+    public void setFrom(String descFrom);
 
     public boolean exclude(Block block);
 

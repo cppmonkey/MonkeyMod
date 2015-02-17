@@ -3,20 +3,22 @@ package me.cppmonkey.monkeymod.boxy.rules;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.material.MaterialData;
 
 public class CBoxyRuleNormalWithData extends CBoxyRuleNormal {
 
-    private byte m_fromMaterialData;
-    private byte m_toMaterialData;
+    private MaterialData m_fromMaterialData;
+    private MaterialData m_toMaterialData;
 
-    public CBoxyRuleNormalWithData(int fromId, int fromData, Material toMaterial, int toData) {
-        super(fromId, toMaterial);
-        m_fromMaterialData = (byte) fromData;
-        m_toMaterialData = (byte) toData;
+    public CBoxyRuleNormalWithData(Material fromMaterial, MaterialData fromData, Material toMaterial, MaterialData toData) {
+        super(fromMaterial, toMaterial);
+        m_fromMaterialData = fromData;
+        m_toMaterialData = toData;
     }
 
     public boolean exclude(Block block) {
-        if (block.getData() == m_fromMaterialData && !super.exclude(block)) {
+        // FIXME determine how to use MaterialData
+        if (block.getData() == m_fromMaterialData.getData() && !super.exclude(block)) {
             return false;
         } else {
             return true;
@@ -29,6 +31,6 @@ public class CBoxyRuleNormalWithData extends CBoxyRuleNormal {
 
     public void process(Block block) {
         block.setType(super.m_toMaterial);
-        block.setData(m_toMaterialData);
+        block.setData(m_toMaterialData.getData());
     }
 }

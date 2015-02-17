@@ -28,7 +28,7 @@ public class ModeCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use " + ModeCommand.command + " commands");
                 return true;
             }
-            player = m_plugin.getServer().getPlayer(args[0]);
+            player = m_plugin.getServer().getPlayer(m_plugin.getPlayer(args[0]));
         } else if (sender instanceof Player) {
             player = (Player) sender;
         }

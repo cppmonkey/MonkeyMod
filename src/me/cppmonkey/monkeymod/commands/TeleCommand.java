@@ -5,7 +5,6 @@ import java.util.Locale;
 import me.cppmonkey.monkeymod.MonkeyMod;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,16 +27,14 @@ public class TeleCommand implements CommandExecutor {
         if (sender instanceof Player && args.length > 0) {
             Player player = (Player) sender;
 
-            OfflinePlayer teleportDest = m_plugin.getServer().getOfflinePlayer(args[0]);
+            Player teleportDest = m_plugin.getServer().getPlayer(m_plugin.getPlayer(args[0]));
 
-            if(!teleportDest.hasPlayedBefore()) {
+            if (teleportDest == null) {
                 player.sendMessage(ChatColor.GOLD + "Player not found.");
-            } else if(!teleportDest.isOnline()){
-                player.sendMessage(ChatColor.GOLD + "Player is not online.");
-            } else if (player.getWorld() == teleportDest.getPlayer().getWorld()) {
+            } else if (player.getWorld() == teleportDest.getWorld()) {
                 // Store current location, may be needed later
-                String path = player.getName().toLowerCase(Locale.ENGLISH)+"."+player.getWorld().getName()+".last";
-                m_plugin.getConfig().set(path,player.getLocation().toVector());
+                String path = player.getName().toLowerCase(Locale.ENGLISH) + "." + player.getWorld().getName() + ".last";
+                m_plugin.getConfig().set(path, player.getLocation().toVector());
 
                 // Now teleport the player
                 player.teleport(teleportDest.getPlayer().getLocation());

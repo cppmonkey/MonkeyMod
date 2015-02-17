@@ -54,7 +54,7 @@ public class CBoxyRuleEverything implements IBoxyReplacer {
         }
     }
 
-    public void setFrom(int descFromId) {
+    public void setFrom(String descFromId) {
         // Nothing to do
     }
 

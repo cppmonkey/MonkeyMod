@@ -1,6 +1,9 @@
 package me.cppmonkey.monkeymod;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MonkeyMod extends JavaPlugin {
 
     // Plugin Details
-    private Integer m_build = 161;
+    private Integer m_build = 162;
     private PluginDescriptionFile m_pluginDescFile;
 
     // Private members containing listeners
@@ -53,11 +56,14 @@ public class MonkeyMod extends JavaPlugin {
 
     private final HashMap<Player, PlayerDetails> playerDetails = new HashMap<Player, PlayerDetails>();
 
-    public PlayerDetails getPlayerDetails(Player player){
-        if( this.playerDetails.containsKey(player)) {
+    public PlayerDetails getPlayerDetails(Player player) {
+        if (this.playerDetails.containsKey(player)) {
             return this.playerDetails.get(player);
         } else {
-            return new PlayerDetails(-1, player.getGameMode());
+            MonkeyMod.log.info("new PlayerDetails() called");
+            PlayerDetails playerDetails = new PlayerDetails(-1, player.getGameMode());
+            addPlayerDetails(player, playerDetails);
+            return playerDetails;
         }
     }
 
@@ -180,20 +186,7 @@ public class MonkeyMod extends JavaPlugin {
             "logger.url " + this.getConfig().getString("logger.url"),
             "protection.grief " + this.getConfig().getBoolean("protection.grief"),
             "plugin.update.auto " + this.getConfig().getBoolean("plugin.update.auto"),
-            "server.protection.enabled " + this.getConfig().getBoolean("server.protection.enabled")
-        };
-    }
-
-    public String[] getUsers() {
-        Player players[] = this.getServer().getOnlinePlayers();
-
-        String names[] = new String[players.length];
-
-        for (int i = 0; i < names.length; i++) {
-            names[i] = players[i].getName();
-        }
-
-        return names;
+            "server.protection.enabled " + this.getConfig().getBoolean("server.protection.enabled") };
     }
 
     public Integer getServerUID() {
@@ -204,10 +197,22 @@ public class MonkeyMod extends JavaPlugin {
         serverUID = uid;
     }
 
-    public static void reportException(String description, Exception ex) {
-        MonkeyMod.log.log(Level.WARNING, description/*, ex*/);
+    public UUID getPlayer(String name) {
+        Collection<? extends Player> players = getServer().getOnlinePlayers();
 
-       // Add report to server via HTTP request
+        Iterator<? extends Player> itr = players.iterator();
+        while (itr.hasNext()) {
+            Player player = itr.next();
+            if (name.equalsIgnoreCase(player.getPlayerListName()))
+                return player.getUniqueId();
+        }
+        return null;
+    }
+
+    public static void reportException(String description, Exception ex) {
+        MonkeyMod.log.log(Level.WARNING, description/* , ex */);
+
+        // Add report to server via HTTP request
 
     }
 }
