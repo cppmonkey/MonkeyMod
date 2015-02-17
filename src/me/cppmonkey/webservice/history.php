@@ -19,36 +19,9 @@ if( isset($_GET["serverip"])) {
 
     if($server != null) {
 
-        $query = sprintf("
-                (
-SELECT
- `mc_players`.`name` AS 'name',
- `mc_chat`.`message` AS 'msg',
- `chat_date` AS 'timestamp'
-FROM
-                `mc_chat`
-LEFT JOIN `mc_players` ON
- `mc_chat`.`player_id` = `mc_players`.`id`
-WHERE
-                `server_id` = '%1\$d'
-) UNION
-                (
-SELECT
- `mc_players`.`name` AS 'name',
-                `mc_transition`.`action` AS 'msg',
-                `mc_transition`.`timestamp` AS 'timestamp'
-FROM
-                `mc_transition`
-LEFT JOIN `mc_players` ON
- `mc_transition`.`player_id` = `mc_players`.`id`
-WHERE
-                `server_id` = '%1\$d'
-)
-ORDER BY
-                `timestamp` DESC
-LIMIT 0, %2\$d
-                ",
+        $query = sprintf("CALL GetServerHistory('%1\$d', '%2\$d', '%3\$d')",
                 $server->GetId(),
+                (isset($_GET["start"]) ? $_GET["start"]:0),
                 (isset($_GET["limit"]) ? $_GET["limit"]:30)
         );
 
